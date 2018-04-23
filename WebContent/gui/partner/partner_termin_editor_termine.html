@@ -1,0 +1,135 @@
+<div class="workspace-frame-content grid" data-has-backbutton="yes" data-has-main-menu="yes" data-frame-title="Termine planen"></div>
+<div class="grid-row-0">
+    <select id="partnertermin_editor_repeatmode" class="grid-col-2 mandatory">
+        <option value="ONCE" selected>Einmaliger Termin</option>
+        <option value="DAILY">T&auml;glicher Termin</option>
+        <option value="WEEKLY">W&ouml;chentlicher Termin</option>
+        <option value="MONTHLY">Monatlicher Termin</option>
+        <option value="YEARLY">J&auml;hrlicher Termin</option>
+    </select>
+</div>
+<div class="grid-row-0">
+    <input id="partnertermin_editor_tododate" class="grid-col-2 datepicker-input mandatory" placeholder="Datum"></input>
+    <input id="partnertermin_editor_repeat_until" class="grid-col-2 datepicker-input mandatory" placeholder="Bis Datum"></input>
+
+
+    <select id="partnertermin_editor_daily_interval" class="grid-col-2 mandatory">
+        <option value="1">Jeden Tag</option>
+        <option value="2">Alle 2 Tage</option>
+        <option value="3">Alle 3 Tage</option>
+        <option value="4">Alle 4 Tage</option>
+        <option value="5">Alle 5 Tage</option>
+        <option value="6">Alle 6 Tage</option>
+        <option value="7">Alle 7 Tage</option>
+        <option value="8">Alle 8 Tage</option>
+        <option value="9">Alle 9 Tage</option>
+        <option value="10">Alle 10 Tage</option>
+        <option value="11">Alle 11 Tage</option>
+        <option value="12">Alle 12 Tage</option>
+        <option value="13">Alle 13 Tage</option>
+        <option value="14">Alle 14 Tage</option>
+        <option value="15">Alle 15 Tage</option>
+        <option value="16">Alle 16 Tage</option>
+        <option value="17">Alle 17 Tage</option>
+        <option value="18">Alle 18 Tage</option>
+        <option value="19">Alle 19 Tage</option>
+        <option value="20">Alle 20 Tage</option>
+        <option value="21">Alle 21 Tage</option>
+        <option value="22">Alle 22 Tage</option>
+        <option value="23">Alle 23 Tage</option>
+        <option value="24">Alle 24 Tage</option>
+        <option value="25">Alle 25 Tage</option>
+        <option value="26">Alle 26 Tage</option>
+        <option value="27">Alle 27 Tage</option>
+        <option value="28">Alle 28 Tage</option>
+        <option value="29">Alle 29 Tage</option>
+        <option value="30">Alle 30 Tage</option>
+        <option value="31">Alle 31 Tage</option>
+    </select>
+
+    <select id="partnertermin_editor_weekly_interval" class="grid-col-2 mandatory">
+        <option value="1">Jede Woche am ...</option>
+        <option value="2">Alle 2 Wochen am ...</option>
+        <option value="3">Alle 3 Wochen am ...</option>
+        <option value="4">Alle 4 Wochen am ...</option>
+    </select>
+    <select id="partnertermin_editor_weekly_day" class="grid-col-2 mandatory">
+        <option value="1">Montag</option>
+        <option value="2">Dienstag</option>
+        <option value="3">Mittwoch</option>
+        <option value="4">Donnerstag</option>
+        <option value="5">Freitag</option>
+        <option value="6">Samstag</option>
+        <option value="0">Sonntag</option>
+    </select>
+     
+
+    <select id="partnertermin_editor_monthly_interval" class="grid-col-2 mandatory">
+        <option value="1">Jeden Monat am ...</option>
+        <option value="2">Alle 2 Monate am ...</option>
+        <option value="3">Alle 3 Monate am ...</option>
+        <option value="4">Alle 4 Monate am ...</option>
+        <option value="5">Alle 5 Monate am ...</option>
+        <option value="6">Alle 6 Monate am ...</option>
+        <option value="7">Alle 7 Monate am ...</option>
+        <option value="8">Alle 8 Monate am ...</option>
+        <option value="9">Alle 9 Monate am ...</option>
+        <option value="10">Alle 10 Monate am ...</option>
+        <option value="11">Alle 11 Monate am ...</option>
+        <option value="12">Alle 12 Monate am ...</option>
+    </select>
+    <select id="partnertermin_editor_monthly_day" class="grid-col-2 mandatory">
+        <option value="1">1.</option>
+        <option value="2">2.</option>
+        <option value="3">3.</option>
+        <option value="4">4.</option>
+        <option value="5">5.</option>
+        <option value="6">6.</option>
+        <option value="7">7.</option>
+        <option value="8">8.</option>
+        <option value="9">9.</option>
+        <option value="10">10.</option>
+        <option value="11">11.</option>
+        <option value="12">12.</option>
+        <option value="13">13.</option>
+        <option value="14">14.</option>
+        <option value="15">15.</option>
+        <option value="16">16.</option>
+        <option value="17">17.</option>
+        <option value="18">18.</option>
+        <option value="19">19.</option>
+        <option value="20">20.</option>
+        <option value="21">21.</option>
+        <option value="22">22.</option>
+        <option value="23">23.</option>
+        <option value="24">24.</option>
+        <option value="25">25.</option>
+        <option value="26">26.</option>
+        <option value="27">27.</option>
+        <option value="28">28.</option>
+        <option value="29">29.</option>
+        <option value="30">30.</option>
+        <option value="31">31.</option>
+    </select>
+</div>
+
+<table id="partnertermin_editor_termin_preview" class="grid-row-1 grid-col-2">
+    <thead>
+        <tr>
+            <th class="sortable">Datum</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<label class="grid-row-0 grid-col-2" for="partnertermin_editor_remember_me">
+    <input type="checkbox" id="partnertermin_editor_remember_me">
+    Erinnere mich...
+</label>
+
+<div class="grid-row-0 grid-col-2" id="partnertermin_editor_remember_row">
+    <label for="partnertermin_editor_remember_daysbefore">
+        <input id="partnertermin_editor_remember_daysbefore" placeholder="Tage vorher">
+        Tage vorher
+    </label>
+</div>

@@ -1,0 +1,13 @@
+{HEADER}
+= Aufgaben-Liste
+Stand vom $TODAY$-$NOW$ Uhr
+{/HEADER}
+
+{TASK}
+'''
+== $TITLE$
+Zu erledigen durch ***$USER$*** bis zum ***$DATE$*** +
+ +
+$DESCRIPTION$ +
+ +
+{/TASK}

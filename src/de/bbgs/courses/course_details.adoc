@@ -1,0 +1,46 @@
+{HEADER}
+= Kurs-Details für den Kurs $COURSE_NAME$
+$COURSE_DESC$
+{/HEADER}
+
+= Notizen/Kommentare
+{N_TABLE}
+[width="100%", cols="1"]
+|=======================
+{N_ROW}
+| $N_NOTE$
+{/N_ROW}
+|=======================
+{/N_TABLE}
+
+= Kurs-Termine
+|============================
+| Datum | Beginn | Ende | Ort
+{T_ROW}
+| $T_DATE$ | $T_START$ | $T_END$ | $T_LOCATION$ 
+{/T_ROW}
+|============================
+
+
+= Kurs-Mitglieder
+{M_TABLE}
+[width="100%", cols="1,4"]
+|============================
+| Kursmitglied | $ZNAME$, $VNAME$
+| Art der Mitgliedschafft: | $M_TYPE$
+| Geschlecht: | $M_SEX$
+| Geburts-Tag: | $M_BIRTHDAY$
+| Wohnort: | $M_ZIPCODE$ $M_CITY$ $M_STREET$
+| Telefon: | $M_PHONE$
+| Mobil: | $M_MOBILE$
+| EMail: | $M_EMAIL$
+{C_ROW}
+1+| |
+| Kontakt: | $C_ZNAME$, $C_VNAME$ ($C_RELATION$)
+| Telefon: | $C_PHONE$
+| Mobil: | $C_MOBILE$
+| EMail: | $C_EMAIL$
+{/C_ROW}
+|============================
+{/M_TABLE}
+

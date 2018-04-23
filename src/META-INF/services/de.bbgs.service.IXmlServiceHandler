@@ -1,0 +1,91 @@
+#------------------------------------------------------------------------------
+#
+# all about session management
+#
+de.bbgs.session.GetAllAccountsHandler
+de.bbgs.session.GetSessionStateHandler
+de.bbgs.session.LogonHandler
+de.bbgs.session.LogoutHandler
+de.bbgs.session.ChangePasswordHandler
+
+#------------------------------------------------------------------------------
+#
+# all about members
+#
+de.bbgs.member.FindMemberHandler
+de.bbgs.member.GetMemberModelHandler
+de.bbgs.member.SaveMemberModelHandler
+de.bbgs.member.RemoveMemberHandler
+
+#------------------------------------------------------------------------------
+#
+# all about partners
+#
+de.bbgs.partner.GetPartnerOverviewHandler
+de.bbgs.partner.GetPartnerModelHandler
+de.bbgs.partner.SavePartnerModelHandler
+de.bbgs.partner.RemovePartnerHandler
+
+#------------------------------------------------------------------------------
+#
+# all about courses
+#
+de.bbgs.courses.GetAllCoursesHandler
+de.bbgs.courses.GetCourseCalendarHandler
+de.bbgs.courses.SaveCourseModelHandler
+de.bbgs.courses.GetCourseModelHandler
+de.bbgs.courses.RemoveCourseHandler
+de.bbgs.courses.GetCourseTerminModelHandler
+de.bbgs.courses.SaveCourseTerminModelHandler
+de.bbgs.courses.GetCourseLocationsHandler
+de.bbgs.courses.GetCourseLocationModelHandler
+de.bbgs.courses.SaveCourseLocationModelHandler
+
+
+#------------------------------------------------------------------------------
+#
+# all about mail
+#
+de.bbgs.mail.GetCustomMailGroupsHandler
+de.bbgs.mail.GetCustomMailGroupHandler
+de.bbgs.mail.SaveCustomMailGroupHandler
+de.bbgs.mail.GetAdressbookHandler
+de.bbgs.mail.SendMailHandler
+de.bbgs.sms.SendSMSHandler
+
+#------------------------------------------------------------------------------
+#
+# all about named colors
+#
+de.bbgs.named_colors.GetNamedColorsHandler
+de.bbgs.named_colors.SaveNamedColorsHandler
+
+
+#------------------------------------------------------------------------------
+#
+# all about the todolist
+#
+de.bbgs.todolist.GetTodolistModelHandler
+de.bbgs.todolist.SaveTodolistModelHandler
+
+#------------------------------------------------------------------------------
+#
+# all about accounting
+#
+de.bbgs.accounting.GetInvoiceItemModelHandler
+de.bbgs.accounting.SaveInvoiceItemModelHandler
+de.bbgs.accounting.GetIncommingRecordsModelHandler
+de.bbgs.accounting.SaveIncommingRecordHandler
+
+de.bbgs.accounting.GetProjectsOverviewHandler
+de.bbgs.accounting.GetProjectModelHandler
+de.bbgs.accounting.SaveProjectModelHandler
+
+
+#------------------------------------------------------------------------------
+#
+# all about registration
+#
+de.bbgs.registration.GetRegistrationModelHandler
+de.bbgs.registration.SaveRegistrationModelHandler
+

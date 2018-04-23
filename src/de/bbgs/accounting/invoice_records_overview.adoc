@@ -1,0 +1,15 @@
+{HEADER}
+= Übersicht der Einnahmen $YEAR$
+Stand: $NOW$
+{/HEADER}
+
+[width="100%", cols=">1,2,1,1,2", options="header"]
+|==========================================================
+| Betrag | Eingangs-Konto | Datum | Gebucht von | Kommentar
+{ROW}
+| € $AMOUNT$ | $INVOICE_ITEM_KTO$ - $INVOICE_ITEM_NAME$ | $DATE$ | $USER$ | $DESCRIPTION$
+{/ROW}
+{FOOTER}
+| [.underline]#€ $TOTAL$# 4+| Total
+{/FOOTER}
+|==========================================================

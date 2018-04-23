@@ -1,0 +1,15 @@
+{HEADER}
+= Kurs-Übersicht $FROM$ - $UNTIL$
+{/HEADER}
+
+{TABLE}
+== $COURSE_NAME$ 
+=== $DATE$, $BEGIN$ - $END$, $LOCATION$
+[width="100%", cols="4,1", options="header"]
+|===========================
+| Teilnehmer | Mitglieds-Art
+{ROW}
+| $ZNAME$, $VNAME$ | $TYPE$ 
+{/ROW}
+|===========================
+{/TABLE}

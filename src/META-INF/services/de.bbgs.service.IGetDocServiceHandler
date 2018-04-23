@@ -1,0 +1,12 @@
+de.bbgs.member.GetMemberImageHandler
+de.bbgs.member.GetCurrentMemberThumbHandler
+de.bbgs.attachments.GetMimeTypeIconHandler
+de.bbgs.attachments.GetAttachmentHandler
+
+de.bbgs.courses.GetCourseOverviewDocumentHandler
+de.bbgs.courses.GetCourseDetailsDocumentHandler
+
+de.bbgs.accounting.GetInvoiceRecordsDocumentHandler
+de.bbgs.accounting.PrintProjectHandler
+
+de.bbgs.todolist.GetPinboardDocumentHandler

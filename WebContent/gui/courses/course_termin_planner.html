@@ -1,0 +1,143 @@
+<div data-has-backbutton="yes" class="workspace-frame-content" data-has-main-menu="yes" data-frame-title="Kurs-Termine planen"></div>
+<div class="grid-row-0">
+    <select id="termin_planner_repeatmode" class="grid-col-2 mandatory">
+        <option value="ONCE" selected>Einzelner Termin</option>
+        <option value="DAILY">T&auml;glich</option>
+        <option value="WEEKLY">W&ouml;chentlich</option>
+        <option value="MONTHLY">Monatlich</option>
+    </select>
+</div>
+<div class="grid-row-0">
+    <input class="grid-col-1 datepicker-input mandatory" id="termin_planner_first_date" placeholder="Datum"></input>
+    <input class="grid-col-1 datepicker-input mandatory" id="termin_planner_last_date" placeholder="letzter Termin"></input>
+</div>
+<div class="grid-row-0" id="termin_planner_repeat_cnr">
+    <!-- Tägliche Wiederholungen -->
+    <select id="termin_planner_repeat_daily_interval" class="grid-col-1 mandatory">
+        <option selected value="1">Jeden Tag</option>
+        <option value="2">alle 2 Tage</option>
+        <option value="3">alle 3 Tage</option>
+        <option value="4">alle 4 Tage</option>
+        <option value="5">alle 5 Tage</option>
+        <option value="6">alle 6 Tage</option>
+        <option value="7">alle 7 Tage</option>
+        <option value="8">alle 8 Tage</option>
+        <option value="9">alle 9 Tage</option>
+        <option value="10">alle 10 Tage</option>
+        <option value="11">alle 11 Tage</option>
+        <option value="12">alle 12 Tage</option>
+        <option value="13">alle 13 Tage</option>
+        <option value="14">alle 14 Tage</option>
+        <option value="15">alle 15 Tage</option>
+        <option value="16">alle 16 Tage</option>
+        <option value="17">alle 17 Tage</option>
+        <option value="18">alle 18 Tage</option>
+        <option value="19">alle 19 Tage</option>
+        <option value="20">alle 20 Tage</option>
+        <option value="21">alle 21 Tage</option>
+        <option value="22">alle 22 Tage</option>
+        <option value="23">alle 23 Tage</option>
+        <option value="24">alle 24 Tage</option>
+        <option value="25">alle 25 Tage</option>
+        <option value="26">alle 26 Tage</option>
+        <option value="27">alle 27 Tage</option>
+        <option value="28">alle 28 Tage</option>
+        <option value="29">alle 29 Tage</option>
+        <option value="30">alle 30 Tage</option>
+        <option value="31">alle 31 Tage</option>
+    </select>
+
+    <!--  Wöchentliche wiederholung -->
+    <select id="termin_planner_repeat_weekly_interval" class="grid-col-1 mandatory">
+        <option selected value="1">Jede Woche am ...</option>
+        <option value="2">Alle 2 Wochen am ...</option>
+        <option value="3">Alle 3 Wochen am ...</option>
+        <option value="4">Alle 4 Wochen am ...</option>
+    </select>
+    <select id="termin_planner_repeat_weekly_weekday" class="grid-col-1 mandatory" title="Wochentag">
+        <option value="1">Montag</option>
+        <option value="2">Dienstag</option>
+        <option value="3">Mittwoch</option>
+        <option value="4">Donnerstag</option>
+        <option value="5">Freitag</option>
+        <option value="6">Samstag</option>
+        <option value="0">Sonntag</option>
+    </select>
+
+    <!-- Wiederholung Monatlich   -->
+    <select id="termin_planner_repeat_monthly_interval" class="grid-col-1 mandatory">
+        <option value="1" selected>Jeden Monat am ...</option>
+        <option value="2">alle 2 Monate am ...</option>
+        <option value="3">alle 3 Monate am ...</option>
+        <option value="4">alle 4 Monate am ...</option>
+        <option value="5">alle 5 Monate am ...</option>
+        <option value="6">alle 6 Monate am ...</option>
+        <option value="7">alle 7 Monate am ...</option>
+        <option value="8">alle 8 Monate am ...</option>
+        <option value="9">alle 9 Monate am ...</option>
+        <option value="10">alle 10 Monate am ...</option>
+        <option value="11">alle 11 Monate am ...</option>
+        <option value="12">alle 12 Monate am ...</option>
+    </select>
+    <select id="termin_planner_repeat_monthly_dayofmonth" class="grid-col-1 mandatory">
+        <option value="1">1.</option>
+        <option value="2">2.</option>
+        <option value="3">3.</option>
+        <option value="4">4.</option>
+        <option value="5">5.</option>
+        <option value="6">6.</option>
+        <option value="7">7.</option>
+        <option value="8">8.</option>
+        <option value="9">9.</option>
+        <option value="10">10.</option>
+        <option value="11">11.</option>
+        <option value="12">12.</option>
+        <option value="13">13.</option>
+        <option value="14">14.</option>
+        <option value="15">15.</option>
+        <option value="16">16.</option>
+        <option value="17">17.</option>
+        <option value="18">18.</option>
+        <option value="19">19.</option>
+        <option value="20">20.</option>
+        <option value="21">21.</option>
+        <option value="22">22.</option>
+        <option value="23">23.</option>
+        <option value="24">24.</option>
+        <option value="25">25.</option>
+        <option value="26">26.</option>
+        <option value="27">27.</option>
+        <option value="28">28.</option>
+        <option value="29">29.</option>
+        <option value="30">30.</option>
+        <option value="31">31.</option>
+    </select>
+</div>
+<div class="grid-row-0">
+    <label class="grid-col-2">
+        <input id="termin_planner_whole_day" type="checkbox">
+        Ganzt&auml;gig
+    </label>
+</div>
+<div class="grid-row-0">
+    <input class="grid-col-1 mandatory timepicker-input" id="termin_planner_startTime" placeholder="Beginn (HH:MM)" pattern="(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])"></input>
+    <input class="grid-col-1 mandatory timepicker-input" id="termin_planner_endTime" placeholder="Ende (HH:MM)" pattern="(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])"></input>
+</div>
+
+<div class="grid-row-0">
+    <select id="termin_planner_location" class="grid-col-2 mandatory">
+        <option value="" disabled selected>Ort</option>
+    </select>
+</div>
+
+<table id="termin_planner_preview">
+    <thead>
+        <tr>
+            <th class="sortable">Datum</th>
+            <th>von</th>
+            <th>bis</th>
+            <th class="sortable">Ort</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>

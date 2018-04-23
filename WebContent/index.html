@@ -1,0 +1,92 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Bayerns beste Gipfelst&uuml;rmer - Verwaltung</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body onload="javascript:SessionManager.checkSessionState();">
+    <div id="workspace"></div>
+    <div id="dialogs" class="dialog-glasspane"></div>
+    <div id="busy-indicator" class="busy-indicator">
+        <img src="gui//images/spin.gif">
+    </div>
+</body>
+
+<!-- 
+    Die Scripts sind bewußt hinter dem body angesiedelt, um diesen wärend der
+    statischen Initialisierung Zugriff auf die Elemente des Bodies zu erlauben 
+ -->
+
+<script type="text/javascript" src="utils/array_utils.js"></script>
+<script type="text/javascript" src="utils/date_time_utils.js"></script>
+<script type="text/javascript" src="utils/currency_utils.js"></script>
+<script type="text/javascript" src="utils/uuid.js"></script>
+<script type="text/javascript" src="utils/xmlutils.js"></script>
+<script type="text/javascript" src="utils/message_catalog.js"></script>
+
+<script type="text/javascript" src="interaction/servicecaller.js"></script>
+<script type="text/javascript" src="interaction/model.js"></script>
+<script type="text/javascript" src="interaction/validator.js"></script>
+<script type="text/javascript" src="interaction/session_manager.js"></script>
+<script type="text/javascript" src="gui/utils/uiutils.js"></script>
+<script type="text/javascript" src="interaction/touchgestures_observer.js"></script>
+
+<script type="text/javascript" src="gui/widgets/busy_indicator.js"></script>
+<script type="text/javascript" src="gui/widgets/workspace.js"></script>
+<script type="text/javascript" src="gui/widgets/table_utils.js"></script>
+<script type="text/javascript" src="gui/widgets/message_box.js"></script>
+<script type="text/javascript" src="gui/widgets/date_picker.js"></script>
+<script type="text/javascript" src="gui/widgets/file_picker.js"></script>
+<script type="text/javascript" src="gui/widgets/color_selector.js"></script>
+<script type="text/javascript" src="gui/widgets/multiselect_dropdown.js"></script>
+<script type="text/javascript" src="gui/widgets/phone_input.js"></script>
+<script type="text/javascript" src="gui/widgets/numeric_input.js"></script>
+<script type="text/javascript" src="gui/widgets/inputfield_decorator.js"></script>
+<script type="text/javascript" src="gui/widgets/tooltip.js"></script>
+<script type="text/javascript" src="gui/widgets/navigation.js"></script>
+<script type="text/javascript" src="gui/widgets/main_navigation.js"></script>
+<script type="text/javascript" src="gui/widgets/logon_dialog.js"></script>
+<script type="text/javascript" src="gui/widgets/change_password_dialog.js"></script>
+
+
+<script type="text/javascript" src="gui/accounting/accounting.js"></script>
+<script type="text/javascript" src="gui/accounting/projects.js"></script>
+
+<script type="text/javascript" src="gui/attachments/attachments_editor.js"></script>
+<script type="text/javascript" src="gui/attachments/document_viewer.js"></script>
+<script type="text/javascript" src="gui/attachments/mimetype_visualizer.js"></script>
+
+<script type="text/javascript" src="gui/contacts/contact_editor.js"></script>
+
+<script type="text/javascript" src="gui/member/member_finder.js"></script>
+<script type="text/javascript" src="gui/member/member_editor.js"></script>
+<script type="text/javascript" src="gui/member/membertype_translator.js"></script>
+
+<script type="text/javascript" src="gui/notes/notes_editor.js"></script>
+
+<script type="text/javascript" src="gui/partner/partner_editor.js"></script>
+
+<script type="text/javascript" src="gui/courses/course_navigation.js"></script>
+<script type="text/javascript" src="gui/courses/course_calendar.js"></script>
+<script type="text/javascript" src="gui/courses/course_finder.js"></script>
+<script type="text/javascript" src="gui/courses/course_editor.js"></script>
+<script type="text/javascript" src="gui/courses/course_termin_editor.js"></script>
+<script type="text/javascript" src="gui/courses/course_termin_planner.js"></script>
+<script type="text/javascript" src="gui/courses/course_location_editor.js"></script>
+
+<script type="text/javascript" src="gui/mail/mail_navigation.js"></script>
+<script type="text/javascript" src="gui/mail/mail_group_editor.js"></script>
+<script type="text/javascript" src="gui/mail/mail_editor.js"></script>
+<script type="text/javascript" src="gui/mail/sms_editor.js"></script>
+<script type="text/javascript" src="gui/mail/adressbook.js"></script>
+
+<script type="text/javascript" src="gui/todolist/todo_list.js"></script>
+
+<script type="text/javascript" src="xternal/ckeditor/ckeditor.js"></script>
+
+<script type="text/javascript" src="gui/notifications/notifications.js"></script>
+
+</html>

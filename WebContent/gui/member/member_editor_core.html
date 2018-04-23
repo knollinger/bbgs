@@ -1,0 +1,67 @@
+<div class="workspace-frame-content grid" id="edit_member_core_data" data-has-backbutton="yes" data-has-main-menu="yes" data-frame-title="Stammdaten bearbeiten"></div>
+<img class="image-preview image-picker" id="edit_member_image" style="margin-bottom: 10px;" title="Hier klicken, um das Bild zu &auml;ndern"></img>
+<div class="grid-row-0">
+    <select class="grid-col-1 mandatory" title="Art der Mitgliedschaft" id="edit_member_type">
+        <option value="" disabled selected>Art der Mitgliedschaft</option>
+        <option value="TEACHER">Trainer</option>
+        <option value="SCOUT">Scout</option>
+        <option value="EXSCOUT">Ex-Scout</option>
+        <option value="PRAKTIKANT">Praktikant</option>
+        <option value="EHRENAMT">Ehrenamt</option>
+        <option value="FEST">Fest-Angestellt</option>
+        <option value="STUDENT">Kurs-Teilnehmer</option>
+        <option value="SHORT">Kurz-Mitgliedschafft</option>
+        <option value="REFUGEE">Geflüchtete</option>
+    </select>
+    <select class="grid-col-1" title="Projekt-Jahr" id="edit_member_projyear">
+        <option value="1">Projekt-Jahr 1 (2014-2015)</option>
+        <option value="2">Projekt-Jahr 2 (2015-2016)</option>
+        <option value="3">Projekt-Jahr 3 (2016-2017)</option>
+        <option value="4">Projekt-Jahr 4 (2017-2018)</option>
+        <option value="5">Projekt-Jahr 5 (2018-2019)</option>
+        <option value="6">Projekt-Jahr 6 (2019-2020)</option>
+        <option value="7">Projekt-Jahr 7 (2020-2021)</option>
+        <option value="8">Projekt-Jahr 8 (2021-2022)</option>
+        <option value="9">Projekt-Jahr 9 (2022-2023)</option>
+        <option value="10">Projekt-Jahr 10 (2023-2024)</option>
+    </select>
+</div>
+<div class="grid-row-0">
+    <input class="grid-col-1" title="Mitglied seit" id="edit_member_since" placeholder="Mitglied seit" data-type="date">
+    <input class="grid-col-1" title="Mitglied bis" id="edit_member_until" placeholder="Mitglied bis" data-type="date">
+</div>
+
+<div class="grid-row-0">
+    <input class="grid-col-1" title="Name" placeholder="Name" id="edit_member_zname">
+    <input class="grid-col-1" title="Vorname" placeholder="Vorname" id="edit_member_vname">
+    <input class="grid-col-1" title="2. Vorname" placeholder="2. Vorname" id="edit_member_vname2">
+    <input class="grid-col-1" title="Titel" placeholder="Titel" id="edit_member_title">
+</div>
+
+<div class="grid-row-0">
+    <input class="grid-col-1" title="Geburtstag" placeholder="Geburtstag" id="edit_member_birthdate" data-type="date">
+    <select class="grid-col-1 mandatory" title="Geschlecht" id="edit_member_sex">
+        <option value="" disabled selected>Geschlecht</option>
+        <option value="W">Weiblich</option>
+        <option value="M">Männlich</option>
+        <option value="U">Keine Angabe</option>
+    </select>
+</div>
+
+<div class="grid-row-0">
+    <input class="grid-col-1" title="Postleitzahl" placeholder="PLZ" id="edit_member_zipcode" data-type="zipcode">
+    <input class="grid-col-1" title="Ort" placeholder="Ort" id="edit_member_city">
+    <input class="grid-col-2" title="Straße" placeholder="Straße" id="edit_member_street">
+</div>
+
+<div class="grid-row-0">
+    <select id="edit_member_photoagreement" class="grid-col-1" title="Fotoeinverständnis">
+        <option value="" disabled selected>Fotoeinverständnis</option>
+        <option value="NONE">Kein Fotoeinverständnis</option>
+        <option value="INTERN">Nur für internen Gebrauch</option>
+        <option value="FULL">komplettes Fotoeinverständnis</option>
+    </select>
+    <select id="edit_member_school" class="grid-col-1" title="Schule/Einrichtung">
+        <option value="" disabled selected>Schule/Einrichtung</option>
+    </select>
+</div>
