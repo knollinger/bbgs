@@ -94,7 +94,6 @@ NotesOverview.prototype.fillTable = function() {
 
     var self = this;
 
-    // gelöschte Notes werden nicht angezeigt
     // was passiert beim Tabellen-Klick?
     var onclick = function(tr, note) {
 
@@ -108,37 +107,10 @@ NotesOverview.prototype.fillTable = function() {
     }
 
     var fields = this.getColumnDescriptor();
-
-    var tab = UIUtils.getElement("edit_notes_overview_body");
-    UIUtils.clearChilds(tab);
-
-    var allNotes = this.model.evaluateXPath(this.xPath + "/note");
-    for (var i = 0; i < allNotes.length; i++) {
-
-	var note = allNotes[i];
-	if (note.getElementsByTagName("action")[0].textContent != "REMOVE") {
-	    this.renderOneRow(note, tab, fields, onclick);
-	}
-    }
-    //
-    // this.model.createTableBinding("edit_notes_overview", fields, allNotes,
-    // onclick, filter);
-    // this.currRow = this.currNote = null;
+    var allNotes = this.xPath + "/note[action != 'REMOVE']";
+    this.model.createTableBinding("edit_notes_overview", fields, allNotes, onclick);
+    this.currRow = this.currNote = null;
     self.actionRemove.hide();
-}
-
-NotesOverview.prototype.renderOneRow = function(note, tab, fields, onclick) {
-
-    var row = this.model.createTableRow(note, fields, onclick);
-    tab.appendChild(row);
-
-    note.addEventListener("change", function() {
-
-	var action = note.getElementsByTagName("action")[0];
-	if (action.textContent != "CREATE" && action.textContent != "REMOVE") {
-	    action.textContent = "MODIFY";
-	}
-    });
 }
 
 /**
@@ -175,16 +147,13 @@ NotesOverview.prototype.createTypeSelector = function(note) {
     var selector = document.createElement("select");
     selector.className = "inplace-select mandatory";
 
-    var opt = document.createElement("option");
-    opt.value = "";
-    opt.textContent = "Art der Notiz";
-    opt.selected = opt.disabled = true;
-    selector.add(opt);
-
     for (var i = 0; i < NotesOverview.TYPE_MAP.length; i++) {
-	opt = document.createElement("option");
+	var opt = document.createElement("option");
 	opt.value = NotesOverview.TYPE_MAP[i].name;
 	opt.textContent = NotesOverview.TYPE_MAP[i].value;
+	if(i == 0) {
+	    opt.selected = opt.disabled = true;
+	}
 	selector.add(opt);
     }
     this.model.createValueBinding(selector, XmlUtils.getXPathTo(note) + "/type", "change");
@@ -195,6 +164,9 @@ NotesOverview.prototype.createTypeSelector = function(note) {
  * 
  */
 NotesOverview.TYPE_MAP = [ {
+    name : "",
+    value : "Art der Notiz"
+}, {
     name : "DIET",
     value : "Ernährung"
 }, {

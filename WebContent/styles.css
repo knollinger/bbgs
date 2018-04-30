@@ -177,10 +177,6 @@ td:last-child {
 	border-right: 0;
 }
 
-td>input {
-	display: block;
-}
-
 h1 {
 	font-size: 1.5em;
 	margin-top: 10px;
@@ -1969,10 +1965,8 @@ h1 {
  */
 .inplace-select {
 	border: 0px solid transparent;
-	border-radius: 0;
-	padding: 4 30px 4 4px;
 	background-color: inherit;
-	margin-bottom: 4px;
+	width: 100%;
 }
 
 .inplace-select:focus {
@@ -1981,14 +1975,8 @@ h1 {
 
 .inplace-edit {
 	border: 0px solid transparent;
-	border-radius: 0;
-	padding: 4px;
 	background-color: inherit;
-	margin-bottom: 4px;
-}
-
-.inplace-edit:last-child {
-	margin-bottom: 0;
+	width: 100%;
 }
 
 .inplace-edit:focus {
@@ -1997,19 +1985,16 @@ h1 {
 
 .inplace-textarea {
 	border: 0px solid transparent;
-	border-radius: 0;
-	padding: 4px;
-	height: calc(1em + 10px);
+	height: calc(1em + 8px);
 	min-height: unset;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	width: 100%;
 	background-color: inherit;
-	margin-bottom: 4px;
 }
 
 .inplace-textarea:focus {
-	min-height: calc(5em + 10px);
+	min-height: calc(5em + 8px);
 	background-color: #ffffff;
 }
 
