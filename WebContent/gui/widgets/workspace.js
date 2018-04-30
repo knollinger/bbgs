@@ -39,10 +39,6 @@ var WorkSpaceFrame = function(logoUrl) {
 	this.frame.appendChild(this.logo);
     }
 
-//    this.content = document.createElement("div");
-//    this.content.className = "workspace-frame-body";
-//    this.frame.appendChild(this.content);
-//
     var actionbar = document.createElement("div");
     actionbar.className = "workspace-actionbar";
     this.frame.appendChild(actionbar);
