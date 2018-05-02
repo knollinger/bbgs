@@ -16,8 +16,6 @@ import de.bbgs.notes.ENoteDomain;
 import de.bbgs.notes.NotesDBUtil;
 import de.bbgs.service.IXmlServiceHandler;
 import de.bbgs.session.SessionWrapper;
-import de.bbgs.todolist.ETaskDomain;
-import de.bbgs.todolist.TodoListDBUtil;
 import de.bbgs.utils.ConnectionPool;
 import de.bbgs.utils.DBUtils;
 import de.bbgs.xml.ErrorResponse;
@@ -77,7 +75,6 @@ public class SavePartnerModelHandler implements IXmlServiceHandler
             ContactsDBUtil.handleContactChanges(model.contacts, partnerId, EContactDomain.PARTNER, conn);
             NotesDBUtil.handleNoteChanges(model.notes, partnerId, ENoteDomain.PARTNER, conn);
             AttachmentsDBUtil.handleAttachmentChanges(model.attachments, partnerId, EAttachmentDomain.PARTNER, session, conn);
-            TodoListDBUtil.handleTodoListChanges(model.todoTasks, partnerId, ETaskDomain.PARTNERTERMIN, session, conn);
 
             conn.commit();
             rsp = new Response();

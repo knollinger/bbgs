@@ -226,11 +226,37 @@ Model.prototype.createTableRow = function(xmlNode, fields, onclick) {
     }
 
     if (onclick) {
-	row.addEventListener("click", function() {
+	
+	var self = this;
+	row.addEventListener("click", function(evt) {	 
+	    
+	    var target = evt.target;
+	    if(target.tagName != "INPUT" && target.type != "radio" && target.type != "checkbox") {
+		self.handleRadioInputs(row);
+	    }
 	    onclick(row, xmlNode);
 	});
     }
     return row;
+}
+
+/**
+ * 
+ */
+Model.prototype.handleRadioInputs = function(row) {
+    
+    var allInputs = row.querySelectorAll("input");
+    for(var i = 0; i < allInputs.length; i++) {
+	switch(allInputs[i].type) {
+	case "radio":
+	    allInputs[i].checked = true;
+	    break;
+	    
+	case "checkbox":
+	    allInputs[i].checked = !allInputs[i].checked;
+	    break;
+	}
+    }
 }
 
 /**

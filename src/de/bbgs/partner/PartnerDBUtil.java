@@ -146,7 +146,6 @@ public class PartnerDBUtil
                     result.contacts.addAll(ContactsDBUtil.getAllContacts(id, EContactDomain.PARTNER, conn));
                     result.notes.addAll(NotesDBUtil.getAllNotes(id, ENoteDomain.PARTNER, conn));
                     result.attachments.addAll(AttachmentsDBUtil.getAllAttachments(id, EAttachmentDomain.PARTNER, conn));
-                    result.todoTasks.addAll(TodoListDBUtil.getAllTasksByRefId(id, ETaskDomain.PARTNERTERMIN, conn));
                 }
             }
             return result;

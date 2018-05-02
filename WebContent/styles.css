@@ -134,7 +134,7 @@ th {
 }
 
 th:last-child {
-	/*	width: 100%; */
+	width: 100%;
 	border-right: 0;
 }
 
@@ -1035,7 +1035,7 @@ h1 {
 	background: transparent url("gui/images/calendar.svg") no-repeat
 		calc(100% - 4px) center;
 	background-size: 16px 16px;
-	width: auto;
+	width: 6em;
 }
 
 .datepicker-header {
@@ -1966,7 +1966,7 @@ h1 {
 .inplace-select {
 	border: 0px solid transparent;
 	background-color: inherit;
-	width: 100%;
+	width: auto;
 }
 
 .inplace-select:focus {
@@ -1976,7 +1976,6 @@ h1 {
 .inplace-edit {
 	border: 0px solid transparent;
 	background-color: inherit;
-	width: 100%;
 }
 
 .inplace-edit:focus {

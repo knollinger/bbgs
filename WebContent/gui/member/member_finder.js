@@ -257,13 +257,10 @@ MemberFinder.prototype.onResultSetSelection = function(tr, member) {
     if (this.multSel) {
 	if (radio.checked) {
 	    this.selection.remove(member);
-	    radio.checked = false;
 	} else {
 	    this.selection.push(member);
-	    radio.checked = true;
 	}
     } else {
-	radio.checked = true;
 	this.selection = [].concat(member);
     }
     this.onSelectionChange(this.selection);

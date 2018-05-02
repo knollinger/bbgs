@@ -38,9 +38,4 @@ public class PartnerModel implements IJAXBObject
     @XmlElementWrapper(name = "attachments")
     @XmlElement(name = "attachment")
     public Collection<Attachment> attachments = new ArrayList<Attachment>();
-    
-    @XmlElementWrapper(name = "todo-tasks")
-    @XmlElement(name = "todo-task")
-    public Collection<TodoTask> todoTasks = new ArrayList<TodoTask>();        
-
 }

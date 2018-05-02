@@ -123,14 +123,11 @@ CourseFinder.prototype.onSelect = function(tr, course) {
 
     if (this.multSel) {
 	if (radio.checked) {
-	    this.selection.remove(course);
-	    radio.checked = false;
-	} else {
 	    this.selection.push(course);
-	    radio.checked = true;
+	} else {
+	    this.selection.remove(course);
 	}
     } else {
-	radio.checked = true;
 	this.selection = [].concat(course);
     }
     this.onSelectionChange(this.selection);

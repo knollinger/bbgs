@@ -58,7 +58,7 @@ NotesOverview.prototype.createAddAction = function() {
     action.hide();
     return action;
 }
-NotesOverview.EMPTY_NOTE = "<note><action>CREATE</action><id/><type/><description/></note>";
+NotesOverview.EMPTY_NOTE = "<note><action>CREATE</action><id/><type></type><description/></note>";
 
 /**
  * erzeugt die action, um einen Anhang zu löschen
@@ -151,11 +151,13 @@ NotesOverview.prototype.createTypeSelector = function(note) {
 	var opt = document.createElement("option");
 	opt.value = NotesOverview.TYPE_MAP[i].name;
 	opt.textContent = NotesOverview.TYPE_MAP[i].value;
-	if(i == 0) {
-	    opt.selected = opt.disabled = true;
+	if (i == 0) {
+	    opt.disabled = "disabled";
+	    opt.selected = "selected";
 	}
 	selector.add(opt);
     }
+
     this.model.createValueBinding(selector, XmlUtils.getXPathTo(note) + "/type", "change");
     return selector;
 }
@@ -167,14 +169,14 @@ NotesOverview.TYPE_MAP = [ {
     name : "",
     value : "Art der Notiz"
 }, {
+    name : "COMMON",
+    value : "Allgemeiner Hinweis"
+}, {
     name : "DIET",
     value : "Ernährung"
 }, {
     name : "MEDICAL",
     value : "Medizinischer Hinweis"
-}, {
-    name : "COMMON",
-    value : "Allgemeiner Hinweis"
 }, {
     name : "OTHER",
     value : "Sonstiges"
