@@ -151,15 +151,12 @@ CourseLocationOverview.prototype.getColumnDescriptor = function() {
 
     fields.push(function(td, location) {
 	return location.getElementsByTagName("name")[0].textContent;
-    });    
-    
+    });
+
     fields.push(function(td, location) {
 	return location.getElementsByTagName("city")[0].textContent;
     });
-    
-    fields.push(function(td, location) {
-	return location.getElementsByTagName("street")[0].textContent;
-    });    
+
     return fields;
 }
 
@@ -191,13 +188,13 @@ CourseLocationEditor.prototype.loadModel = function(id, onsuccess) {
     var self = this;
     var caller = new ServiceCaller();
     caller.onSuccess = function(rsp) {
-	
+
 	switch (rsp.documentElement.nodeName) {
 	case "course-location-model":
 	    self.model = new Model(rsp);
 	    onsuccess();
 	    break;
-	    
+
 	case "error-response":
 	    var title = MessageCatalog.getMessage("COURSELOCATION_LOAD_ERROR_TITLE");
 	    var messg = MessageCatalog.getMessage("COURSELOCATION_LOAD_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
@@ -302,11 +299,11 @@ CourseLocationEditor.prototype.onSave = function() {
     var self = this;
     var caller = new ServiceCaller();
     caller.onSuccess = function(rsp) {
-	
+
 	switch (rsp.documentElement.nodeName) {
 	case "save-course-location-ok-rsp":
 	    break;
-	    
+
 	case "error-response":
 	    var title = MessageCatalog.getMessage("COURSELOCATION_SAVE_ERROR_TITLE");
 	    var messg = MessageCatalog.getMessage("COURSELOCATION_SAVE_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
@@ -344,6 +341,10 @@ var CourseLocationCoreDataEditor = function(parentFrame, targetCnr, model) {
 	self.model.createValueBinding("edit_courseloc_core_street", "/course-location-model/street");
 	self.model.createValueBinding("edit_courseloc_core_description", "/course-location-model/description");
 	self.model.createValueBinding("edit_courseloc_core_homepage", "/course-location-model/homepage");
+
+	new InputFieldDecorator("edit_courseloc_core_homepage", "url-input", function() {
+	    window.open(UIUtils.getElement("edit_courseloc_core_homepage").value);
+	});
     });
 }
 

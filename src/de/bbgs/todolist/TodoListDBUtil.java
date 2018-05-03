@@ -32,6 +32,7 @@ public class TodoListDBUtil
             while (rs.next())
             {
                 TodoTask t = new TodoTask();
+                t.id = rs.getInt("id");
                 t.action = EAction.NONE;
                 t.title = rs.getString("title");
                 t.description = rs.getString("description");
@@ -154,7 +155,7 @@ public class TodoListDBUtil
             
             rs = stmt.getGeneratedKeys();
             if(rs.next()) {
-                task.id = rs.getInt("id");
+                task.id = rs.getInt(1);
                 AttachmentsDBUtil.handleAttachmentChanges(task.attachments, task.id, EAttachmentDomain.TODOLIST, session, conn);
             }
         }

@@ -291,12 +291,10 @@ CourseTerminMembersEditor.prototype.createRemoveAction = function() {
     var self = this;
     var action = new WorkSpaceFrameAction("gui/images/person-remove.svg", "Das Mitglied entfernen", function() {
 
-	var zname = self.model.getValue(self.currentMember + "/zname");
-	var vname = self.model.getValue(self.currentMember + "/vname");
+	var zname = self.model.getValue(self.currMember + "/zname");
+	var vname = self.model.getValue(self.currMember + "/vname");
 	var cname = self.model.getValue("/course-termin-model/course-name");
 	var date = self.model.getValue("/course-termin-model/termin/date");
-	var start = self.model.getValue("/course-termin-model/termin/begin");
-	var end = self.model.getValue("/course-termin-model/termin/end");
 
 	var messg = MessageCatalog.getMessage("COURSE_MEMBER_REMOVE", zname, vname, cname);
 	var title = MessageCatalog.getMessage("COURSE_QUERY_REMOVE_TITLE");
@@ -345,10 +343,6 @@ CourseTerminMembersEditor.prototype.fillTable = function() {
 
     // was passiert beim Tabellen-Klick?
     var onclick = function(tr, member) {
-
-	var radio = "edit_coursetermin_members_radio_" + member.getElementsByTagName("id")[0].textContent;
-	radio = document.getElementById(radio);
-	radio.click();
 
 	self.currRow = tr;
 	self.currMember = XmlUtils.getXPathTo(member);

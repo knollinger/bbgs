@@ -110,13 +110,13 @@ CourseCalendar.prototype.setupUI = function() {
  * 
  */
 CourseCalendar.prototype.createPrintAction = function() {
-        
+
     var self = this;
     var action = new WorkSpaceFrameAction("gui/images/print.svg", "Kurs-Kalender drucken", function() {
 	var startDate = DateTimeUtils.formatDate(self.findStartDate(), "{dd}.{mm}.{yyyy}");
 	var endDate = DateTimeUtils.formatDate(self.findLastDate(), "{dd}.{mm}.{yyyy}");
 	var url = "getDocument/course_overview.pdf?from=" + startDate + "&until=" + endDate;
-	
+
 	var title = "Kurs-Übersicht " + startDate + " - " + endDate;
 	new DocumentViewer(url, title);
 
@@ -304,7 +304,6 @@ CourseCalendar.prototype.createWeeklyTermin = function(termin) {
     var t = document.createElement("div");
     t.className = "calendar-termin-weekly";
     t.style.backgroundColor = termin.getElementsByTagName("color")[0].textContent;
-    t.appendChild(this.makeInfoIcon(t, termin));
     t.appendChild(document.createTextNode(termin.getElementsByTagName("name")[0].textContent));
 
     // selectable machen um das aktivieren per click zu visualisieren
@@ -313,6 +312,7 @@ CourseCalendar.prototype.createWeeklyTermin = function(termin) {
 	self.selectedTermin = parseInt(termin.getElementsByTagName("id")[0].textContent);
 	self.actionEdit.show();
 	self.actionRemove.show();
+	self.showInfoPopup(t, termin);
     });
 
     var start = termin.getElementsByTagName("begin")[0].textContent;
@@ -336,26 +336,20 @@ CourseCalendar.prototype.createWeeklyTermin = function(termin) {
 /**
  * 
  */
-CourseCalendar.prototype.makeInfoIcon = function(cnr, termin) {
+CourseCalendar.prototype.showInfoPopup = function(cnr, termin) {
 
-    var img = document.createElement("img");
-    img.src = "gui/images/info.svg";
-    img.className = "calendar-termin-infoicon";
+    var start = termin.getElementsByTagName("begin")[0].textContent;
+    var end = termin.getElementsByTagName("end")[0].textContent;
+    var location = termin.getElementsByTagName("location")[0].textContent;
+    var cat = termin.getElementsByTagName("category")[0].textContent;
 
-    var self = this;
-    img.addEventListener("click", function() {
-
-	var start = termin.getElementsByTagName("begin")[0].textContent;
-	var end = termin.getElementsByTagName("end")[0].textContent;
-	var location = termin.getElementsByTagName("location")[0].textContent;
-	var cat = termin.getElementsByTagName("category")[0].textContent;
-
-	var msg = MessageCatalog.getMessage("COURSE_TERMIN_TOOLTIP", location, start, end, cat, self.makeTeacherList(termin));
-	new ToolTip(cnr, null, msg, ToolTip.INFINITE);
-    });
-    return img;
+    var msg = MessageCatalog.getMessage("COURSE_TERMIN_TOOLTIP", location, start, end, cat, this.makeTeacherList(termin));
+    new ToolTip(cnr, null, msg, ToolTip.INFINITE);
 }
 
+/**
+ * 
+ */
 CourseCalendar.prototype.makeTeacherList = function(termin) {
 
     var result = "";

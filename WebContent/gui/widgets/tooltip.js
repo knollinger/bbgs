@@ -126,16 +126,37 @@ ToolTip.prototype.close = function() {
  */
 ToolTip.prototype.adjustToAnchor = function(anchor) {
 
+    var clazz;
     var anchorRect = anchor.getBoundingClientRect();
     var tooltipRect = this.uiElem.getBoundingClientRect();
     
     var left = anchorRect.left;
-    if(left > window.innerWidth / 2) {
-	left = anchorRect.right - tooltipRect.width;
-	UIUtils.addClass(this.uiElem, "tooltip-right");
+    var top = anchorRect.top;
+    if(left < window.innerWidth / 2) {
+	
+	if(top < window.innerHeight / 2) {
+	    clazz = "tooltip-top-left";
+	    top += anchorRect.height + 5;
+	}
+	else {
+	    clazz = "tooltip-bottom-left";	    
+	    top -= (tooltipRect.height + 5);
+	}
+    }
+    else {
+	if(top < window.innerHeight / 2) {
+	    clazz = "tooltip-top-right";
+	    top += anchorRect.height + 5;
+	}
+	else {
+	    clazz = "tooltip-bottom-right";	
+	    top -= (tooltipRect.height + 5);
+	}
+	left += anchorRect.width;
+	left -= tooltipRect.width;
     }
     
-    var top = 5 + anchorRect.top + anchorRect.height;
     this.uiElem.style.top = window.scrollY + top + "px";
-    this.uiElem.style.left = window.scrollX + 5 + left + "px";
+    this.uiElem.style.left = window.scrollX + left + "px";
+    UIUtils.addClass(this.uiElem, clazz);
 }

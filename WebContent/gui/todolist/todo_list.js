@@ -243,11 +243,22 @@ TodoTaskEditor.prototype.setupCoreDataEditor = function(model, accounts) {
     this.coreDataTab.select();
 }
 
+/**
+ * 
+ */
 TodoTaskEditor.prototype.setupAttachmentsOverview = function(model) {
 
     this.attachmentsTab = this.addTab("gui/images/document.svg", "Anhänge bearbeiten");
     var subFrame = new AttachmentsOverview(this, this.attachmentsTab.contentPane, model, "//task/attachments");
     this.attachmentsTab.associateTabPane(subFrame);
+}
+
+/**
+ * 
+ */
+TodoTaskEditor.prototype.onClose = function() {
+
+    alert("onClose not yet implemented!\n\nMaybeee, here we can locate the 'dump all changes'-query????");
 }
 
 /**

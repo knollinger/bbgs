@@ -256,9 +256,9 @@ MemberFinder.prototype.onResultSetSelection = function(tr, member) {
 
     if (this.multSel) {
 	if (radio.checked) {
-	    this.selection.remove(member);
-	} else {
 	    this.selection.push(member);
+	} else {
+	    this.selection.remove(member);
 	}
     } else {
 	this.selection = [].concat(member);

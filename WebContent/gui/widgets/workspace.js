@@ -746,21 +746,21 @@ WorkSpaceDialog.prototype.makeActionBtn = function(imgUrl, title, onclick) {
 
 /*---------------------------------------------------------------------------*/
 /**
- * 
+ * PopupMenu
  */
-var MainMenu = function(anchor) {
+var PopupMenu = function(anchor) {
 
     this.makeUI();
-    this.adjustToanchor(anchor);
+    this.adjustToAnchor(anchor);
 }
 
 /**
  * 
  */
-MainMenu.prototype.makeUI = function() {
+PopupMenu.prototype.makeUI = function() {
 
     this.ui = document.createElement("div");
-    this.ui.className = "main-menu-cnr";
+    this.ui.className = "popup-menu-cnr";
     this.ui.tabIndex = "0";
 
     document.body.appendChild(this.ui);
@@ -774,8 +774,58 @@ MainMenu.prototype.makeUI = function() {
 	if (evt.keyCode == 27) {
 	    UIUtils.removeElement(self.ui);
 	}
-    });
+    });    
+}
 
+
+/**
+ * 
+ */
+PopupMenu.prototype.clear = function() {
+    
+    UIUtils.clearChilds(this.ui);
+}
+
+/**
+ * 
+ */
+PopupMenu.prototype.makeMenuItem = function(text, onclick) {
+    
+    var item = document.createElement("div");
+    item.className = "popup-menu-item";
+    item.textContent = text;
+
+    var self = this;
+    item.addEventListener("click", function() {
+	onclick();
+    });
+    this.ui.appendChild(item);
+}
+
+/**
+ * 
+ */
+PopupMenu.prototype.adjustToAnchor = function(anchor) {
+
+    var anchorRect = anchor.getBoundingClientRect();
+    var ui = this.ui.getBoundingClientRect();
+
+    var left = anchorRect.left;
+    var top = 5 + anchorRect.top + anchorRect.height;
+    this.ui.style.top = window.scrollY + top + "px";
+    this.ui.style.left = window.scrollX + left + "px";
+}
+
+
+/*---------------------------------------------------------------------------*/
+/**
+ * 
+ */
+var MainMenu = function(anchor) {
+
+    PopupMenu.call(this, anchor);
+    
+    var self = this;
     var caller = new ServiceCaller();
     caller.onSuccess = function(rsp) {
 	switch (rsp.documentElement.nodeName) {
@@ -788,10 +838,10 @@ MainMenu.prototype.makeUI = function() {
 	    break;
 	}
     }
-
     var req = XmlUtils.createDocument("get-session-state-request");
     caller.invokeService(req);
 }
+MainMenu.prototype = Object.create(PopupMenu.prototype);
 
 /**
  * 
@@ -801,52 +851,22 @@ MainMenu.prototype.makeMenuItems = function(loggedIn) {
     var self = this;
     if (loggedIn) {
 
-	this.ui.appendChild(this.makeMenuItem("Abmelden", function() {
+	this.makeMenuItem("Abmelden", function() {
 	    self.logout();
-	}));
+	});
 
-	this.ui.appendChild(this.makeMenuItem("Kennwort ändern", function() {
+	this.makeMenuItem("Kennwort ändern", function() {
 	    new ChangePasswordDialog();
-	}));
+	});
     }
 
-    this.ui.appendChild(this.makeMenuItem("Über das Projekt", function() {
+    this.makeMenuItem("Über das Projekt", function() {
 	new AboutDialog();
-    }));
-
-    this.ui.appendChild(this.makeMenuItem("Opensource Lizenzen", function() {
-	new LicenceDialog();
-    }));
-}
-
-/**
- * 
- */
-MainMenu.prototype.makeMenuItem = function(text, onclick) {
-
-    var item = document.createElement("div");
-    item.className = "main-menu-item";
-    item.textContent = text;
-
-    var self = this;
-    item.addEventListener("click", function() {
-	onclick();
     });
-    return item;
-}
 
-/**
- * 
- */
-MainMenu.prototype.adjustToanchor = function(anchor) {
-
-    var anchorRect = anchor.getBoundingClientRect();
-    var ui = this.ui.getBoundingClientRect();
-
-    var left = anchorRect.left;
-    var top = 5 + anchorRect.top + anchorRect.height;
-    this.ui.style.top = window.scrollY + top + "px";
-    this.ui.style.left = window.scrollX + left + "px";
+    this.makeMenuItem("Opensource Lizenzen", function() {
+	new LicenceDialog();
+    });
 }
 
 /**
