@@ -572,6 +572,10 @@ h1 {
 	z-index: 3;
 }
 
+/*---------------------------------------------------------------------------*/
+/**
+ * popup menu
+ */
 .popup-menu-cnr {
 	position: fixed;
 	background: #ffffff;
@@ -586,7 +590,43 @@ h1 {
 	outline: none;
 }
 
-.popup-menu-cnr:after, .main-menu-cnr:before {
+/*---------------------------------------------------------------------------*/
+/**
+ * tooltip
+ */
+.tooltip {
+	position: fixed;
+	background: #ffffff;
+	border: 1px solid #888888;
+	padding: 10px;
+	border-radius: 2px;
+	box-shadow: 2px 2px 2px #c0c0c0;
+	z-index: 1;
+}
+
+.tooltip:focus {
+	outline: none;
+}
+
+.tooltip img {
+	vertical-align: middle;
+	margin-bottom: 10px;
+	width: 22px;
+}
+
+.tooltip-body {
+	color: black;
+}
+ 
+/*---------------------------------------------------------------------------*/
+/**
+ * popup/tooltip common styles
+ */
+  
+/**
+ * Pfeil oben links
+ */
+.popup-top-left:after, .popup-top-left:before {
 	bottom: 100%;
 	left: 10px;
 	border: solid transparent;
@@ -597,24 +637,109 @@ h1 {
 	pointer-events: none;
 }
 
-.popup-menu-cnr:after {
+.popup-top-left:after {
 	border-color: rgba(255, 255, 255, 0);
 	border-bottom-color: #ffffff;
 	border-width: 5px;
 	margin-left: -5px;
 }
 
-.popup-menu-cnr:before {
+.popup-top-left:before {
 	border-color: rgba(204, 0, 0, 0);
 	border-bottom-color: #888888;
 	border-width: 6px;
 	margin-left: -6px;
 }
 
+/**
+ * Pfeil oben rechts
+ */
+.popup-top-right:after, .popup-top-right:before {
+	bottom: 100%;
+	right: 10px;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.popup-top-right:after {
+	border-color: rgba(255, 255, 255, 0);
+	border-bottom-color: #ffffff;
+	border-width: 5px;
+	margin-right: -5px;
+}
+
+.popup-top-right:before {
+	border-color: rgba(204, 0, 0, 0);
+	border-bottom-color: #888888;
+	border-width: 6px;
+	margin-right: -6px;
+}
+
+/**
+ * Pfeil unten links
+ */
+.popup-bottom-left:after, .popup-bottom-left:before {
+	top: 100%;
+	left: 10px;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.popup-bottom-left:after {
+	border-color: rgba(255, 255, 255, 0);
+	border-top-color: #ffffff;
+	border-width: 5px;
+	margin-left: -5px;
+}
+
+.popup-bottom-left:before {
+	border-color: rgba(204, 0, 0, 0);
+	border-top-color: #888888;
+	border-width: 6px;
+	margin-left: -6px;
+}
+
+/**
+ * Pfeil unten rechts
+ */
+.popup-bottom-right:after, .popup-bottom-right:before {
+	top: 100%;
+	right: 10px;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.popup-bottom-right:after {
+	border-color: rgba(255, 255, 255, 0);
+	border-top-color: #ffffff;
+	border-width: 5px;
+	margin-right: -5px;
+}
+
+.popup-bottom-right:before {
+	border-color: rgba(204, 0, 0, 0);
+	border-top-color: #888888;
+	border-width: 6px;
+	margin-right: -6px;
+}
+
 .popup-menu-item {
 	padding: 5px;
 	background-color: #ffffff;
 	color: #000000;
+	white-space: nowrap;
 }
 
 .popup-menu-item:hover {
@@ -975,146 +1100,6 @@ h1 {
 		no-repeat calc(100% - 4px) center;
 	background-size: 16px 16px;
 }
-
-/**
- * all about tooltips
- */
-.tooltip {
-	position: fixed;
-	background: #ffffff;
-	border: 1px solid #888888;
-	padding: 10px;
-	border-radius: 2px;
-	box-shadow: 2px 2px 2px #c0c0c0;
-	z-index: 1;
-}
-
-.tooltip:focus {
-	outline: none;
-}
-
-.tooltip img {
-	vertical-align: middle;
-	margin-bottom: 10px;
-	width: 22px;
-}
-
-.tooltip-body {
-	color: black;
-}
-
-/**
- * Pfeil oben links
- */
-.tooltip-top-left:after, .tooltip-top-left:before {
-	bottom: 100%;
-	left: 10px;
-	border: solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	pointer-events: none;
-}
-
-.tooltip-top-left:after {
-	border-color: rgba(255, 255, 255, 0);
-	border-bottom-color: #ffffff;
-	border-width: 5px;
-	margin-left: -5px;
-}
-
-.tooltip-top-left:before {
-	border-color: rgba(204, 0, 0, 0);
-	border-bottom-color: #888888;
-	border-width: 6px;
-	margin-left: -6px;
-}
-
-/**
- * Pfeil oben rechts
- */
-.tooltip-top-right:after, .tooltip-top-right:before {
-	bottom: 100%;
-	right: 10px;
-	border: solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	pointer-events: none;
-}
-
-.tooltip-top-right:after {
-	border-color: rgba(255, 255, 255, 0);
-	border-bottom-color: #ffffff;
-	border-width: 5px;
-	margin-right: -5px;
-}
-
-.tooltip-top-right:before {
-	border-color: rgba(204, 0, 0, 0);
-	border-bottom-color: #888888;
-	border-width: 6px;
-	margin-right: -6px;
-}
-
-/**
- * Pfeil unten links
- */
-.tooltip-bottom-left:after, .tooltip-bottom-left:before {
-	top: 100%;
-	left: 10px;
-	border: solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	pointer-events: none;
-}
-
-.tooltip-bottom-left:after {
-	border-color: rgba(255, 255, 255, 0);
-	border-top-color: #ffffff;
-	border-width: 5px;
-	margin-left: -5px;
-}
-
-.tooltip-bottom-left:before {
-	border-color: rgba(204, 0, 0, 0);
-	border-top-color: #888888;
-	border-width: 6px;
-	margin-left: -6px;
-}
-
-/**
- * Pfeil unten rechts
- */
-.tooltip-bottom-right:after, .tooltip-bottom-right:before {
-	top: 100%;
-	right: 10px;
-	border: solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	pointer-events: none;
-}
-
-.tooltip-bottom-right:after {
-	border-color: rgba(255, 255, 255, 0);
-	border-top-color: #ffffff;
-	border-width: 5px;
-	margin-right: -5px;
-}
-
-.tooltip-bottom-right:before {
-	border-color: rgba(204, 0, 0, 0);
-	border-top-color: #888888;
-	border-width: 6px;
-	margin-right: -6px;
-}
-
 
 /**
  * all about datepicker
@@ -1519,13 +1504,6 @@ h1 {
 	border-right: 0;
 }
 
-.calendar-termin-infoicon {
-	height: 1em;
-	vertical-align: middle;
-	margin-right: 5px;
-	display: none;
-}
-
 .calendar-termin-weekly {
 	position: relative;
 	border: 1px solid #d0d0d0;
@@ -1540,10 +1518,6 @@ h1 {
 
 .calendar-termin-weekly:last-child {
 	margin-bottom: 5px;
-}
-
-.calendar-termin-weekly:hover>.calendar-termin-infoicon {
-	display: inline-block;
 }
 
 .calendar-row-monthly {

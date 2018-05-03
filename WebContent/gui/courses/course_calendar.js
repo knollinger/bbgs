@@ -113,13 +113,12 @@ CourseCalendar.prototype.createPrintAction = function() {
 
     var self = this;
     var action = new WorkSpaceFrameAction("gui/images/print.svg", "Kurs-Kalender drucken", function() {
+
 	var startDate = DateTimeUtils.formatDate(self.findStartDate(), "{dd}.{mm}.{yyyy}");
 	var endDate = DateTimeUtils.formatDate(self.findLastDate(), "{dd}.{mm}.{yyyy}");
 	var url = "getDocument/course_overview.pdf?from=" + startDate + "&until=" + endDate;
-
 	var title = "Kurs-Übersicht " + startDate + " - " + endDate;
 	new DocumentViewer(url, title);
-
     });
     this.addAction(action);
     return action;
@@ -304,7 +303,7 @@ CourseCalendar.prototype.createWeeklyTermin = function(termin) {
     var t = document.createElement("div");
     t.className = "calendar-termin-weekly";
     t.style.backgroundColor = termin.getElementsByTagName("color")[0].textContent;
-    t.appendChild(document.createTextNode(termin.getElementsByTagName("name")[0].textContent));
+    t.textContent = termin.getElementsByTagName("name")[0].textContent;
 
     // selectable machen um das aktivieren per click zu visualisieren
     t.tabIndex = "0";
@@ -425,7 +424,6 @@ CourseCalendar.prototype.createMonthlyTermin = function(termin) {
     var t = document.createElement("div");
     t.className = "calendar-termin-monthly";
     t.style.backgroundColor = termin.getElementsByTagName("color")[0].textContent;
-    t.appendChild(this.makeInfoIcon(t, termin));
     t.appendChild(document.createTextNode(termin.getElementsByTagName("name")[0].textContent));
 
     // selectable machen um das aktivieren per click zu visualisieren
@@ -434,6 +432,7 @@ CourseCalendar.prototype.createMonthlyTermin = function(termin) {
 	self.selectedTermin = parseInt(termin.getElementsByTagName("id")[0].textContent);
 	self.actionEdit.show();
 	self.actionRemove.show();
+	self.showInfoPopup(t, termin);
     });
     return t;
 }

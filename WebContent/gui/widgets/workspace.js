@@ -750,8 +750,9 @@ WorkSpaceDialog.prototype.makeActionBtn = function(imgUrl, title, onclick) {
  */
 var PopupMenu = function(anchor) {
 
+    this.anchor = anchor;
     this.makeUI();
-    this.adjustToAnchor(anchor);
+    this.adjustToAnchor();
 }
 
 /**
@@ -800,21 +801,47 @@ PopupMenu.prototype.makeMenuItem = function(text, onclick) {
 	onclick();
     });
     this.ui.appendChild(item);
+    this.adjustToAnchor();
 }
 
 /**
  * 
  */
-PopupMenu.prototype.adjustToAnchor = function(anchor) {
+PopupMenu.prototype.adjustToAnchor = function() {
 
-    var anchorRect = anchor.getBoundingClientRect();
-    var ui = this.ui.getBoundingClientRect();
-
+    var clazz;
+    var anchorRect = this.anchor.getBoundingClientRect();
+    var tooltipRect = this.ui.getBoundingClientRect();
+    
     var left = anchorRect.left;
-    var top = 5 + anchorRect.top + anchorRect.height;
+    var top = anchorRect.top;
+    if(left < window.innerWidth / 2) {
+	
+	if(top < window.innerHeight / 2) {
+	    clazz = "popup-top-left";
+	    top += anchorRect.height + 5;
+	}
+	else {
+	    clazz = "popup-bottom-left";	    
+	    top -= (tooltipRect.height + 5);
+	}
+    }
+    else {
+	if(top < window.innerHeight / 2) {
+	    clazz = "popup-top-right";
+	    top += anchorRect.height + 5;
+	}
+	else {
+	    clazz = "popup-bottom-right";	
+	    top -= (tooltipRect.height + 5);
+	}
+	left += anchorRect.width;
+	left -= tooltipRect.width;
+    }
+    
     this.ui.style.top = window.scrollY + top + "px";
     this.ui.style.left = window.scrollX + left + "px";
-}
+    UIUtils.addClass(this.ui, clazz);}
 
 
 /*---------------------------------------------------------------------------*/

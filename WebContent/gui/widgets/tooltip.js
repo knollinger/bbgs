@@ -135,21 +135,21 @@ ToolTip.prototype.adjustToAnchor = function(anchor) {
     if(left < window.innerWidth / 2) {
 	
 	if(top < window.innerHeight / 2) {
-	    clazz = "tooltip-top-left";
+	    clazz = "popup-top-left";
 	    top += anchorRect.height + 5;
 	}
 	else {
-	    clazz = "tooltip-bottom-left";	    
+	    clazz = "popup-bottom-left";	    
 	    top -= (tooltipRect.height + 5);
 	}
     }
     else {
 	if(top < window.innerHeight / 2) {
-	    clazz = "tooltip-top-right";
+	    clazz = "popup-top-right";
 	    top += anchorRect.height + 5;
 	}
 	else {
-	    clazz = "tooltip-bottom-right";	
+	    clazz = "popup-bottom-right";	
 	    top -= (tooltipRect.height + 5);
 	}
 	left += anchorRect.width;
