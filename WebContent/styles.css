@@ -78,9 +78,9 @@ button {
 	padding: 4px;
 }
 
-button:-moz-focus-inner {
-	padding: 0;
-	border: 0
+button::-moz-focus-inner {
+    padding: 0;
+    border: 0;
 }
 
 label {
@@ -1951,7 +1951,7 @@ h1 {
 
 .todolist-task:focus {
 	
-	box-shadow: 0px 2px 4px rgba(0, 0, 192, 0.3);
+	box-shadow: 0px 2px 4px rgba(0, 0, 192, 0.5);
 }
 
 @media only screen and (min-width: 800px) {
