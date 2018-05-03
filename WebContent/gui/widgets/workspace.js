@@ -1,10 +1,10 @@
 WorkSpace = (function() {
 
     // Keine ContextMenus!
-    // document.body.addEventListener("contextmenu", function(evt) {
-    //
-    // evt.preventDefault();
-    // }, false);
+    document.body.addEventListener("contextmenu", function(evt) {
+	evt.preventDefault();
+	evt.stopPropagation();
+    }, false);
 
     // prevent touchmove!
     document.body.addEventListener("touchmove", function(evt) {
@@ -775,15 +775,14 @@ PopupMenu.prototype.makeUI = function() {
 	if (evt.keyCode == 27) {
 	    UIUtils.removeElement(self.ui);
 	}
-    });    
+    });
 }
-
 
 /**
  * 
  */
 PopupMenu.prototype.clear = function() {
-    
+
     UIUtils.clearChilds(this.ui);
 }
 
@@ -791,7 +790,7 @@ PopupMenu.prototype.clear = function() {
  * 
  */
 PopupMenu.prototype.makeMenuItem = function(text, onclick) {
-    
+
     var item = document.createElement("div");
     item.className = "popup-menu-item";
     item.textContent = text;
@@ -812,37 +811,34 @@ PopupMenu.prototype.adjustToAnchor = function() {
     var clazz;
     var anchorRect = this.anchor.getBoundingClientRect();
     var tooltipRect = this.ui.getBoundingClientRect();
-    
+
     var left = anchorRect.left;
     var top = anchorRect.top;
-    if(left < window.innerWidth / 2) {
-	
-	if(top < window.innerHeight / 2) {
+    if (left < window.innerWidth / 2) {
+
+	if (top < window.innerHeight / 2) {
 	    clazz = "popup-top-left";
 	    top += anchorRect.height + 5;
-	}
-	else {
-	    clazz = "popup-bottom-left";	    
+	} else {
+	    clazz = "popup-bottom-left";
 	    top -= (tooltipRect.height + 5);
 	}
-    }
-    else {
-	if(top < window.innerHeight / 2) {
+    } else {
+	if (top < window.innerHeight / 2) {
 	    clazz = "popup-top-right";
 	    top += anchorRect.height + 5;
-	}
-	else {
-	    clazz = "popup-bottom-right";	
+	} else {
+	    clazz = "popup-bottom-right";
 	    top -= (tooltipRect.height + 5);
 	}
 	left += anchorRect.width;
 	left -= tooltipRect.width;
     }
-    
+
     this.ui.style.top = window.scrollY + top + "px";
     this.ui.style.left = window.scrollX + left + "px";
-    UIUtils.addClass(this.ui, clazz);}
-
+    UIUtils.addClass(this.ui, clazz);
+}
 
 /*---------------------------------------------------------------------------*/
 /**
@@ -851,7 +847,7 @@ PopupMenu.prototype.adjustToAnchor = function() {
 var MainMenu = function(anchor) {
 
     PopupMenu.call(this, anchor);
-    
+
     var self = this;
     var caller = new ServiceCaller();
     caller.onSuccess = function(rsp) {
