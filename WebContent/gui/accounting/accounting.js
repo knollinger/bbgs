@@ -1256,15 +1256,15 @@ InvoiceRecordsOverview.prototype.getColumnDescriptor = function() {
 	    return radio;
 	});
 
-	// Der Betrag als Währungs-Darstellung
-	this.columnDesc.push(function(td, record) {
-	    return self.createAmountEntry(record);
-	});
-
 	// Das Eingangs-Konto mit SubKontonummer und Name
 	this.columnDesc.push(function(td, record) {
 	    return self.createKontoSelector(record);
 
+	});
+
+	// Der Betrag als Währungs-Darstellung
+	this.columnDesc.push(function(td, record) {
+	    return self.createAmountEntry(record);
 	});
 
 	// Das Buchungs-Datum
@@ -1343,7 +1343,6 @@ InvoiceRecordsOverview.prototype.createDateEntry = function(record) {
     var entry = document.createElement("input");
     entry.className = "inplace-edit datepicker-input mandatory";
     entry.placeholder = "Buchungs-Datum";
-    entry.size = "8";
     new DatePicker(entry, "Buchungs-Datum");
 
     var xpath = XmlUtils.getXPathTo(record) + "/date";
@@ -1445,7 +1444,7 @@ InvoiceRecordsSubPanel.prototype.createTable = function() {
     return table;
 }
 
-InvoiceRecordsSubPanel.HEADER_COLS = [ "", "Betrag", "Eingangs-Konto", "Datum", "Kommentar" ];
+InvoiceRecordsSubPanel.HEADER_COLS = [ "", "Eingangs-Konto", "Betrag", "Datum", "Kommentar" ];
 
 /**
  * 

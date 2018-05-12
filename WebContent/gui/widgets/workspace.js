@@ -1,10 +1,10 @@
 WorkSpace = (function() {
 
     // Keine ContextMenus!
-    document.body.addEventListener("contextmenu", function(evt) {
-	evt.preventDefault();
-	evt.stopPropagation();
-    }, false);
+//    document.body.addEventListener("contextmenu", function(evt) {
+//	evt.preventDefault();
+//	evt.stopPropagation();
+//    }, false);
 
     // prevent touchmove!
     document.body.addEventListener("touchmove", function(evt) {

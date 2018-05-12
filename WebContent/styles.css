@@ -1109,7 +1109,7 @@ h1 {
 	background: transparent url("gui/images/calendar.svg") no-repeat
 		calc(100% - 4px) center;
 	background-size: 16px 16px;
-	width: 6em;
+	width: 8em;
 }
 
 .datepicker-header {
@@ -1390,7 +1390,7 @@ h1 {
 	height: 100%;
 }
 
-.calendar-header {
+.workspace-frame-content-header {
 	display: -webkit-flex;
 	display: -moz-flex;
 	display: -ms-flex;
@@ -1438,7 +1438,7 @@ h1 {
 	cursor: default;
 }
 
-.calendar-body {
+.workspace-frame-content-body {
 	-webkit-flex: 1;
 	-moz-flex: 1;
 	-ms-flex: 1;
