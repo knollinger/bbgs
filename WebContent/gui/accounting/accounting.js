@@ -157,10 +157,10 @@ IncommingItemsEditor.prototype.createAddAction = function() {
 	var item = self.model.addElement("//invoice-item-model/items", tmp.getDocument().documentElement);
 
 	var row = self.renderOneSubItem(item);
-	self.currCatRow.parentElement.insertBefore(self.renderOneSubItem(item), self.currCatRow.nextSibling);
+	self.currCatRow.parentElement.insertBefore(row, self.currCatRow.nextSibling);
 
 	row.querySelector("input[type='radio'").click();
-	row.querySelector(".inplace-edit").click();
+	row.querySelector(".inplace-edit").focus();
     });
     this.addAction(action);
     action.hide();
@@ -177,10 +177,15 @@ IncommingItemsEditor.prototype.createRemoveAction = function() {
     var action = new WorkSpaceFrameAction("gui/images/planning-item-remove.svg", "Buchungsposten löschen", function() {
 
 	var title = MessageCatalog.getMessage("QUERY_REMOVE_INVOICE_ITEM_TITLE");
-	var messg = MessageCatalog.getMessage("QUERY_REMOVE_INVOICE_ITEM", self.model.getValue(self.currRecord + "/name"));
+	var messg = MessageCatalog.getMessage("QUERY_REMOVE_INVOICE_ITEM", self.model.getValue(self.currSubItem + "/name"));
 	new MessageBox(MessageBox.QUERY, title, messg, function() {
 
-	    self.model.setValue(self.currItem + "/action", "REMOVE");
+	    var action = self.model.setValue(self.currSubItem + "/action");
+	    if (action != "CREATE") {
+		self.model.setValue(self.currSubItem + "/action", "REMOVE");
+	    } else {
+		self.model.removeElement(self.currItem);
+	    }
 	    self.currRow.parentElement.removeChild(self.currRow);
 	    self.currRecord = self.currRow = null;
 	});
@@ -384,10 +389,11 @@ IncommingItemsEditor.prototype.renderOneSubItem = function(xpath) {
     tr.addEventListener("click", function() {
 	radio.click();
 	self.currSubItem = xpath;
+	self.currRow = tr;
 	self.actionRemove.show();
     });
     this.model.addChangeListener(xpath, function() {
-	var action = item.getElementsByTagName("action")[0];
+	var action = self.model.evaluateXPath(xpath + "/action")[0];
 	if (action.textContent != "REMOVE" && action.textContent != "CREATE") {
 	    action.textContent = "MODIFY";
 	}
@@ -402,6 +408,7 @@ IncommingItemsEditor.prototype.createNameInput = function(xpath) {
 
     var input = document.createElement("input");
     input.className = "inplace-edit mandatory";
+    input.placeholder = input.title = "Name";
     this.model.createValueBinding(input, xpath, "change");
     return input;
 }
@@ -413,6 +420,7 @@ IncommingItemsEditor.prototype.createDescriptionInput = function(xpath) {
 
     var input = document.createElement("textarea");
     input.className = "inplace-textarea mandatory";
+    input.placeholder = input.title = "Beschreibung";
     this.model.createValueBinding(input, xpath, "change");
     return input;
 }
@@ -1395,7 +1403,9 @@ InvoiceRecordsOverview.prototype.onSave = function() {
 
 /*---------------------------------------------------------------------------*/
 /**
- * 
+ * Das InvoiceRecordsSubPanel stellt einen SubContainer des
+ * InvoiceRecordsOverview dar. In einem solchen Control wird eine Tabelle
+ * dargestellt, welche alle Einnahmen eines Jahres darstellt.
  */
 var InvoiceRecordsSubPanel = function(parentFrame, targetCnr, year) {
 
