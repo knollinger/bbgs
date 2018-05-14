@@ -58,7 +58,6 @@ public class AccountingDBUtils
                 item.name = rs.getString("name");
                 item.description = rs.getString("description");
                 item.type = EInvoiceItemType.valueOf(rs.getString("type"));
-                item.amount = getSaldoByItemId(item.id, conn);
                 result.add(item);
             }
             return result;
@@ -537,46 +536,4 @@ public class AccountingDBUtils
             DBUtils.closeQuitly(stmt);
         }
     }
-
-    /**
-     * @param itemId
-     * @param conn
-     * @return
-     * @throws SQLException
-     */
-    public static double getSaldoByItemId(int itemId, Connection conn) throws SQLException
-    {
-
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        double result = 0.0f;
-        try
-        {
-            stmt = conn.prepareStatement("select sum(amount) as total from invoice_records where to_invoice=?");
-            stmt.setInt(1, itemId);
-            rs = stmt.executeQuery();
-            if (rs.next())
-            {
-                result += rs.getDouble("total");
-            }
-            DBUtils.closeQuitly(rs);
-            DBUtils.closeQuitly(stmt);
-
-            stmt = conn.prepareStatement("select sum(amount) as total from invoice_records where from_invoice=?");
-            stmt.setInt(1, itemId);
-            rs = stmt.executeQuery();
-            if (rs.next())
-            {
-                result -= rs.getDouble("total");
-            }
-        }
-        finally
-        {
-            DBUtils.closeQuitly(rs);
-            DBUtils.closeQuitly(stmt);
-        }
-        return result;
-    }
-
 }

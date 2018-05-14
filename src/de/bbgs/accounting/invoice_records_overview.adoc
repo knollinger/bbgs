@@ -3,13 +3,13 @@
 Stand: $NOW$
 {/HEADER}
 
-[width="100%", cols=">1,2,1,1,2", options="header"]
+[width="100%", cols="2,>1,1,2", options="header"]
 |==========================================================
-| Betrag | Eingangs-Konto | Datum | Gebucht von | Kommentar
+| Eingangs-Konto | Betrag | Datum | Kommentar
 {ROW}
-| € $AMOUNT$ | $INVOICE_ITEM_KTO$ - $INVOICE_ITEM_NAME$ | $DATE$ | $USER$ | $DESCRIPTION$
+| $INVOICE_ITEM_KTO$ - $INVOICE_ITEM_NAME$ | € $AMOUNT$ | $DATE$ | $DESCRIPTION$
 {/ROW}
 {FOOTER}
-| [.underline]#€ $TOTAL$# 4+| Total
+| Total | [.underline]#€ $TOTAL$# 2+|
 {/FOOTER}
 |==========================================================

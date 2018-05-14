@@ -2044,6 +2044,7 @@ h1 {
  */
 .inplace-select {
 	border: 0px solid transparent;
+	border-radius: 0;
 	background-color: inherit;
 	width: auto;
 }
@@ -2054,6 +2055,7 @@ h1 {
 
 .inplace-edit {
 	border: 0px solid transparent;
+	border-radius: 0;
 	background-color: inherit;
 }
 
@@ -2063,6 +2065,7 @@ h1 {
 
 .inplace-textarea {
 	border: 0px solid transparent;
+	border-radius: 0;
 	height: calc(1em + 8px);
 	min-height: unset;
 	overflow: hidden;

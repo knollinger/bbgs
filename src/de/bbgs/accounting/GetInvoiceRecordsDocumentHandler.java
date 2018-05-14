@@ -30,10 +30,9 @@ public class GetInvoiceRecordsDocumentHandler implements IGetDocServiceHandler
     private static final SimpleDateFormat DATE_FMT = new SimpleDateFormat("dd.MM.yyyy");
     
     // @formatter:off
-    private static final String SQL = "select r.amount, r.description, r.date, u.accountName, i.konto, i.name from invoice_records r\n"
-        + "left join user_accounts u on r.user_ref = u.id\n"
+    private static final String SQL = "select r.amount, r.description, r.date, i.konto, i.name from invoice_records r\n"
         + "left join invoice_items i on i.id = r.to_invoice\n"
-        + "where r.date between ? and ?\n"
+        + "where r.date between ? and ? and type='INCOME'\n"
         + "order by r.date";
     // @formatter:on
     private NumberFormat currencyFmt = NumberFormat.getNumberInstance(Locale.GERMANY);
@@ -133,7 +132,6 @@ public class GetInvoiceRecordsDocumentHandler implements IGetDocServiceHandler
                 p.replaceTag("$INVOICE_ITEM_KTO$", rs.getInt("i.konto"));
                 p.replaceTag("$INVOICE_ITEM_NAME$", rs.getString("i.name"));
                 p.replaceTag("$DATE$", rs.getDate("r.date"));
-                p.replaceTag("$USER$", rs.getString("u.accountName"));
                 p.replaceTag("$DESCRIPTION$", rs.getString("r.description"));
                 p.commit();
             }

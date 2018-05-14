@@ -48,9 +48,6 @@ public class InvoiceItem implements IJAXBObject
     @XmlElement(name = "type")
     public EInvoiceItemType type = EInvoiceItemType.NONE;
     
-    @XmlElement(name = "amount")
-    public double amount = 0.0f;
-    
     /**
      * Der Typ ist stark mit der Kontonummer verknüpft. Stelle sicher, 
      * dass Typ und Kontonummer zusammen passen
