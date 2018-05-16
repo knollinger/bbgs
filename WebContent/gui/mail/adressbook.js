@@ -171,7 +171,7 @@ MailSubView.prototype.createCheckbox = function(name, node, parentXPath, elemXPa
 MailSubView.prototype.handleTableRowClick = function(tr) {
 
     var cb = tr.getElementsByTagName("input")[0];
-    if (cb) {
+    if (cb) {	
 	cb.click();
     }
 }

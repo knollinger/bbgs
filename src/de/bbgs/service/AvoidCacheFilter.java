@@ -10,10 +10,10 @@ import org.apache.catalina.filters.ExpiresFilter;
  * Servlet-Filter die ueblichen HTTP-Header im ResponseObjekt.
  */
 @WebFilter(urlPatterns = "/*", initParams= {
-    @WebInitParam(name="ExpiresByType image/*", value="access plus 1 day"),
-    @WebInitParam(name="ExpiresByType text/html", value="access plus 1 day"),    
-    @WebInitParam(name="ExpiresByType text/css",  value="access plus 1 day"),    
-    @WebInitParam(name="ExpiresByType application/javascript", value="access plus 1 day"),    
+    @WebInitParam(name="ExpiresByType image/*", value="access plus 1 hour"),
+    @WebInitParam(name="ExpiresByType text/html", value="access plus 1 hour"),    
+    @WebInitParam(name="ExpiresByType text/css",  value="access plus 1 hour"),    
+    @WebInitParam(name="ExpiresByType application/javascript", value="access plus 1 hour"),    
 })
 public class AvoidCacheFilter extends ExpiresFilter
 {    

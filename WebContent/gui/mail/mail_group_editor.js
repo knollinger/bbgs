@@ -234,9 +234,6 @@ MailGroupEditor.prototype.getColumnDescriptor = function() {
     });
     fields.push("zname");
     fields.push("vname");
-    
-    fields.push("city");    
-    fields.push("street");
     fields.push(function(td, member) {
 	return MemberTypeTranslator[member.getElementsByTagName("type")[0].textContent];
     });
