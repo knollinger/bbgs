@@ -7,7 +7,7 @@ var Adressbook = function(model, xpath, mode) {
 
     var self = this;
     this.result = new ModelWorkingCopy(model, xpath);
-    this.result.addChangeListener("/", function() {
+    this.result.addChangeListener("//", function() {
 	self.enableSaveButton(true);
     });
     this.setTitle("Adressbuch");
@@ -67,7 +67,7 @@ Adressbook.prototype.setupMembersView = function(mode) {
 
     var self = this;
     this.membersTab = this.addTab("gui/images/person.svg", "Mitglieder");
-    var subFrame = new MailMembersView(this, this.membersTab.contentPane, this.model, this.result, mode);
+    var subFrame = new AdressbookMembersView(this, this.membersTab.contentPane, this.model, this.result, mode);
     this.membersTab.associateTabPane(subFrame);
     this.membersTab.select();
 }
@@ -79,7 +79,7 @@ Adressbook.prototype.setupMemberTypesView = function() {
 
     var self = this;
     this.memberTypesTab = this.addTab("gui/images/person-group.svg", "Mitglieds-Arten");
-    var subFrame = new MailMemberTypesView(this, this.memberTypesTab.contentPane, this.model, this.result);
+    var subFrame = new AdressbookMemberTypesView(this, this.memberTypesTab.contentPane, this.model, this.result);
     this.memberTypesTab.associateTabPane(subFrame);
 }
 
@@ -90,7 +90,7 @@ Adressbook.prototype.setupPartnerView = function() {
 
     var self = this;
     this.partnerTab = this.addTab("gui/images/partner.svg", "Partner");
-    var subFrame = new MailPartnerView(this, this.partnerTab.contentPane, this.model, this.result);
+    var subFrame = new AdressbookPartnerView(this, this.partnerTab.contentPane, this.model, this.result);
     this.partnerTab.associateTabPane(subFrame);
 }
 
@@ -101,7 +101,7 @@ Adressbook.prototype.setupCoursesView = function() {
 
     var self = this;
     this.coursesTab = this.addTab("gui/images/course.svg", "Kurse");
-    var subFrame = new MailCoursesView(this, this.coursesTab.contentPane, this.model, this.result);
+    var subFrame = new AdressbookCoursesView(this, this.coursesTab.contentPane, this.model, this.result);
     this.coursesTab.associateTabPane(subFrame);
 }
 
@@ -112,7 +112,7 @@ Adressbook.prototype.setupCustomGroupsView = function() {
 
     var self = this;
     this.customGroupsTab = this.addTab("gui/images/person-group.svg", "Eigene Mailverteiler");
-    var subFrame = new MailCustomView(this, this.customGroupsTab.contentPane, this.model, this.result);
+    var subFrame = new AdressbookCustomView(this, this.customGroupsTab.contentPane, this.model, this.result);
     this.customGroupsTab.associateTabPane(subFrame);
 }
 
@@ -127,14 +127,14 @@ Adressbook.prototype.onSave = function() {
 /**
  * Basis-Klasse für die SubView. Alle SubViews haben die selben Probleme:
  */
-MailSubView = function(parentFrame, targetCnr, model, result) {
+AdressbookSubView = function(parentFrame, targetCnr, model, result) {
 
     WorkSpaceTabPane.call(this, parentFrame, targetCnr);
 
     this.model = model;
     this.result = result;
 }
-MailSubView.prototype = Object.create(WorkSpaceTabPane.prototype);
+AdressbookSubView.prototype = Object.create(WorkSpaceTabPane.prototype);
 
 /**
  * Erzeuge eine Checkbox, welche im Context einer abgeleiteten Klasse in eine TD
@@ -142,7 +142,7 @@ MailSubView.prototype = Object.create(WorkSpaceTabPane.prototype);
  * den xpath referenzierten IDs entweder in die Selektion aufgenommen
  * (checked-state) oder aus der Selektion entfernt (unchecked-State)
  */
-MailSubView.prototype.createCheckbox = function(name, node, parentXPath, elemXPath) {
+AdressbookSubView.prototype.createCheckbox = function(name, node, parentXPath, elemXPath) {
 
     var self = this;
     var check = document.createElement("input");
@@ -152,27 +152,19 @@ MailSubView.prototype.createCheckbox = function(name, node, parentXPath, elemXPa
     if (self.result.containsElement(elemXPath)) {
 	check.checked = true;
     }
-
-    check.addEventListener("click", function(evt) {
-	evt.stopPropagation();
-	if (check.checked) {
-	    self.result.addElement(parentXPath, node);
-	} else {
-	    self.result.removeElement(elemXPath);
-	}
-    })
-
     return check;
 }
 
 /**
  * 
  */
-MailSubView.prototype.handleTableRowClick = function(tr) {
+AdressbookSubView.prototype.handleTableRowClick = function(tr, parentXPath, node) {
 
-    var cb = tr.getElementsByTagName("input")[0];
-    if (cb) {	
-	cb.click();
+    var check = tr.querySelector("input");
+    if (check.checked) {
+	this.result.addElement(parentXPath, node);
+    } else {
+	this.result.removeElement(node);
     }
 }
 
@@ -180,26 +172,31 @@ MailSubView.prototype.handleTableRowClick = function(tr) {
 /**
  * 
  */
-MailMembersView = function(parentFrame, targetCnr, model, result, mode) {
+AdressbookMembersView = function(parentFrame, targetCnr, model, result, mode) {
 
-    MailSubView.call(this, parentFrame, targetCnr, model, result);
+    AdressbookSubView.call(this, parentFrame, targetCnr, model, result);
     this.model = model;
 
     var self = this;
     this.load("gui/mail/member_view.html", function() {
 
 	self.fillTable(model, mode);
-	self.setupAtAllCheckbox();
+	self.setupAtAllCheckbox(mode);
     });
 }
-MailMembersView.prototype = Object.create(MailSubView.prototype);
+AdressbookMembersView.prototype = Object.create(AdressbookSubView.prototype);
 
 /**
  * 
  */
-MailMembersView.prototype.setupAtAllCheckbox = function() {
+AdressbookMembersView.prototype.setupAtAllCheckbox = function(mode) {
 
     var self = this;
+    
+    // setup the Label
+    var label = UIUtils.getElement("adressbook_at_all_label");
+    label.textContent = (mode == Adressbook.SMS) ? "SMS an alle" : "Mail an alle";
+    
     var atAll = UIUtils.getElement("adressbook_at_all");
     atAll.addEventListener("click", function() {
 
@@ -218,7 +215,7 @@ MailMembersView.prototype.setupAtAllCheckbox = function() {
 /**
  * 
  */
-MailMembersView.prototype.fillTable = function(model, mode) {
+AdressbookMembersView.prototype.fillTable = function(model, mode) {
 
     new TableDecorator("edit_mail_memberview");
     var self = this;
@@ -244,7 +241,7 @@ MailMembersView.prototype.fillTable = function(model, mode) {
 
     // was passiert beim Tabellen-Klick?
     var onclick = function(tr, member) {
-	self.handleTableRowClick(tr);
+	self.handleTableRowClick(tr, "/send-to/members", member);
     }
 
     var allMembers = "/get-adressbook-ok-response/members/member";
@@ -261,7 +258,7 @@ MailMembersView.prototype.fillTable = function(model, mode) {
  * <li>description </li>
  * </ul>
  */
-MailMembersView.prototype.getColumnDescriptor = function() {
+AdressbookMembersView.prototype.getColumnDescriptor = function() {
 
     var self = this;
     var fields = [];
@@ -291,9 +288,9 @@ MailMembersView.prototype.getColumnDescriptor = function() {
 /**
  * 
  */
-MailMemberTypesView = function(parentFrame, targetCnr, model, result) {
+AdressbookMemberTypesView = function(parentFrame, targetCnr, model, result) {
 
-    MailSubView.call(this, parentFrame, targetCnr, model, result);
+    AdressbookSubView.call(this, parentFrame, targetCnr, model, result);
     this.model = model;
 
     var self = this;
@@ -303,19 +300,19 @@ MailMemberTypesView = function(parentFrame, targetCnr, model, result) {
     });
 }
 
-MailMemberTypesView.prototype = Object.create(MailSubView.prototype);
+AdressbookMemberTypesView.prototype = Object.create(AdressbookSubView.prototype);
 
 /**
  * 
  */
-MailMemberTypesView.prototype.fillTable = function(model) {
+AdressbookMemberTypesView.prototype.fillTable = function(model) {
 
     new TableDecorator("edit_mail_membertypesview");
     var self = this;
 
     // was passiert beim Tabellen-Klick?
     var onclick = function(tr, member) {
-	self.handleTableRowClick(tr);
+	self.handleTableRowClick(tr, "/send-to/types", member);
     }
 
     var allMembers = "/get-adressbook-ok-response/member-types/member-type";
@@ -332,7 +329,7 @@ MailMemberTypesView.prototype.fillTable = function(model) {
  * <li>description </li>
  * </ul>
  */
-MailMemberTypesView.prototype.getColumnDescriptor = function() {
+AdressbookMemberTypesView.prototype.getColumnDescriptor = function() {
 
     var self = this;
     var fields = [];
@@ -356,9 +353,9 @@ MailMemberTypesView.prototype.getColumnDescriptor = function() {
 /**
  * 
  */
-MailCoursesView = function(parentFrame, targetCnr, model, result) {
+AdressbookCoursesView = function(parentFrame, targetCnr, model, result) {
 
-    MailSubView.call(this, parentFrame, targetCnr, model, result);
+    AdressbookSubView.call(this, parentFrame, targetCnr, model, result);
     this.model = model;
 
     var self = this;
@@ -368,19 +365,19 @@ MailCoursesView = function(parentFrame, targetCnr, model, result) {
     });
 }
 
-MailCoursesView.prototype = Object.create(MailSubView.prototype);
+AdressbookCoursesView.prototype = Object.create(AdressbookSubView.prototype);
 
 /**
  * 
  */
-MailCoursesView.prototype.fillTable = function(model) {
+AdressbookCoursesView.prototype.fillTable = function(model) {
 
     new TableDecorator("edit_mail_coursesview");
     var self = this;
 
     // was passiert beim Tabellen-Klick?
     var onclick = function(tr, course) {
-	self.handleTableRowClick(tr);
+	self.handleTableRowClick(tr, "/send-to/courses", course);
     }
 
     var allCourses = "/get-adressbook-ok-response/courses/course";
@@ -397,7 +394,7 @@ MailCoursesView.prototype.fillTable = function(model) {
  * <li>description </li>
  * </ul>
  */
-MailCoursesView.prototype.getColumnDescriptor = function() {
+AdressbookCoursesView.prototype.getColumnDescriptor = function() {
 
     var self = this;
     var fields = [];
@@ -423,9 +420,9 @@ MailCoursesView.prototype.getColumnDescriptor = function() {
 /**
  * 
  */
-MailPartnerView = function(parentFrame, targetCnr, model, result) {
+AdressbookPartnerView = function(parentFrame, targetCnr, model, result) {
 
-    MailSubView.call(this, parentFrame, targetCnr, model, result);
+    AdressbookSubView.call(this, parentFrame, targetCnr, model, result);
     this.model = model;
 
     var self = this;
@@ -434,19 +431,19 @@ MailPartnerView = function(parentFrame, targetCnr, model, result) {
 	self.fillTable(model);
     });
 }
-MailPartnerView.prototype = Object.create(MailSubView.prototype);
+AdressbookPartnerView.prototype = Object.create(AdressbookSubView.prototype);
 
 /**
  * 
  */
-MailPartnerView.prototype.fillTable = function(model) {
+AdressbookPartnerView.prototype.fillTable = function(model) {
 
     new TableDecorator("edit_mail_partnerview");
     var self = this;
 
     // was passiert beim Tabellen-Klick?
     var onclick = function(tr, partner) {
-	self.handleTableRowClick(tr);
+	self.handleTableRowClick(tr, "/send-to/partners", partner);
     }
 
     var allGroups = "/get-adressbook-ok-response/partners/partner";
@@ -463,7 +460,7 @@ MailPartnerView.prototype.fillTable = function(model) {
  * <li>description </li>
  * </ul>
  */
-MailPartnerView.prototype.getColumnDescriptor = function() {
+AdressbookPartnerView.prototype.getColumnDescriptor = function() {
 
     var self = this;
     var fields = [];
@@ -481,18 +478,10 @@ MailPartnerView.prototype.getColumnDescriptor = function() {
 	return partner.getElementsByTagName("zname")[0].textContent;
     });
 
-
     fields.push(function(td, partner) {
 	return partner.getElementsByTagName("vname")[0].textContent;
     });
 
-    fields.push(function(td, partner) {
-	return partner.getElementsByTagName("mobile")[0].textContent;
-    });
-
-    fields.push(function(td, partner) {
-	return partner.getElementsByTagName("email")[0].textContent;
-    });
     fields.push(function(td, partner) {
 	var type = partner.getElementsByTagName("type")[0].textContent;
 	return PartnerTypeTranslator[type];
@@ -504,9 +493,9 @@ MailPartnerView.prototype.getColumnDescriptor = function() {
 /**
  * 
  */
-MailCustomView = function(parentFrame, targetCnr, model, result) {
+AdressbookCustomView = function(parentFrame, targetCnr, model, result) {
 
-    MailSubView.call(this, parentFrame, targetCnr, model, result);
+    AdressbookSubView.call(this, parentFrame, targetCnr, model, result);
     this.model = model;
 
     var self = this;
@@ -515,19 +504,19 @@ MailCustomView = function(parentFrame, targetCnr, model, result) {
 	self.fillTable(model);
     });
 }
-MailCustomView.prototype = Object.create(MailSubView.prototype);
+AdressbookCustomView.prototype = Object.create(AdressbookSubView.prototype);
 
 /**
  * 
  */
-MailCustomView.prototype.fillTable = function(model) {
+AdressbookCustomView.prototype.fillTable = function(model) {
 
     new TableDecorator("edit_mail_customview");
     var self = this;
 
     // was passiert beim Tabellen-Klick?
-    var onclick = function(tr, course) {
-	self.handleTableRowClick(tr);
+    var onclick = function(tr, customGroup) {
+	self.handleTableRowClick(tr, "/send-to/custom-groups", customGroup);
     }
 
     var allGroups = "/get-adressbook-ok-response/custom-groups/custom-group";
@@ -544,7 +533,7 @@ MailCustomView.prototype.fillTable = function(model) {
  * <li>description </li>
  * </ul>
  */
-MailCustomView.prototype.getColumnDescriptor = function() {
+AdressbookCustomView.prototype.getColumnDescriptor = function() {
 
     var self = this;
     var fields = [];
@@ -559,7 +548,7 @@ MailCustomView.prototype.getColumnDescriptor = function() {
     fields.push(function(td, custom) {
 	return custom.getElementsByTagName("name")[0].textContent;
     });
-    
+
     fields.push(function(td, custom) {
 	return custom.getElementsByTagName("description")[0].textContent;
     });
