@@ -47,8 +47,8 @@ Model.prototype.createValueBinding = function(htmlTag, xPath, eventName, toXml, 
 }
 
 /**
- * Convinience-Methode, um ein ValueBinding mit dem Value eines Currency-HtmlTags zu
- * erzeugen
+ * Convinience-Methode, um ein ValueBinding mit dem Value eines
+ * Currency-HtmlTags zu erzeugen
  * 
  * @param htmlTag
  * @param xPath
@@ -62,8 +62,8 @@ Model.prototype.createCurrencyValueBinding = function(htmlTag, xPath, eventName)
 }
 
 /**
- * Convinience-Methode, um ein ValueBinding mit dem Value eines Currency-HtmlTags zu
- * erzeugen
+ * Convinience-Methode, um ein ValueBinding mit dem Value eines
+ * Currency-HtmlTags zu erzeugen
  * 
  * @param htmlTag
  * @param xPath
@@ -226,12 +226,12 @@ Model.prototype.createTableRow = function(xmlNode, fields, onclick) {
     }
 
     if (onclick) {
-	
+
 	var self = this;
-	row.addEventListener("click", function(evt) {	 
-	    
+	row.addEventListener("click", function(evt) {
+
 	    var target = evt.target;
-	    if(target.tagName != "INPUT" && target.type != "radio" && target.type != "checkbox") {
+	    if (target.tagName != "INPUT" && target.type != "radio" && target.type != "checkbox") {
 		self.handleRadioInputs(row);
 	    }
 	    onclick(row, xmlNode);
@@ -244,14 +244,14 @@ Model.prototype.createTableRow = function(xmlNode, fields, onclick) {
  * 
  */
 Model.prototype.handleRadioInputs = function(row) {
-    
+
     var allInputs = row.querySelectorAll("input");
-    for(var i = 0; i < allInputs.length; i++) {
-	switch(allInputs[i].type) {
+    for (var i = 0; i < allInputs.length; i++) {
+	switch (allInputs[i].type) {
 	case "radio":
 	    allInputs[i].checked = true;
 	    break;
-	    
+
 	case "checkbox":
 	    allInputs[i].checked = !allInputs[i].checked;
 	    break;
@@ -400,11 +400,13 @@ Model.prototype.addElements = function(xPath, nodes) {
 }
 
 /**
- * 
+ * entferne ein Element. elem kann dabei ein xpath sein oder die referenz auf
+ * eine bestehende Node. Wenn die NOde nicht gefunden wurde (via xpath oder
+ * referenz), dann passiert nichts.
  */
-Model.prototype.removeElement = function(xPath) {
+Model.prototype.removeElement = function(elem) {
 
-    var target = this.evaluateXPath(xPath)[0];
+    var target = (typeof elem === "string") ? this.evaluateXPath(elem)[0] : elem;
     if (target) {
 
 	var parent = target.parentElement;
@@ -508,6 +510,14 @@ Model.prototype.fireXmlEvent = function(node) {
     node.dispatchEvent(event);
 }
 
+/**
+ * als String darstellen
+ */
+Model.prototype.stringify = function() {
+
+    return XmlUtils.stringify(this.workingCopy);
+}
+
 /*---------------------------------------------------------------------------*/
 /**
  * WorkingCopies dienen dazu, den SubEditoren eine "Sandbox" bereit zu stellen.
@@ -553,4 +563,12 @@ ModelWorkingCopy.prototype.commit = function() {
 	element = element.nextSibling;
     }
     this.fireXmlEvent(this.orgNode);
+}
+
+/**
+ * als String darstellen
+ */
+ModelWorkingCopy.prototype.stringify = function() {
+
+    return XmlUtils.stringify(this.workingCopy);
 }

@@ -7,7 +7,7 @@ var Adressbook = function(model, xpath, mode) {
 
     var self = this;
     this.result = new ModelWorkingCopy(model, xpath);
-    this.result.addChangeListener("//", function() {
+    this.result.addChangeListener("//send-to", function() {
 	self.enableSaveButton(true);
     });
     this.setTitle("Adressbuch");
@@ -137,10 +137,7 @@ AdressbookSubView = function(parentFrame, targetCnr, model, result) {
 AdressbookSubView.prototype = Object.create(WorkSpaceTabPane.prototype);
 
 /**
- * Erzeuge eine Checkbox, welche im Context einer abgeleiteten Klasse in eine TD
- * eingebunden wird. Wenn die CB angeklickt wird, so werden alle mit Ihr über
- * den xpath referenzierten IDs entweder in die Selektion aufgenommen
- * (checked-state) oder aus der Selektion entfernt (unchecked-State)
+ * 
  */
 AdressbookSubView.prototype.createCheckbox = function(name, node, parentXPath, elemXPath) {
 
@@ -156,7 +153,16 @@ AdressbookSubView.prototype.createCheckbox = function(name, node, parentXPath, e
 }
 
 /**
+ * behandle den Click auf eine TableRow. Die Selection/Deselection der
+ * radiobuttons/checkboxen übernimmt hier das TableBinding des Models.
  * 
+ * Wenn nun die checkbox/der Radiobutton selektiert wurde, dann wird eine Kopie
+ * der Node in den angegebenen parentXPath transferiert.
+ * 
+ * Wenn die Checkbox/der Radiobutton delektiert wurde, dann wird diese Kopie
+ * wieder aus dem parentXPath entfernt. Dummerweise können wir da nicht mit der
+ * NodeReferenz arbeiten, es wurde ja eine Kopie transferiert. wir arbeiten also
+ * mit dem ID-Attribut und basteln daraus einen xpath.
  */
 AdressbookSubView.prototype.handleTableRowClick = function(tr, parentXPath, node) {
 
@@ -164,7 +170,14 @@ AdressbookSubView.prototype.handleTableRowClick = function(tr, parentXPath, node
     if (check.checked) {
 	this.result.addElement(parentXPath, node);
     } else {
-	this.result.removeElement(node);
+
+	console.log(this.result.stringify());
+	var id = node.getElementsByTagName("id")[0].textContent;
+	var nodeName = node.nodeName;
+	var xpath = parentXPath + "/" + nodeName + "[id='" + id + "']";
+	console.log(xpath);
+	this.result.removeElement(xpath);
+	console.log(this.result.stringify());
     }
 }
 
@@ -192,11 +205,11 @@ AdressbookMembersView.prototype = Object.create(AdressbookSubView.prototype);
 AdressbookMembersView.prototype.setupAtAllCheckbox = function(mode) {
 
     var self = this;
-    
+
     // setup the Label
     var label = UIUtils.getElement("adressbook_at_all_label");
     label.textContent = (mode == Adressbook.SMS) ? "SMS an alle" : "Mail an alle";
-    
+
     var atAll = UIUtils.getElement("adressbook_at_all");
     atAll.addEventListener("click", function() {
 

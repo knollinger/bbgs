@@ -126,21 +126,3 @@ NumericInputField.digitsByKeyCode = {
     104 : "8",
     105 : "9"
 }
-
- /**
-     * 
-     */
-//NumericInputField.prototype.setupValueProperty = function() {
-//
-//    Object.defineProperty(this, "value", {
-//	get : function() {
-//	    return parseFloat(this.value) / 100;
-//	},
-//	set : function(newVal) {
-//	    this.value = "" + newVal * 100;
-//	    this.updateValue();
-//	},
-//	enumberable : true,
-//	configurable : true
-//    });
-//}

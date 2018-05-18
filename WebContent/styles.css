@@ -79,8 +79,8 @@ button {
 }
 
 button::-moz-focus-inner {
-    padding: 0;
-    border: 0;
+	padding: 0;
+	border: 0;
 }
 
 label {
@@ -617,12 +617,12 @@ h1 {
 .tooltip-body {
 	color: black;
 }
- 
+
 /*---------------------------------------------------------------------------*/
 /**
  * popup/tooltip common styles
  */
-  
+
 /**
  * Pfeil oben links
  */
@@ -880,7 +880,7 @@ h1 {
 
 .navigation-header {
 	position: relative;
-	height: 35%;
+	height: 33%;
 	background-size: cover;
 	background-position: center center;
 }
@@ -1034,7 +1034,7 @@ h1 {
 	-ms-flex-direction: column;
 	flex-direction: column;
 	height: 250px;
-	width: 50%;
+	width: 80%;
 	border: 1px solid #d0d0d0;
 	background-color: white;
 	position: absolute;
@@ -1043,6 +1043,12 @@ h1 {
 	transform: translate(-50%, -50%);
 	box-shadow: 5px 5px 5px #808080;
 	z-index: 1;
+}
+
+@media only screen and (min-width: 800px) {
+	.mbox-frame {
+		width: 700px;
+	}
 }
 
 .mbox-title {
@@ -1950,7 +1956,6 @@ h1 {
 }
 
 .todolist-task:focus {
-	
 	box-shadow: 0px 2px 4px rgba(0, 0, 192, 0.5);
 }
 
