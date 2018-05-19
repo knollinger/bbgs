@@ -8,7 +8,7 @@ var AccountingNavigation = function() {
     var self = this;
 
     // Übersicht der Buchungsposten
-    this.addNavigationButton("gui/images/planning-item.svg", "Rechnungs-Posten verwalten", function() {
+    this.addNavigationButton("gui/images/planning-item.svg", "Buchungs-Posten verwalten", function() {
 	new InvoiceItemsOverview();
     });
 
@@ -19,7 +19,7 @@ var AccountingNavigation = function() {
 
     // Konten-Übersicht
     this.addNavigationButton("gui/images/money-overview.svg", "Konten-Übersicht", function() {
-
+	alert("comming soon");
     });
 
     // Übersicht der Projekte

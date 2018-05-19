@@ -1258,8 +1258,9 @@ ProjectOutgoingEditor.prototype.renderOneRecord = function(recordXPath) {
     td.appendChild(radio);
     row.appendChild(td);
 
-    row.appendChild(document.createElement("td"));
-    row.appendChild(document.createElement("td"));
+    var filler = document.createElement("td");
+    filler.colSpan = "2";
+    row.appendChild(filler);
 
     var td = document.createElement("td");
     td.appendChild(this.createAmountEntry(recordXPath));
@@ -1279,8 +1280,8 @@ ProjectOutgoingEditor.prototype.createAmountEntry = function(recordXPath) {
     var edit = document.createElement("input");
     edit.className = "inplace-edit currency-input mandatory";
     edit.style.width = "6em";
-    new NumericInputField(edit);
     this.model.createCurrencyValueBinding(edit, recordXPath + "/amount", "change");
+    new NumericInputField(edit);
     return edit;
 }
 

@@ -1304,13 +1304,12 @@ h1 {
 	left: 0px;
 	height: 100%;
 	width: 100%;
-	background: rgba(0, 0, 0, 0.1);
+	background-color: #475057;
+	color: #eff0f1;
 	z-index: 20;
 }
 
 .docviewer-titlebar {
-	background-color: #475057;
-	color: #eff0f1;
 	padding: 20px;
 }
 
@@ -1322,6 +1321,17 @@ h1 {
 .docviewer-titlebar-btn {
 	float: right;
 	width: 32px;
+	border: 1px solid transparent;
+	border-radius: 2px;
+}
+
+.docviewer-titlebar-btn:hover {
+	border-color: #d0d0d0;
+	background: -webkit-linear-gradient(#f8f8f8, #e8e8e8);
+	background: -o-linear-gradient(#f8f8f8, #e8e8e8);
+	background: -moz-linear-gradient(#f8f8f8, #e8e8e8);
+	background: -ms-linear-gradient(#f8f8f8, #e8e8e8);
+	background: linear-gradient(#f8f8f8, #e8e8e8);
 }
 
 .docviewer-iframe {

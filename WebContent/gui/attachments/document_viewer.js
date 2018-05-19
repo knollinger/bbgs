@@ -6,7 +6,7 @@ var DocumentViewer = function(url, title) {
     BusyIndicator.show();
     
     var glass = this.createGlassPane();
-    glass.appendChild(this.createTitlebar(title, glass));
+    glass.appendChild(this.createTitlebar(title, glass, url));
     glass.tabIndex = "0";
     document.body.appendChild(glass);
     glass.focus();
@@ -40,17 +40,20 @@ DocumentViewer.prototype.createGlassPane = function() {
  * 
  * @param title
  * @param glass
+ * @param url
  */
-DocumentViewer.prototype.createTitlebar = function(title, glass) {
+DocumentViewer.prototype.createTitlebar = function(title, glass, url) {
 
     var titlebar = document.createElement("div");
     titlebar.className = "docviewer-titlebar";
 
+    // make the title
     var text = document.createElement("span");
     text.textContent = title;
     text.className = "docviewer-titlebar-text";
     titlebar.appendChild(text);
 
+    // make the close button
     var btn = document.createElement("img");
     btn.src = "gui/images/dialog-cancel.svg";
     btn.className = "docviewer-titlebar-btn";
@@ -59,8 +62,27 @@ DocumentViewer.prototype.createTitlebar = function(title, glass) {
         glass.parentElement.removeChild(glass);
     });
 
+    // make the download-button
+    titlebar.appendChild(this.makeDownloadButton(url)); 
+
     titlebar.appendChild(UIUtils.createClearFix());
     return titlebar;
+}
+
+/**
+ * erzeuge den Download-Button
+ */
+DocumentViewer.prototype.makeDownloadButton = function(url) {
+    
+    var img = document.createElement("img");
+    img.src = "gui/images/download.svg";
+    img.className = "docviewer-titlebar-btn";
+
+    var link = document.createElement("a");
+    link.href = url;
+    link.download = "";
+    link.appendChild(img);
+    return link;
 }
 
 /**
