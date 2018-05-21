@@ -49,11 +49,10 @@ public class CourseDBUtil
                 c.id = rs.getInt("id");
                 c.name = rs.getString("name");
                 c.type = ECourseType.valueOf(rs.getString("type"));
-                c.color = rs.getInt("color");
+                c.color = rs.getInt("color_id");
                 c.description = rs.getString("description");
-
+                result.add(c);
             }
-
             return result;
         }
         finally

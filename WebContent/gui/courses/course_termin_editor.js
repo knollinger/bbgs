@@ -12,10 +12,10 @@
  * Anhänge hinzu zu fügen, anzuzeigen oder auch zu löschen</li>
  * </ul>
  */
-var CourseTerminEditor = function(terminId) {
+var CourseTerminEditor = function(terminId, onsave) {
 
     WorkSpaceTabbedFrame.call(this, "course_termin_editor_tabbed_dlg");
-
+    this.onSaveCallback = onsave;
     var self = this;
     this.loadModel(terminId, function() {
 
@@ -155,12 +155,23 @@ CourseTerminEditor.prototype.setupAttachmentsEditor = function() {
  */
 CourseTerminEditor.prototype.onSave = function() {
 
+    var self = this;
     var caller = new ServiceCaller();
     caller.onSuccess = function(rsp) {
+	switch (rsp.documentElement.nodeName) {
+	case "save-course-termin-ok-response":
+	    if (self.onSaveCallback) {
+		self.onSaveCallback();
+	    }
+	    break;
 
+	case "error-response":
+	    // TODO: not yet implemented
+	    break;
+	}
     }
     caller.onError = function(req, status) {
-
+	// TODO: not yet implemented
     }
     caller.invokeService(this.model.getDocument());
 }

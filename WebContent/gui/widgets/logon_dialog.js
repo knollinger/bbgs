@@ -79,7 +79,7 @@ LogonDialog.prototype.renderAccounts = function(rsp) {
 LogonDialog.prototype.renderOneAccount = function(id, name) {
 
     var self = this;
-    var label = document.createElement("label");
+    var label = document.createElement("div");
     label.className = "login-account-button";
 
     var img = document.createElement("img");
@@ -104,14 +104,14 @@ LogonDialog.prototype.renderOneAccount = function(id, name) {
     });
     label.appendChild(pwd);
 
-    this.registerEventListeners(name, label, pwd);
+    this.registerEventListeners(name, label, pwd, radio);
     return label;
 }
 
 /**
  * registriere alle EventListener für ein AccountLabel
  */
-LogonDialog.prototype.registerEventListeners = function(name, label, pwdField) {
+LogonDialog.prototype.registerEventListeners = function(name, label, pwdField, radio) {
     
     var self = this;
 
@@ -130,6 +130,7 @@ LogonDialog.prototype.registerEventListeners = function(name, label, pwdField) {
     label.addEventListener("click", function() {
 	pwdField.value = "",
 	pwdField.focus();
+	radio.click();
     });
 }
 

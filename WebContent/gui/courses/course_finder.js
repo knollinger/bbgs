@@ -50,7 +50,6 @@ CourseFinder.prototype.loadModel = function(onSuccess) {
     }
 
     var req = XmlUtils.createDocument("get-all-courses-request");
-    XmlUtils.setNode(req, "mode", "ALL")
     caller.invokeService(req);
 }
 
@@ -101,7 +100,6 @@ CourseFinder.prototype.getColumnDescriptor = function() {
 
     fields.push("name");
     fields.push(function(td, course) {
-	UIUtils.addClass(td, "fill-on-mobile");
 	return CourseTypeTranslator[course.getElementsByTagName("type")[0].textContent];
     });
     fields.push(function(td, course) {

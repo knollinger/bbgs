@@ -147,7 +147,6 @@ ProjectsOverview.prototype.getColumnDescriptor = function() {
 	    return radio;
 	});
 	ProjectsOverview.collDesc.push(function(td, project) {
-	    UIUtils.addClass(td, "fill-on-mobile");
 	    return project.getElementsByTagName("name")[0].textContent;
 	});
 

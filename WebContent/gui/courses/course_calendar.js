@@ -34,7 +34,9 @@ CourseCalendar.prototype.createEditAction = function() {
 
     var self = this;
     this.actionEdit = new WorkSpaceFrameAction("gui/images/course-edit.svg", "Kurs-Termin bearbeiten", function() {
-	new CourseTerminEditor(self.selectedTermin);
+	new CourseTerminEditor(self.selectedTermin, function() {
+	    self.update();
+	});
     });
     this.addAction(this.actionEdit);
     this.actionEdit.hide();
@@ -311,13 +313,19 @@ CourseCalendar.prototype.createWeeklyTermin = function(termin) {
 	self.selectedTermin = parseInt(termin.getElementsByTagName("id")[0].textContent);
 	self.actionEdit.show();
 	self.actionRemove.show();
-	self.showInfoPopup(t, termin);
     });
-
+    self.prepareInfoPopup(t, termin);
+    
     var start = termin.getElementsByTagName("begin")[0].textContent;
-    var end = termin.getElementsByTagName("end")[0].textContent;
     start = DateTimeUtils.parseTime(start, "{hh}:{mm}");
+    if(start.getHours() < 9) {
+	start.setHours(9);
+	start.setMinutes(0);
+	start.setSeconds(0);
+    }
+    var end = termin.getElementsByTagName("end")[0].textContent;
     end = DateTimeUtils.parseTime(end, "{hh}:{mm}");
+    
     var len = (end - start) / 3600000;
     len = (len * 100 / 14);
     t.style.width = len + "%";
@@ -335,15 +343,25 @@ CourseCalendar.prototype.createWeeklyTermin = function(termin) {
 /**
  * 
  */
-CourseCalendar.prototype.showInfoPopup = function(cnr, termin) {
+CourseCalendar.prototype.prepareInfoPopup = function(cnr, termin) {
 
     var start = termin.getElementsByTagName("begin")[0].textContent;
     var end = termin.getElementsByTagName("end")[0].textContent;
     var location = termin.getElementsByTagName("location")[0].textContent;
     var cat = termin.getElementsByTagName("category")[0].textContent;
-
     var msg = MessageCatalog.getMessage("COURSE_TERMIN_TOOLTIP", location, start, end, cat, this.makeTeacherList(termin));
-    new ToolTip(cnr, null, msg, ToolTip.INFINITE);
+    
+    var timerid = -1;
+    var showInfoPopup = function() {
+	clearTimeout(timerid);
+	new ToolTip(cnr, null, msg);	
+    }
+    cnr.addEventListener("mouseover", function() {
+	timerId = setTimeout(showInfoPopup, 1000);
+    });
+    cnr.addEventListener("mouseleave", function() {
+	clearTimeout(timerid);
+    });
 }
 
 /**
@@ -432,7 +450,7 @@ CourseCalendar.prototype.createMonthlyTermin = function(termin) {
 	self.selectedTermin = parseInt(termin.getElementsByTagName("id")[0].textContent);
 	self.actionEdit.show();
 	self.actionRemove.show();
-	self.showInfoPopup(t, termin);
     });
+    self.prepareInfoPopup(t, termin);
     return t;
 }

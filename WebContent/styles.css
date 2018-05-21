@@ -85,6 +85,8 @@ button::-moz-focus-inner {
 
 label {
 	vertical-align: middle;
+	height: 1em;
+	padding: 6px;
 }
 
 table {
@@ -2104,7 +2106,6 @@ h1 {
 }
 
 .contact-overview-item {
-	background-color: #f8f8f8;
 	border: 1px solid #d0d0d0;
 	margin-bottom: 10px;
 	padding: 10px 5px 0 5px;
@@ -2120,6 +2121,10 @@ h1 {
 	-moz-align-items: flex-start;
 	-ms-align-items: flex-start;
 	align-items: flex-start;
+	-webkit-box-shadow: 0px 5px 5px -3px #f0f0f0;
+	-moz-box-shadow: 0px 5px 5px -3px #f0f0f0;
+	-ms-box-shadow: 0px 5px 5px -3px #f0f0f0;
+	box-shadow: 0px 5px 5px -3px #f0f0f0;
 }
 
 .contact-overview-item:last-child {

@@ -487,7 +487,6 @@ AdressbookPartnerView.prototype.getColumnDescriptor = function() {
 
     fields.push("name");
     fields.push(function(td, partner) {
-	UIUtils.addClass(td, "fill-on-mobile");
 	return partner.getElementsByTagName("zname")[0].textContent;
     });
 

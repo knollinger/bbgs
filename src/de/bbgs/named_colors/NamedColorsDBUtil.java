@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import de.bbgs.service.EAction;
 import de.bbgs.utils.DBUtils;
@@ -22,7 +23,7 @@ public class NamedColorsDBUtil
      * @return die Collection aller NamedColors
      * @throws SQLException
      */
-    public static Collection<NamedColor> getAllNamedColors(Connection conn) throws SQLException
+    public static List<NamedColor> getAllNamedColors(Connection conn) throws SQLException
     {
 
         PreparedStatement stmt = null;
@@ -33,7 +34,7 @@ public class NamedColorsDBUtil
             stmt = conn.prepareStatement("select * from named_colors");
             rs = stmt.executeQuery();
 
-            Collection<NamedColor> result = new ArrayList<>();
+            List<NamedColor> result = new ArrayList<>();
             while (rs.next())
             {
                 NamedColor nc = new NamedColor();
