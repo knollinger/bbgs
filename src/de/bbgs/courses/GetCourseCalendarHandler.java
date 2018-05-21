@@ -126,11 +126,12 @@ public class GetCourseCalendarHandler implements IXmlServiceHandler
                 "        (\n" + 
                 "            select ref_id from course_termins where id = ?\n" + 
                 "        ) \n" + 
-                "        and type=?\n" + 
+                "        and (type=? or type=?)\n" + 
                 "    )";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, terminId);
             stmt.setString(2, EMemberType.TEACHER.name());
+            stmt.setString(3, EMemberType.FEST.name());
             rs = stmt.executeQuery();
             while(rs.next()) {
                 

@@ -53,6 +53,7 @@ public class GetCourseOverviewDocumentHandler implements IGetDocServiceHandler
         ResultSet rs = null;
 
         String currCourse = "";
+        Date currDate = new Date(0);
         try
         {
             DocBuilder db = new DocBuilder(this.getClass().getResourceAsStream("course_overview.adoc"));
@@ -70,7 +71,8 @@ public class GetCourseOverviewDocumentHandler implements IGetDocServiceHandler
             while (rs.next())
             {
                 String courseName = rs.getString("c.name");
-                if (!courseName.equals(currCourse))
+                Date courseDate = rs.getDate("t.date");
+                if (!courseName.equals(currCourse) || !courseDate.equals(currDate))
                 {
                     if (!currCourse.equals(""))
                     {
@@ -84,6 +86,7 @@ public class GetCourseOverviewDocumentHandler implements IGetDocServiceHandler
                     part.replaceTag("$LOCATION$", rs.getString("l.name"));
                     part.commit();
                     currCourse = courseName;
+                    currDate = courseDate;
                 }
 
                 String zName = rs.getString("m.zname");

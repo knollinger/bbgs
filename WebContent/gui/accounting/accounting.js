@@ -7,9 +7,9 @@ var AccountingNavigation = function() {
 
     var self = this;
 
-    // Übersicht der Buchungsposten
-    this.addNavigationButton("gui/images/planning-item.svg", "Buchungs-Posten verwalten", function() {
-	new InvoiceItemsOverview();
+    // Konten-Übersicht
+    this.addNavigationButton("gui/images/money-overview.svg", "Konten-Übersicht", function() {
+	alert("comming soon");
     });
 
     // Übersicht der Einnahmen
@@ -17,14 +17,14 @@ var AccountingNavigation = function() {
 	new InvoiceRecordsOverview();
     });
 
-    // Konten-Übersicht
-    this.addNavigationButton("gui/images/money-overview.svg", "Konten-Übersicht", function() {
-	alert("comming soon");
-    });
-
     // Übersicht der Projekte
     this.addNavigationButton("gui/images/folder.svg", "Projekte verwalten", function() {
 	new ProjectsOverview();
+    });
+
+    // Übersicht der Buchungsposten
+    this.addNavigationButton("gui/images/planning-item.svg", "Buchungs-Posten verwalten", function() {
+	new InvoiceItemsOverview();
     });
 
     this.setTitle("Rechnungswesen");

@@ -117,6 +117,9 @@ CourseTerminEditor.prototype.setupLocationsEditor = function() {
     tabBinder.associateTabPane(subFrame);
 }
 
+/**
+ * 
+ */
 CourseTerminEditor.prototype.setupMembersEditor = function() {
 
     var self = this;
@@ -125,6 +128,9 @@ CourseTerminEditor.prototype.setupMembersEditor = function() {
     tabBinder.associateTabPane(subFrame);
 }
 
+/**
+ * 
+ */
 CourseTerminEditor.prototype.setupNotesEditor = function() {
 
     var self = this;
@@ -133,6 +139,9 @@ CourseTerminEditor.prototype.setupNotesEditor = function() {
     tabBinder.associateTabPane(subFrame);
 }
 
+/**
+ * 
+ */
 CourseTerminEditor.prototype.setupAttachmentsEditor = function() {
 
     var self = this;
@@ -141,6 +150,9 @@ CourseTerminEditor.prototype.setupAttachmentsEditor = function() {
     tabBinder.associateTabPane(subFrame);
 }
 
+/**
+ * 
+ */
 CourseTerminEditor.prototype.onSave = function() {
 
     var caller = new ServiceCaller();
