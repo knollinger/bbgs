@@ -67,7 +67,7 @@ public class GetCourseCalendarHandler implements IXmlServiceHandler
             Request req = (Request) request;
 
             conn = ConnectionPool.getConnection();
-            stmt = conn.prepareStatement("select t.id, t.date, t.start, t.end, c.name, nc.color, nc.name, l.name from course_termins t left join courses c on t.ref_id = c.id left join named_colors nc on c.color_id = nc.id left join course_locations l on l.id = t.location_id where t.date between ? and ? order by t.date, t.start;");
+            stmt = conn.prepareStatement("select t.id, t.ref_id, t.date, t.start, t.end, c.name, nc.color, nc.name, l.name from course_termins t left join courses c on t.ref_id = c.id left join named_colors nc on c.color_id = nc.id left join course_locations l on l.id = t.location_id where t.date between ? and ? order by t.date, t.start;");
             DBUtils.setDate(stmt, 1, req.from);
             DBUtils.setDate(stmt, 2, req.until);
             rs = stmt.executeQuery();
@@ -78,6 +78,7 @@ public class GetCourseCalendarHandler implements IXmlServiceHandler
                 CalEntry entry = new CalEntry();
                 int terminId = rs.getInt("t.id");
                 entry.terminId = terminId;
+                entry.courseId = rs.getInt("t.ref_id");
                 entry.date = DBUtils.getDate(rs, "t.date");
                 entry.startTime = DBUtils.getTime(rs, "t.start");
                 entry.endTime = DBUtils.getTime(rs, "t.end");
@@ -164,6 +165,9 @@ public class GetCourseCalendarHandler implements IXmlServiceHandler
     {
         @XmlElement(name = "id")
         public int terminId;
+
+        @XmlElement(name = "course-id")
+        public int courseId;
 
         @XmlElement(name = "name")
         public String name;

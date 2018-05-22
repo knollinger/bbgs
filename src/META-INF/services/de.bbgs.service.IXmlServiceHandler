@@ -35,12 +35,9 @@ de.bbgs.courses.GetCourseCalendarHandler
 de.bbgs.courses.SaveCourseModelHandler
 de.bbgs.courses.GetCourseModelHandler
 de.bbgs.courses.RemoveCourseHandler
-de.bbgs.courses.GetCourseTerminModelHandler
-de.bbgs.courses.SaveCourseTerminModelHandler
 de.bbgs.courses.GetCourseLocationsHandler
 de.bbgs.courses.GetCourseLocationModelHandler
 de.bbgs.courses.SaveCourseLocationModelHandler
-
 
 #------------------------------------------------------------------------------
 #

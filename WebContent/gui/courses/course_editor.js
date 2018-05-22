@@ -1,18 +1,24 @@
-/*---------------------------------------------------------------------------*/
 /**
+ * @param courseId
+ * @param terminId
+ *                optional. wenn angegeben wird der TerminTab geöffnet und der
+ *                angegebene termin selektiert
+ * @param onSaveCB
+ *                optional, wird nach einem erfolgreichen Speichern aufgerufen
  * 
  */
-var CourseEditor = function(id) {
+var CourseEditor = function(courseId, terminId, onSaveCB) {
 
     WorkSpaceTabbedFrame.call(this, "course_edit_tabbed_dlg");
 
+    this.onSaveCB = onSaveCB;
     var self = this;
-    this.loadModel(id, function() {
+    this.loadModel(courseId, function() {
 
 	self.adjustTitle();
 	self.setupModelListener();
 	self.setupCoreDataEditor();
-	self.setupTerminOverview();
+	self.setupTerminOverview(terminId);
 	self.setupMembersOverview();
 	self.setupNotesOverview();
 	self.setupAttachmentsOverview();
@@ -91,12 +97,15 @@ CourseEditor.prototype.setupCoreDataEditor = function() {
 /**
  * 
  */
-CourseEditor.prototype.setupTerminOverview = function() {
+CourseEditor.prototype.setupTerminOverview = function(terminId) {
 
     var self = this;
     var tabBinder = this.addTab("gui/images/course-edit.svg", "Termine");
-    var subFrame = new CourseTerminAndLocationOverview(this, tabBinder.contentPane, this.model);
+    var subFrame = new CourseTerminAndLocationOverview(this, tabBinder.contentPane, this.model, terminId);
     tabBinder.associateTabPane(subFrame);
+    if (terminId) {
+	tabBinder.select();
+    }
 }
 
 /**
@@ -140,6 +149,9 @@ CourseEditor.prototype.onSave = function() {
     caller.onSuccess = function(rsp) {
 	switch (rsp.documentElement.nodeName) {
 	case "save-course-ok-response":
+	    if(self.onSaveCB) {
+		self.onSaveCB();
+	    }
 	    break;
 
 	case "error-response":
@@ -198,7 +210,7 @@ CourseCoreDataEditor.prototype.fillColors = function() {
 /**
  * 
  */
-var CourseTerminAndLocationOverview = function(parentFrame, targetCnr, model) {
+var CourseTerminAndLocationOverview = function(parentFrame, targetCnr, model, terminId) {
 
     WorkSpaceTabPane.call(this, parentFrame, targetCnr);
     this.model = model;
@@ -209,7 +221,7 @@ var CourseTerminAndLocationOverview = function(parentFrame, targetCnr, model) {
 	self.actionRemove = self.createRemoveAction();
 
 	new TableDecorator("edit_termin_overview");
-	self.fillTable();
+	self.fillTable(terminId);
     });
 }
 
@@ -218,7 +230,7 @@ CourseTerminAndLocationOverview.prototype = Object.create(WorkSpaceTabPane.proto
 /**
  * 
  */
-CourseTerminAndLocationOverview.prototype.fillTable = function() {
+CourseTerminAndLocationOverview.prototype.fillTable = function(terminId) {
 
     var self = this;
 
@@ -239,7 +251,11 @@ CourseTerminAndLocationOverview.prototype.fillTable = function() {
 
 	var termin = allTermins[i];
 	if (termin.getElementsByTagName("action")[0].textContent != "REMOVE") {
-	    this.renderOneRow(tbody, termin, onclick);
+	    var row = this.renderOneRow(tbody, termin, onclick);
+	    if (termin.getElementsByTagName("id")[0].textContent == terminId) {
+		row.click();
+		row.querySelector("input[type='radio']").focus();
+	    }
 	}
     }
 }
@@ -261,6 +277,7 @@ CourseTerminAndLocationOverview.prototype.renderOneRow = function(tbody, termin,
 	    action.textContent = "MODIFY";
 	}
     });
+    return row;
 }
 
 /**

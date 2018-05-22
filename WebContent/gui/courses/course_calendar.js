@@ -7,7 +7,7 @@ var CourseCalendar = function(mode, date) {
 
     this.mode = mode || CourseCalendar.WEEKLY;
     this.currentDate = date || new Date();
-    this.selectedTermin = -1;
+    this.selectedTermin = this.selectedCourse = -1;
 
     var self = this;
     this.load("gui/courses/course_calendar.html", function() {
@@ -34,7 +34,7 @@ CourseCalendar.prototype.createEditAction = function() {
 
     var self = this;
     this.actionEdit = new WorkSpaceFrameAction("gui/images/course-edit.svg", "Kurs-Termin bearbeiten", function() {
-	new CourseTerminEditor(self.selectedTermin, function() {
+	new CourseEditor(self.selectedCourse, self.selectedTermin, function() {
 	    self.update();
 	});
     });
@@ -44,11 +44,38 @@ CourseCalendar.prototype.createEditAction = function() {
 
 CourseCalendar.prototype.createRemoveAction = function() {
 
-    this.actionRemove = new WorkSpaceFrameAction("gui/images/course-remove.svg", "Kurs-Termin löschen", function() {
+    var self = this;
+    this.actionRemove = new WorkSpaceFrameAction("gui/images/course-remove.svg", "Kurs/Kurs-Termin löschen", function() {
 
+	var menu = new PopupMenu(self.actionRemove.btn);
+	menu.makeMenuItem("Kurs-Termin löschen", function() {
+	    self.removeCurrentTermin();
+	});
+
+	menu.makeSeparator();
+
+	menu.makeMenuItem("gesamten Kurs löschen", function() {
+	    self.removeCurrentCourse();
+	});
     });
     this.addAction(this.actionRemove);
     this.actionRemove.hide();
+}
+
+/**
+ * 
+ */
+CourseCalendar.prototype.removeCurrentTermin = function() {
+
+    alert("not yet implemented");
+}
+
+/**
+ * 
+ */
+CourseCalendar.prototype.removeCurrentCourse = function() {
+
+    alert("not yet implemented");
 }
 
 /**
@@ -311,21 +338,22 @@ CourseCalendar.prototype.createWeeklyTermin = function(termin) {
     t.tabIndex = "0";
     t.addEventListener("click", function() {
 	self.selectedTermin = parseInt(termin.getElementsByTagName("id")[0].textContent);
+	self.selectedCourse = parseInt(termin.getElementsByTagName("course-id")[0].textContent);
 	self.actionEdit.show();
 	self.actionRemove.show();
     });
     self.prepareInfoPopup(t, termin);
-    
+
     var start = termin.getElementsByTagName("begin")[0].textContent;
     start = DateTimeUtils.parseTime(start, "{hh}:{mm}");
-    if(start.getHours() < 9) {
+    if (start.getHours() < 9) {
 	start.setHours(9);
 	start.setMinutes(0);
 	start.setSeconds(0);
     }
     var end = termin.getElementsByTagName("end")[0].textContent;
     end = DateTimeUtils.parseTime(end, "{hh}:{mm}");
-    
+
     var len = (end - start) / 3600000;
     len = (len * 100 / 14);
     t.style.width = len + "%";
@@ -350,17 +378,10 @@ CourseCalendar.prototype.prepareInfoPopup = function(cnr, termin) {
     var location = termin.getElementsByTagName("location")[0].textContent;
     var cat = termin.getElementsByTagName("category")[0].textContent;
     var msg = MessageCatalog.getMessage("COURSE_TERMIN_TOOLTIP", location, start, end, cat, this.makeTeacherList(termin));
-    
-    var timerid = -1;
-    var showInfoPopup = function() {
-	clearTimeout(timerid);
-	new ToolTip(cnr, null, msg);	
-    }
-    cnr.addEventListener("mouseover", function() {
-	timerId = setTimeout(showInfoPopup, 1000);
-    });
-    cnr.addEventListener("mouseleave", function() {
-	clearTimeout(timerid);
+    cnr.addEventListener("contextmenu", function(evt) {
+	evt.preventDefault();
+	evt.stopPropagation();
+	new ToolTip(cnr, null, msg);
     });
 }
 
@@ -448,6 +469,7 @@ CourseCalendar.prototype.createMonthlyTermin = function(termin) {
     t.tabIndex = "0";
     t.addEventListener("click", function() {
 	self.selectedTermin = parseInt(termin.getElementsByTagName("id")[0].textContent);
+	self.selectedCourse = parseInt(termin.getElementsByTagName("course-id")[0].textContent);
 	self.actionEdit.show();
 	self.actionRemove.show();
     });

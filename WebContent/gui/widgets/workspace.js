@@ -806,6 +806,14 @@ PopupMenu.prototype.makeMenuItem = function(text, onclick) {
 /**
  * 
  */
+PopupMenu.prototype.makeSeparator = function() {
+
+    this.ui.appendChild(document.createElement("hr"));
+}
+
+/**
+ * 
+ */
 PopupMenu.prototype.adjustToAnchor = function() {
 
     var clazz;

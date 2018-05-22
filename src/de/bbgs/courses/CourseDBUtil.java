@@ -221,7 +221,6 @@ public class CourseDBUtil
     {
         CourseModel mdl = null;
 
-
         if (courseId == 0)
         {
             mdl = new CourseModel();
@@ -243,7 +242,6 @@ public class CourseDBUtil
         }
         return mdl;
     }
-
 
     /**
      * 
@@ -283,75 +281,7 @@ public class CourseDBUtil
         return result;
     }
 
-    /**
-     * @param terminId
-     * @param conn
-     * @return
-     * @throws SQLException
-     */
-    public static CourseTerminModel getCourseTerminModel(int terminId, Connection conn) throws SQLException
-    {
-        CourseTerminModel mdl = null;
-        if (terminId == 0)
-        {
-            mdl = new CourseTerminModel();
-            mdl.locations.addAll(CourseDBUtil.getAllLocations(conn));
-        }
-        else
-        {
-            mdl = CourseDBUtil.loadTerminCoreData(terminId, conn);
-            if (mdl != null)
-            {
-                int courseId = mdl.courseId;
-                mdl.member.addAll(CourseDBUtil.getAllMembersByTerminId(terminId, conn));
-                mdl.notes.addAll(NotesDBUtil.getAllNotes(courseId, ENoteDomain.COURSE, conn));
-                mdl.attachments.addAll(AttachmentsDBUtil.getAllAttachments(courseId, EAttachmentDomain.COURSE, conn));
-                mdl.locations.addAll(CourseDBUtil.getAllLocations(conn));
-            }
-        }
-        return mdl;
-    }
-
-    /**
-     * @param terminId
-     * @param conn
-     * @return
-     * @throws SQLException
-     */
-    private static CourseTerminModel loadTerminCoreData(int terminId, Connection conn) throws SQLException
-    {
-        CourseTerminModel mdl = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        try
-        {
-            stmt = conn.prepareStatement(
-                "select c.id, c.name, c.description, t.date, t.start, t.end, t.location_id from course_termins t left join courses c on c.id = t.ref_id where t.id=?");
-            stmt.setInt(1, terminId);
-            rs = stmt.executeQuery();
-            if (rs.next())
-            {
-                mdl = new CourseTerminModel();
-                mdl.courseId = rs.getInt("c.id");
-                mdl.name = rs.getString("c.name");
-                mdl.description = rs.getString("c.description");
-
-                mdl.termin = new Termin();
-                mdl.termin.id = terminId;
-                mdl.termin.date = DBUtils.getDate(rs, "t.date");
-                mdl.termin.startTime = DBUtils.getTime(rs, "t.start");
-                mdl.termin.endTime = DBUtils.getTime(rs, "t.end");
-                mdl.termin.locationId = rs.getInt("t.location_id");
-            }
-        }
-        finally
-        {
-            DBUtils.closeQuitly(rs);
-            DBUtils.closeQuitly(stmt);
-        }
-        return mdl;
-    }
+ 
 
     public static Collection<Member> getAllMembersByCourseId(int courseId, Connection conn) throws SQLException
     {
@@ -411,13 +341,9 @@ public class CourseDBUtil
 
         try
         {
-            String sql = "select * from members where id in \n" + 
-                "(\n" + 
-                "    select distinct member_id from course_member where course_id in\n" + 
-                "    (\n" + 
-                "        select ref_id from course_termins where id=?\n" + 
-                "    )\n" + 
-                ")";
+            String sql = "select * from members where id in \n" + "(\n"
+                + "    select distinct member_id from course_member where course_id in\n" + "    (\n"
+                + "        select ref_id from course_termins where id=?\n" + "    )\n" + ")";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, terminId);
             rs = stmt.executeQuery();
@@ -446,7 +372,7 @@ public class CourseDBUtil
      * @param id
      * @param conn
      * @return
-     * @throws SQLException 
+     * @throws SQLException
      */
     private static Collection<Termin> loadTermine(int id, Connection conn) throws SQLException
     {
@@ -562,7 +488,7 @@ public class CourseDBUtil
      * @param mdl
      * @param termine
      * @param conn
-     * @throws SQLException 
+     * @throws SQLException
      */
     private static void handleTerminChanges(CourseModel mdl, Connection conn) throws SQLException
     {
@@ -621,7 +547,6 @@ public class CourseDBUtil
         }
     }
 
-
     /**
      * @param id
      * @param t
@@ -649,7 +574,6 @@ public class CourseDBUtil
         }
     }
 
-
     /**
      * @param id
      * @param t
@@ -672,11 +596,10 @@ public class CourseDBUtil
         }
     }
 
-
     /**
      * @param mdl
      * @param conn
-     * @throws SQLException 
+     * @throws SQLException
      */
     private static void handleMemberCreations(CourseModel mdl, Connection conn) throws SQLException
     {
@@ -703,7 +626,7 @@ public class CourseDBUtil
     /**
      * @param mdl
      * @param conn
-     * @throws SQLException 
+     * @throws SQLException
      */
     private static void handleMemberDeletions(CourseModel mdl, Connection conn) throws SQLException
     {
@@ -727,7 +650,6 @@ public class CourseDBUtil
             DBUtils.closeQuitly(stmt);
         }
     }
-
 
     /**
      * @param conn
@@ -845,12 +767,11 @@ public class CourseDBUtil
         }
     }
 
-
     /**
      * 
      * @param location
      * @param conn
-     * @throws SQLException 
+     * @throws SQLException
      */
     public static void saveCourseLocation(Location location, SessionWrapper session, Connection conn)
         throws SQLException
@@ -869,11 +790,10 @@ public class CourseDBUtil
         NotesDBUtil.handleNoteChanges(location.notes, location.id, ENoteDomain.COURSELOC, conn);
     }
 
-
     /**
      * @param location
      * @return
-     * @throws SQLException 
+     * @throws SQLException
      */
     private static int createLocation(Location location, Connection conn) throws SQLException
     {
@@ -904,7 +824,7 @@ public class CourseDBUtil
 
     /**
      * @param location
-     * @throws SQLException 
+     * @throws SQLException
      */
     private static void updateLocation(Location location, Connection conn) throws SQLException
     {
@@ -932,67 +852,6 @@ public class CourseDBUtil
     }
 
     /**
-     * @param mdl
-     * @param conn
-     * @throws SQLException 
-     */
-    public static void saveCourseTerminModel(CourseTerminModel mdl, SessionWrapper session, Connection conn)
-        throws SQLException
-    {
-        try
-        {
-            int courseId = mdl.courseId;
-            int terminId = mdl.termin.id;
-            if (terminId == 0)
-            {
-                CourseDBUtil.createTermin(courseId, mdl.termin, conn);
-            }
-            else
-            {
-                CourseDBUtil.updateTermin(courseId, mdl.termin, conn);
-            }
-
-            CourseDBUtil.handleMemberChanges(mdl.member, courseId, conn);
-            NotesDBUtil.handleNoteChanges(mdl.notes, courseId, ENoteDomain.COURSE, conn);
-            AttachmentsDBUtil.handleAttachmentChanges(mdl.attachments, courseId, EAttachmentDomain.COURSE, session,
-                conn);
-        }
-        finally
-        {
-        }
-    }
-
-
-    /**
-     * Behandle Änderungen in der Zuordnung mehrerer Members zu einem Kurs
-     * 
-     * @param members
-     * @param courseId
-     * @param conn
-     * @throws SQLException 
-     */
-    private static void handleMemberChanges(List<Member> members, int courseId, Connection conn) throws SQLException
-    {
-        for (Member member : members)
-        {
-            switch (member.action)
-            {
-                case CREATE :
-                    CourseDBUtil.createCourseAssociation(courseId, member.id, conn);
-                    break;
-
-                case REMOVE :
-                    CourseDBUtil.removeCourseAssociation(courseId, member.id, conn);
-                    break;
-
-                default :
-                    break;
-            }
-            
-        }
-    }
-
-    /**
      * Behandle Änderungen in der Zuordnung eines Members zu mehreren Kursen
      * 
      * @param courses
@@ -1000,7 +859,8 @@ public class CourseDBUtil
      * @param conn
      * @throws SQLException
      */
-    public static void handleMemberCourseChanges(Collection<Course> courses, int memberId, Connection conn) throws SQLException
+    public static void handleMemberCourseChanges(Collection<Course> courses, int memberId, Connection conn)
+        throws SQLException
     {
         for (Course course : courses)
         {
@@ -1024,10 +884,9 @@ public class CourseDBUtil
      * @param course
      * @param memberId
      * @param conn
-     * @throws SQLException 
+     * @throws SQLException
      */
-    private static void createCourseAssociation(int courseId, int memberId, Connection conn)
-        throws SQLException
+    private static void createCourseAssociation(int courseId, int memberId, Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
         try
@@ -1047,10 +906,9 @@ public class CourseDBUtil
      * @param course
      * @param memberId
      * @param conn
-     * @throws SQLException 
+     * @throws SQLException
      */
-    private static void removeCourseAssociation(int courseId, int memberId, Connection conn)
-        throws SQLException
+    private static void removeCourseAssociation(int courseId, int memberId, Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
         try
