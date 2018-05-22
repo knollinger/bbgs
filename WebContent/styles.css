@@ -102,7 +102,7 @@ thead>tr {
 }
 
 tr {
-	vertical-align: top;
+	vertical-align: middle;
 }
 
 tr:focus {
@@ -1339,7 +1339,7 @@ h1 {
 	position: absolute;
 	background-color: white;
 	height: 80%;
-	width: 80%;
+	width: 800px;
 	border: 0;
 	-webkit-box-shadow: 5px 5px 5px #444444;
 	-moz-box-shadow: 5px 5px 5px #444444;
@@ -1358,7 +1358,7 @@ h1 {
 .docviewer-image {
 	position: absolute;
 	max-height: 80%;
-	max-width: 80%;
+	max-width: 800px;
 	height: auto;
 	width: auto;
 	border: 1px solid #d0d0d0;

@@ -7,7 +7,7 @@ var CourseCalendar = function(mode, date) {
 
     this.mode = mode || CourseCalendar.WEEKLY;
     this.currentDate = date || new Date();
-    this.selectedTermin = this.selectedCourse = -1;
+    this.currSelection = null;
 
     var self = this;
     this.load("gui/courses/course_calendar.html", function() {
@@ -30,111 +30,6 @@ CourseCalendar.prototype = Object.create(WorkSpaceFrame.prototype);
 CourseCalendar.WEEKLY = 1;
 CourseCalendar.MONTHLY = 2;
 
-CourseCalendar.prototype.createEditAction = function() {
-
-    var self = this;
-    this.actionEdit = new WorkSpaceFrameAction("gui/images/course-edit.svg", "Kurs-Termin bearbeiten", function() {
-	new CourseEditor(self.selectedCourse, self.selectedTermin, function() {
-	    self.update();
-	});
-    });
-    this.addAction(this.actionEdit);
-    this.actionEdit.hide();
-}
-
-CourseCalendar.prototype.createRemoveAction = function() {
-
-    var self = this;
-    this.actionRemove = new WorkSpaceFrameAction("gui/images/course-remove.svg", "Kurs/Kurs-Termin löschen", function() {
-
-	var menu = new PopupMenu(self.actionRemove.btn);
-	menu.makeMenuItem("Kurs-Termin löschen", function() {
-	    self.removeCurrentTermin();
-	});
-
-	menu.makeSeparator();
-
-	menu.makeMenuItem("gesamten Kurs löschen", function() {
-	    self.removeCurrentCourse();
-	});
-    });
-    this.addAction(this.actionRemove);
-    this.actionRemove.hide();
-}
-
-/**
- * 
- */
-CourseCalendar.prototype.removeCurrentTermin = function() {
-
-    var self = this;
-    var title = MessageCatalog.getMessage("COURSETERMIN_QUERY_REMOVE_TITLE");
-    var messg = MessageCatalog.getMessage("COURSETERMIN_QUERY_REMOVE", this.selectedTermin);
-    new MessageBox(MessageBox.QUERY, title, messg, function() {
-
-	var caller = new ServiceCaller();
-	caller.onSuccess = function(rsp) {
-	    switch (rsp.documentElement.nodeName) {
-	    case "remove-course-termin-ok-response":
-		self.update();
-		break;
-
-	    case "error-response":
-		var title = MessageCatalog.getMessage("COURSETERMIN_REMOVE_ERROR_TITLE");
-		var messg = MessageCatalog.getMessage("COURSETERMIN_REMOVE_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
-		new MessageBox(MessageBox.ERROR, title, messg);
-		break;
-	    }
-	}
-
-	caller.onError = function(req, status) {
-	    var title = MessageCatalog.getMessage("COURSETERMIN_REMOVE_ERROR_TITLE");
-	    var messg = MessageCatalog.getMessage("COURSETERMIN_REMOVE_TECH_ERROR", status);
-	    new MessageBox(MessageBox.ERROR, title, messg);
-	}
-	var req = XmlUtils.createDocument("remove-course-termin-request");
-	XmlUtils.setNode(req, "id", self.selectedTermin);
-	caller.invokeService(req);
-    });
-
-}
-
-/**
- * 
- */
-CourseCalendar.prototype.removeCurrentCourse = function() {
-
-    var self = this;
-    var title = MessageCatalog.getMessage("COURSE_QUERY_REMOVE_TITLE");
-    var messg = MessageCatalog.getMessage("COURSE_QUERY_REMOVE", this.selectedCourse);
-    new MessageBox(MessageBox.QUERY, title, messg, function() {
-
-	var caller = new ServiceCaller();
-	caller.onSuccess = function(rsp) {
-	    switch (rsp.documentElement.nodeName) {
-	    case "remove-course-ok-response":
-		self.update();
-		break;
-
-	    case "error-response":
-		var title = MessageCatalog.getMessage("COURSE_REMOVE_ERROR_TITLE");
-		var messg = MessageCatalog.getMessage("COURSE_REMOVE_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
-		new MessageBox(MessageBox.ERROR, title, messg);
-		break;
-	    }
-	}
-
-	caller.onError = function(req, status) {
-	    var title = MessageCatalog.getMessage("COURSE_REMOVE_ERROR_TITLE");
-	    var messg = MessageCatalog.getMessage("COURSE_REMOVE_TECH_ERROR_TITLE", status);
-	    new MessageBox(MessageBox.ERROR, title, messg);
-	}
-	var req = XmlUtils.createDocument("remove-course-request");
-	XmlUtils.setNode(req, "id", self.selectedCourse);
-	caller.invokeService(req);
-    });
-}
-
 /**
  * 
  */
@@ -142,6 +37,8 @@ CourseCalendar.prototype.setupUI = function() {
 
     var self = this;
 
+    this.createShowWeeklyAction();
+    this.createShowMonthlyAction();
     this.createEditAction();
     this.createRemoveAction();
 
@@ -184,11 +81,170 @@ CourseCalendar.prototype.setupUI = function() {
 	}
 	self.update();
     });
+}
 
-    // mode
-    document.getElementById("course_calendar_mode").addEventListener("change", function() {
-	self.mode = parseInt(document.getElementById("course_calendar_mode").value);
+/**
+ * 
+ */
+CourseCalendar.prototype.createShowWeeklyAction = function() {
+
+    var self = this;
+    this.actionShowWeekly = new WorkSpaceFrameAction("gui/images/view-calendar-week.svg", "Wochen-Ansicht", function() {
+	self.mode = CourseCalendar.WEEKLY;
+	self.actionShowWeekly.hide();
+	self.actionShowMonthly.show();
 	self.update();
+    });    
+    this.addAction(this.actionShowWeekly);
+    this.actionShowWeekly.hide();
+}
+
+/**
+ * 
+ */
+CourseCalendar.prototype.createShowMonthlyAction = function () {
+
+    var self = this;
+    this.actionShowMonthly = new WorkSpaceFrameAction("gui/images/view-calendar-month.svg", "Monats-Ansicht", function() {
+	self.mode = CourseCalendar.MONTHLY;
+	self.actionShowWeekly.show();
+	self.actionShowMonthly.hide();
+	self.update();	
+    });    
+    this.addAction(this.actionShowMonthly);
+    this.actionShowMonthly.show();
+}
+
+/**
+ * 
+ */
+CourseCalendar.prototype.createEditAction = function() {
+
+    var self = this;
+    this.actionEdit = new WorkSpaceFrameAction("gui/images/course-edit.svg", "Kurs/Kurs-Termin bearbeiten", function() {
+
+	var courseId = self.model.getValue(self.currSelection + "/course-id");
+	var terminId = self.model.getValue(self.currSelection + "/id");
+	var onSave = function() {
+	    self.update();
+	};
+
+	var menu = new PopupMenu(self.actionEdit.btn);
+	menu.makeMenuItem("Kurs-Termin bearbeiten", function() {
+	    self.actionEdit.hide();
+	    self.actionRemove.hide();
+	    new CourseEditor(courseId, terminId, onSave);
+	});
+
+	menu.makeSeparator();
+
+	menu.makeMenuItem("Kurs bearbeiten", function() {
+	    self.actionEdit.hide();
+	    self.actionRemove.hide();
+	    new CourseEditor(courseId, null, onSave);
+	});
+    });
+    this.addAction(this.actionEdit);
+    this.actionEdit.hide();
+}
+
+/**
+ * 
+ */
+CourseCalendar.prototype.createRemoveAction = function() {
+
+    var self = this;
+    this.actionRemove = new WorkSpaceFrameAction("gui/images/course-remove.svg", "Kurs/Kurs-Termin löschen", function() {
+
+	var menu = new PopupMenu(self.actionRemove.btn);
+	menu.makeMenuItem("Kurs-Termin löschen", function() {
+	    self.removeCurrentTermin();
+	});
+
+	menu.makeSeparator();
+
+	menu.makeMenuItem("gesamten Kurs löschen", function() {
+	    self.removeCurrentCourse();
+	});
+    });
+    this.addAction(this.actionRemove);
+    this.actionRemove.hide();
+}
+
+/**
+ * 
+ */
+CourseCalendar.prototype.removeCurrentTermin = function() {
+
+    var self = this;
+    var name = this.model.getValue(this.currSelection + "/name");
+    var date = this.model.getValue(this.currSelection + "/date");
+
+    var title = MessageCatalog.getMessage("COURSETERMIN_QUERY_REMOVE_TITLE");
+    var messg = MessageCatalog.getMessage("COURSETERMIN_QUERY_REMOVE", date, name);
+    new MessageBox(MessageBox.QUERY, title, messg, function() {
+
+	var caller = new ServiceCaller();
+	caller.onSuccess = function(rsp) {
+	    switch (rsp.documentElement.nodeName) {
+	    case "remove-course-termin-ok-response":
+		self.update();
+		break;
+
+	    case "error-response":
+		var title = MessageCatalog.getMessage("COURSETERMIN_REMOVE_ERROR_TITLE");
+		var messg = MessageCatalog.getMessage("COURSETERMIN_REMOVE_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
+		new MessageBox(MessageBox.ERROR, title, messg);
+		break;
+	    }
+	}
+
+	caller.onError = function(req, status) {
+	    var title = MessageCatalog.getMessage("COURSETERMIN_REMOVE_ERROR_TITLE");
+	    var messg = MessageCatalog.getMessage("COURSETERMIN_REMOVE_TECH_ERROR", status);
+	    new MessageBox(MessageBox.ERROR, title, messg);
+	}
+	var req = XmlUtils.createDocument("remove-course-termin-request");
+	XmlUtils.setNode(req, "id", self.model.getValue(self.currSelection + "/id"));
+	caller.invokeService(req);
+    });
+
+}
+
+/**
+ * 
+ */
+CourseCalendar.prototype.removeCurrentCourse = function() {
+
+    var self = this;
+    var name = this.model.getValue(this.currSelection + "/name");
+    var title = MessageCatalog.getMessage("COURSE_QUERY_REMOVE_TITLE");
+    var messg = MessageCatalog.getMessage("COURSE_QUERY_REMOVE", name);
+    new MessageBox(MessageBox.QUERY, title, messg, function() {
+
+	var caller = new ServiceCaller();
+	caller.onSuccess = function(rsp) {
+	    switch (rsp.documentElement.nodeName) {
+	    case "remove-course-ok-response":
+		self.update();
+		break;
+
+	    case "error-response":
+		var title = MessageCatalog.getMessage("COURSE_REMOVE_ERROR_TITLE");
+		var messg = MessageCatalog.getMessage("COURSE_REMOVE_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
+		new MessageBox(MessageBox.ERROR, title, messg);
+		break;
+	    }
+	}
+
+	caller.onError = function(req, status) {
+	    var title = MessageCatalog.getMessage("COURSE_REMOVE_ERROR_TITLE");
+	    var messg = MessageCatalog.getMessage("COURSE_REMOVE_TECH_ERROR_TITLE", status);
+	    new MessageBox(MessageBox.ERROR, title, messg);
+	}
+	var req = XmlUtils.createDocument("remove-course-request");
+	XmlUtils.setNode(req, "id", self.model.getValue(self.currSelection + "/course-id"));
+	caller.invokeService(req);
     });
 }
 
@@ -200,15 +256,46 @@ CourseCalendar.prototype.createPrintAction = function() {
     var self = this;
     var action = new WorkSpaceFrameAction("gui/images/print.svg", "Kurs-Kalender drucken", function() {
 
-	var startDate = DateTimeUtils.formatDate(self.findStartDate(), "{dd}.{mm}.{yyyy}");
-	var endDate = DateTimeUtils.formatDate(self.findLastDate(), "{dd}.{mm}.{yyyy}");
-	var url = "getDocument/course_overview.pdf?from=" + startDate + "&until=" + endDate;
-	var title = "Kurs-Übersicht " + startDate + " - " + endDate;
-	new DocumentViewer(url, title);
+	var menu = new PopupMenu(action.btn);
+	menu.makeMenuItem("aktuellen Kurs-Kalender drucken", function() {
+	    self.printCurrentCalendar();
+	});
+
+	if (self.currSelection) {
+	    menu.makeSeparator();
+	    menu.makeMenuItem("ausgewählten Kurs drucken", function() {
+		self.printCurrentCourse();
+	    });
+	}
+
     });
     this.addAction(action);
     return action;
 }
+
+/**
+ * Drucke den aktuell angezeigten Kurs-Kalender
+ */
+CourseCalendar.prototype.printCurrentCalendar = function() {
+
+    var startDate = DateTimeUtils.formatDate(this.findStartDate(), "{dd}.{mm}.{yyyy}");
+    var endDate = DateTimeUtils.formatDate(this.findLastDate(), "{dd}.{mm}.{yyyy}");
+    var url = "getDocument/course_overview.pdf?from=" + startDate + "&until=" + endDate;
+    var title = "Kurs-Übersicht " + startDate + " - " + endDate;
+    new DocumentViewer(url, title);
+}
+
+/**
+ * Drucke den aktuell angezeigten Kurs-Kalender
+ */
+CourseCalendar.prototype.printCurrentCourse = function() {
+
+    var courseId = this.model.getValue(this.currSelection + "/course-id");
+    var title = "Details für den Kurs " + this.model.getValue(this.currSelection + "/name");
+    var url = "getDocument/course_details.pdf?id=" + courseId;
+    new DocumentViewer(url, title);
+}
+
 
 /**
  * von rechts nach links wischen
@@ -330,18 +417,19 @@ CourseCalendar.prototype.updateBody = function(startDate, endDate, rsp) {
 
     var body = document.getElementById("course_calendar_body");
     UIUtils.clearChilds(body);
+    this.currSelection = null;
 
     this.actionEdit.hide();
     this.actionRemove.hide();
 
-    var model = new Model(rsp);
+    this.model = new Model(rsp);
     switch (this.mode) {
     case CourseCalendar.WEEKLY:
-	this.updateWeeklyBody(body, startDate, endDate, model);
+	this.updateWeeklyBody(body, startDate, endDate);
 	break;
 
     case CourseCalendar.MONTHLY:
-	this.updateMonthlyBody(body, startDate, endDate, model);
+	this.updateMonthlyBody(body, startDate, endDate);
 	break;
 
     default:
@@ -349,7 +437,7 @@ CourseCalendar.prototype.updateBody = function(startDate, endDate, rsp) {
     }
 }
 
-CourseCalendar.prototype.updateWeeklyBody = function(body, startDate, endDate, model) {
+CourseCalendar.prototype.updateWeeklyBody = function(body, startDate, endDate) {
 
     var currDate = new Date(startDate);
     while (currDate <= endDate) {
@@ -366,7 +454,7 @@ CourseCalendar.prototype.updateWeeklyBody = function(body, startDate, endDate, m
 
 	var now = DateTimeUtils.formatDate(currDate, "{dd}.{mm}.{yyyy}");
 	var xpath = "/get-course-termins-between-rsp/cal-entries/cal-entry[date='" + now + "']";
-	var termins = model.evaluateXPath(xpath);
+	var termins = this.model.evaluateXPath(xpath);
 
 	for (var i = 0; i < termins.length; i++) {
 	    cnr.appendChild(this.createWeeklyTermin(termins[i]));
@@ -394,8 +482,9 @@ CourseCalendar.prototype.createWeeklyTermin = function(termin) {
     // selectable machen um das aktivieren per click zu visualisieren
     t.tabIndex = "0";
     t.addEventListener("click", function() {
-	self.selectedTermin = parseInt(termin.getElementsByTagName("id")[0].textContent);
-	self.selectedCourse = parseInt(termin.getElementsByTagName("course-id")[0].textContent);
+	self.currSelection = XmlUtils.getXPathTo(termin);
+	// self.selectedCourse =
+	// parseInt(termin.getElementsByTagName("course-id")[0].textContent);
 	self.actionEdit.show();
 	self.actionRemove.show();
     });
@@ -479,7 +568,7 @@ CourseCalendar.prototype.createWeeklyRuler = function() {
 /**
  * 
  */
-CourseCalendar.prototype.updateMonthlyBody = function(body, startDate, endDate, model) {
+CourseCalendar.prototype.updateMonthlyBody = function(body, startDate, endDate) {
 
     for (var currDate = new Date(startDate); currDate <= endDate;) {
 
@@ -499,7 +588,7 @@ CourseCalendar.prototype.updateMonthlyBody = function(body, startDate, endDate, 
 
 	    var now = DateTimeUtils.formatDate(currDate, "{dd}.{mm}.{yyyy}");
 	    var xpath = "/get-course-termins-between-rsp/cal-entries/cal-entry[date='" + now + "']";
-	    var termins = model.evaluateXPath(xpath);
+	    var termins = this.model.evaluateXPath(xpath);
 
 	    for (var j = 0; j < termins.length; j++) {
 
@@ -525,8 +614,7 @@ CourseCalendar.prototype.createMonthlyTermin = function(termin) {
     // selectable machen um das aktivieren per click zu visualisieren
     t.tabIndex = "0";
     t.addEventListener("click", function() {
-	self.selectedTermin = parseInt(termin.getElementsByTagName("id")[0].textContent);
-	self.selectedCourse = parseInt(termin.getElementsByTagName("course-id")[0].textContent);
+	self.currSelection = XmlUtils.getXPathTo(termin);
 	self.actionEdit.show();
 	self.actionRemove.show();
     });
