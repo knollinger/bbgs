@@ -67,7 +67,36 @@ CourseCalendar.prototype.createRemoveAction = function() {
  */
 CourseCalendar.prototype.removeCurrentTermin = function() {
 
-    alert("not yet implemented");
+    var self = this;
+    var title = MessageCatalog.getMessage("COURSETERMIN_QUERY_REMOVE_TITLE");
+    var messg = MessageCatalog.getMessage("COURSETERMIN_QUERY_REMOVE", this.selectedTermin);
+    new MessageBox(MessageBox.QUERY, title, messg, function() {
+
+	var caller = new ServiceCaller();
+	caller.onSuccess = function(rsp) {
+	    switch (rsp.documentElement.nodeName) {
+	    case "remove-course-termin-ok-response":
+		self.update();
+		break;
+
+	    case "error-response":
+		var title = MessageCatalog.getMessage("COURSETERMIN_REMOVE_ERROR_TITLE");
+		var messg = MessageCatalog.getMessage("COURSETERMIN_REMOVE_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
+		new MessageBox(MessageBox.ERROR, title, messg);
+		break;
+	    }
+	}
+
+	caller.onError = function(req, status) {
+	    var title = MessageCatalog.getMessage("COURSETERMIN_REMOVE_ERROR_TITLE");
+	    var messg = MessageCatalog.getMessage("COURSETERMIN_REMOVE_TECH_ERROR", status);
+	    new MessageBox(MessageBox.ERROR, title, messg);
+	}
+	var req = XmlUtils.createDocument("remove-course-termin-request");
+	XmlUtils.setNode(req, "id", self.selectedTermin);
+	caller.invokeService(req);
+    });
+
 }
 
 /**
@@ -75,7 +104,35 @@ CourseCalendar.prototype.removeCurrentTermin = function() {
  */
 CourseCalendar.prototype.removeCurrentCourse = function() {
 
-    alert("not yet implemented");
+    var self = this;
+    var title = MessageCatalog.getMessage("COURSE_QUERY_REMOVE_TITLE");
+    var messg = MessageCatalog.getMessage("COURSE_QUERY_REMOVE", this.selectedCourse);
+    new MessageBox(MessageBox.QUERY, title, messg, function() {
+
+	var caller = new ServiceCaller();
+	caller.onSuccess = function(rsp) {
+	    switch (rsp.documentElement.nodeName) {
+	    case "remove-course-ok-response":
+		self.update();
+		break;
+
+	    case "error-response":
+		var title = MessageCatalog.getMessage("COURSE_REMOVE_ERROR_TITLE");
+		var messg = MessageCatalog.getMessage("COURSE_REMOVE_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
+		new MessageBox(MessageBox.ERROR, title, messg);
+		break;
+	    }
+	}
+
+	caller.onError = function(req, status) {
+	    var title = MessageCatalog.getMessage("COURSE_REMOVE_ERROR_TITLE");
+	    var messg = MessageCatalog.getMessage("COURSE_REMOVE_TECH_ERROR_TITLE", status);
+	    new MessageBox(MessageBox.ERROR, title, messg);
+	}
+	var req = XmlUtils.createDocument("remove-course-request");
+	XmlUtils.setNode(req, "id", self.selectedCourse);
+	caller.invokeService(req);
+    });
 }
 
 /**

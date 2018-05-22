@@ -332,41 +332,6 @@ public class CourseDBUtil
         }
     }
 
-    public static Collection<Member> getAllMembersByTerminId(int terminId, Connection conn) throws SQLException
-    {
-        Collection<Member> result = new ArrayList<Member>();
-
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        try
-        {
-            String sql = "select * from members where id in \n" + "(\n"
-                + "    select distinct member_id from course_member where course_id in\n" + "    (\n"
-                + "        select ref_id from course_termins where id=?\n" + "    )\n" + ")";
-            stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, terminId);
-            rs = stmt.executeQuery();
-            while (rs.next())
-            {
-                Member m = new Member();
-                m.id = rs.getInt("id");
-                m.zname = rs.getString("zname");
-                m.vname = rs.getString("vname");
-                m.vname2 = rs.getString("vname2");
-                m.city = rs.getString("city");
-                m.street = rs.getString("street");
-                m.memberType = EMemberType.valueOf(rs.getString("type"));
-                result.add(m);
-            }
-            return result;
-        }
-        finally
-        {
-            DBUtils.closeQuitly(rs);
-            DBUtils.closeQuitly(stmt);
-        }
-    }
 
     /**
      * @param id
@@ -501,11 +466,11 @@ public class CourseDBUtil
                     break;
 
                 case MODIFY :
-                    CourseDBUtil.updateTermin(mdl.id, t, conn);
+                    CourseDBUtil.updateTermin(t, conn);
                     break;
 
                 case REMOVE :
-                    CourseDBUtil.removeTermin(mdl.id, t, conn);
+                    CourseDBUtil.removeTermin(t.id, conn);
                     break;
 
                 default :
@@ -553,7 +518,7 @@ public class CourseDBUtil
      * @param conn
      * @throws SQLException
      */
-    private static void updateTermin(int id, Termin t, Connection conn) throws SQLException
+    private static void updateTermin(Termin t, Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
 
@@ -580,14 +545,14 @@ public class CourseDBUtil
      * @param conn
      * @throws SQLException
      */
-    private static void removeTermin(int id, Termin t, Connection conn) throws SQLException
+    public static void removeTermin(int id, Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
 
         try
         {
             stmt = conn.prepareStatement("delete from course_termins where id=?");
-            stmt.setInt(1, t.id);
+            stmt.setInt(1, id);
             stmt.executeUpdate();
         }
         finally

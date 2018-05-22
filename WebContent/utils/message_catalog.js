@@ -120,6 +120,12 @@ var MessageCatalog = (function() {
 	COURSETERMIN_LOAD_ERROR : "Beim laden der Termin-Informationen ist ein technischer Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
 	COURSETERMIN_LOAD_TECH_ERROR : "Beim laden der Termin-Informationen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
 
+	COURSETERMIN_QUERY_REMOVE_TITLE : "Bist Du sicher ?",
+	COURSETERMIN_QUERY_REMOVE : "M&ouml;chtest Du den Kurs-Termin '{1}'wirklich l&ouml;schen ?",
+	COURSETERMIN_REMOVE_ERROR_TITLE : "Fehler beim l&ouml;schen des Kurs-Termins",
+	COURSETERMIN_REMOVE_ERROR : "Beim laden der Termin-Informationen ist ein technischer Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
+	COURSETERMIN_REMOVE_TECH_ERROR : "Beim laden der Termin-Informationen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
+
 	COURSE_QUERY_REMOVE_TITLE : "Bist Du sicher ?",
 	COURSE_QUERY_REMOVE : "M&ouml;chtest Du den Kurs '{1}' <b>und alle seine Termine</b> wirklich l&ouml;schen ?",
 	COURSE_REMOVE_ERROR_TITLE : "Fehler beim l&ouml;schen des Kurses",
