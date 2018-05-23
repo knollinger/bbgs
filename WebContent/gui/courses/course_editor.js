@@ -29,6 +29,11 @@ CourseEditor.prototype = Object.create(WorkSpaceTabbedFrame.prototype);
 /**
  * 
  */
+CourseEditor.NEW_TERMIN = -1;
+
+/**
+ * 
+ */
 CourseEditor.prototype.loadModel = function(id, onSuccess) {
 
     var self = this;
@@ -99,11 +104,13 @@ CourseEditor.prototype.setupCoreDataEditor = function() {
  */
 CourseEditor.prototype.setupTerminOverview = function(terminId) {
 
+    var id = terminId || null;
+
     var self = this;
     var tabBinder = this.addTab("gui/images/course-edit.svg", "Termine");
-    var subFrame = new CourseTerminAndLocationOverview(this, tabBinder.contentPane, this.model, terminId);
+    var subFrame = new CourseTerminAndLocationOverview(this, tabBinder.contentPane, this.model, id);
     tabBinder.associateTabPane(subFrame);
-    if (terminId) {
+    if (id) {
 	tabBinder.select();
     }
 }
@@ -149,7 +156,7 @@ CourseEditor.prototype.onSave = function() {
     caller.onSuccess = function(rsp) {
 	switch (rsp.documentElement.nodeName) {
 	case "save-course-ok-response":
-	    if(self.onSaveCB) {
+	    if (self.onSaveCB) {
 		self.onSaveCB();
 	    }
 	    break;
@@ -182,10 +189,10 @@ var CourseCoreDataEditor = function(parentFrame, targetCnr, model) {
     this.load("gui/courses/course_editor_core.html", function() {
 
 	self.fillColors();
-	self.model.createValueBinding("edit_course_name", "/course-model/name");
-	self.model.createValueBinding("edit_course_description", "/course-model/description");
-	self.model.createValueBinding("edit_course_type", "/course-model/type");
-	self.model.createValueBinding("edit_course_color", "/course-model/color-id");
+	self.model.createValueBinding("edit_course_name", "//course-model/name");
+	self.model.createValueBinding("edit_course_description", "//course-model/description");
+	self.model.createValueBinding("edit_course_type", "//course-model/type");
+	self.model.createValueBinding("edit_course_color", "//course-model/color-id");
     });
 }
 CourseCoreDataEditor.prototype = Object.create(WorkSpaceTabPane.prototype);
@@ -222,6 +229,11 @@ var CourseTerminAndLocationOverview = function(parentFrame, targetCnr, model, te
 
 	new TableDecorator("edit_termin_overview");
 	self.fillTable(terminId);
+
+	if (terminId == CourseEditor.NEW_TERMIN) {
+	    self.activate();
+	    self.actionAdd.btn.click();
+	}
     });
 }
 

@@ -1,0 +1,732 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<course-model>
+	<id>39</id>
+	<name>Ungarn-Scout-Ausfahrt</name>
+	<description>Aufbau eines Feriencamps, mit allem drum und dran!</description>
+	<color-id>1</color-id>
+	<color>rgb(244,255,37)</color>
+	<type>ONETIME</type>
+	<termine>
+		<termin>
+			<action>NONE</action>
+			<id>767</id>
+			<date>19.05.2018</date>
+			<begin>00:00</begin>
+			<end>23:59</end>
+			<location-id>9</location-id>
+		</termin>
+		<termin>
+			<action>NONE</action>
+			<id>768</id>
+			<date>20.05.2018</date>
+			<begin>00:00</begin>
+			<end>23:59</end>
+			<location-id>9</location-id>
+		</termin>
+		<termin>
+			<action>NONE</action>
+			<id>769</id>
+			<date>21.05.2018</date>
+			<begin>00:00</begin>
+			<end>23:59</end>
+			<location-id>9</location-id>
+		</termin>
+		<termin>
+			<action>NONE</action>
+			<id>770</id>
+			<date>22.05.2018</date>
+			<begin>00:00</begin>
+			<end>23:59</end>
+			<location-id>9</location-id>
+		</termin>
+		<termin>
+			<action>NONE</action>
+			<id>771</id>
+			<date>23.05.2018</date>
+			<begin>00:00</begin>
+			<end>23:59</end>
+			<location-id>9</location-id>
+		</termin>
+		<termin>
+			<action>NONE</action>
+			<id>772</id>
+			<date>24.05.2018</date>
+			<begin>00:00</begin>
+			<end>23:59</end>
+			<location-id>9</location-id>
+		</termin>
+		<termin>
+			<action>NONE</action>
+			<id>773</id>
+			<date>25.05.2018</date>
+			<begin>00:00</begin>
+			<end>23:59</end>
+			<location-id>9</location-id>
+		</termin>
+		<termin>
+			<action>NONE</action>
+			<id>774</id>
+			<date>26.05.2018</date>
+			<begin>00:00</begin>
+			<end>23:59</end>
+			<location-id>9</location-id>
+		</termin>
+	</termine>
+	<members>
+		<member>
+			<action>NONE</action>
+			<id>258</id>
+			<zname>Akhlaqi</zname>
+			<vname>Zahra</vname>
+			<vname2 />
+			<title />
+			<birth_date>20.10.1999</birth_date>
+			<sex>W</sex>
+			<zip_code>81241</zip_code>
+			<city>München</city>
+			<street>Richard-Riemerschmid-Allee</street>
+			<photoagreement>FULL</photoagreement>
+			<phone />
+			<phone2 />
+			<mobile>017643636899</mobile>
+			<mobile2 />
+			<email>zahra.aklaqi1999@yahoo.com</email>
+			<email2 />
+			<member_since>01.10.2017</member_since>
+			<member_until>31.07.2018</member_until>
+			<school />
+			<type>REFUGEE</type>
+			<image />
+			<image-mimetype />
+			<mailsig />
+			<mailsig-mimetype />
+		</member>
+		<member>
+			<action>NONE</action>
+			<id>71</id>
+			<zname>Almahoud</zname>
+			<vname>Monib</vname>
+			<vname2 />
+			<title />
+			<birth_date />
+			<sex>M</sex>
+			<zip_code />
+			<city>München</city>
+			<street>Moosacher Str. 14</street>
+			<photoagreement>NONE</photoagreement>
+			<phone />
+			<phone2 />
+			<mobile />
+			<mobile2 />
+			<email />
+			<email2 />
+			<member_since>01.10.2016</member_since>
+			<member_until>31.07.2017</member_until>
+			<school />
+			<type>REFUGEE</type>
+			<image />
+			<image-mimetype />
+			<mailsig />
+			<mailsig-mimetype />
+		</member>
+		<member>
+			<action>NONE</action>
+			<id>248</id>
+			<zname>Dietrich</zname>
+			<vname>Nicola</vname>
+			<vname2 />
+			<title />
+			<birth_date>11.05.1993</birth_date>
+			<sex>W</sex>
+			<zip_code>81925</zip_code>
+			<city>München</city>
+			<street>Elektrastraße 22</street>
+			<photoagreement>FULL</photoagreement>
+			<phone />
+			<phone2 />
+			<mobile>017699523427</mobile>
+			<mobile2 />
+			<email>nicola.dietrich@web.de</email>
+			<email2 />
+			<member_since />
+			<member_until />
+			<school />
+			<type>TEACHER</type>
+			<image />
+			<image-mimetype />
+			<mailsig />
+			<mailsig-mimetype />
+		</member>
+		<member>
+			<action>NONE</action>
+			<id>109</id>
+			<zname>Fauth</zname>
+			<vname>Julian</vname>
+			<vname2 />
+			<title />
+			<birth_date>14.07.2006</birth_date>
+			<sex>M</sex>
+			<zip_code>85570</zip_code>
+			<city>Markt Schwaben</city>
+			<street>Gerhart-Hauptmann-Weg 10</street>
+			<photoagreement>FULL</photoagreement>
+			<phone />
+			<phone2 />
+			<mobile />
+			<mobile2 />
+			<email />
+			<email2 />
+			<member_since>01.10.2016</member_since>
+			<member_until>31.07.2017</member_until>
+			<school />
+			<type>REFUGEE</type>
+			<image />
+			<image-mimetype />
+			<mailsig />
+			<mailsig-mimetype />
+		</member>
+		<member>
+			<action>NONE</action>
+			<id>65</id>
+			<zname>Hamagoon</zname>
+			<vname>Luffi</vname>
+			<vname2 />
+			<title />
+			<birth_date>28.08.1996</birth_date>
+			<sex>M</sex>
+			<zip_code>81739</zip_code>
+			<city>München</city>
+			<street>Arnold-Sommerfeldstr. 11</street>
+			<photoagreement>INTERN</photoagreement>
+			<phone />
+			<phone2 />
+			<mobile>0152/14372933</mobile>
+			<mobile2 />
+			<email>luffi65@yahoomail.com</email>
+			<email2 />
+			<member_since>01.10.2016</member_since>
+			<member_until>31.07.2017</member_until>
+			<school />
+			<type>REFUGEE</type>
+			<image />
+			<image-mimetype />
+			<mailsig />
+			<mailsig-mimetype />
+		</member>
+		<member>
+			<action>NONE</action>
+			<id>264</id>
+			<zname>Linse</zname>
+			<vname>Anna</vname>
+			<vname2>Sophie</vname2>
+			<title />
+			<birth_date>02.04.2018</birth_date>
+			<sex>W</sex>
+			<zip_code>12345</zip_code>
+			<city>München</city>
+			<street>Dahoam</street>
+			<photoagreement>FULL</photoagreement>
+			<phone />
+			<phone2 />
+			<mobile />
+			<mobile2 />
+			<email />
+			<email2 />
+			<member_since>01.04.2018</member_since>
+			<member_until />
+			<school />
+			<type>FEST</type>
+			<image />
+			<image-mimetype />
+			<mailsig />
+			<mailsig-mimetype />
+		</member>
+		<member>
+			<action>NONE</action>
+			<id>125</id>
+			<zname>Märkl</zname>
+			<vname>Philipp</vname>
+			<vname2 />
+			<title />
+			<birth_date>26.01.1988</birth_date>
+			<sex>M</sex>
+			<zip_code>85757</zip_code>
+			<city>Karlsfeld</city>
+			<street>Leinorstraße 2</street>
+			<photoagreement>FULL</photoagreement>
+			<phone />
+			<phone2 />
+			<mobile>017624373090</mobile>
+			<mobile2 />
+			<email>philipp@schneidig.com</email>
+			<email2 />
+			<member_since>01.10.2014</member_since>
+			<member_until>31.07.2015</member_until>
+			<school />
+			<type>TEACHER</type>
+			<image />
+			<image-mimetype />
+			<mailsig />
+			<mailsig-mimetype />
+		</member>
+		<member>
+			<action>NONE</action>
+			<id>253</id>
+			<zname>Xaser</zname>
+			<vname>Ibrahim</vname>
+			<vname2 />
+			<title />
+			<birth_date>22.06.1998</birth_date>
+			<sex>M</sex>
+			<zip_code>80639</zip_code>
+			<city>München</city>
+			<street />
+			<photoagreement>FULL</photoagreement>
+			<phone />
+			<phone2 />
+			<mobile>017685129114</mobile>
+			<mobile2 />
+			<email />
+			<email2 />
+			<member_since />
+			<member_until />
+			<school />
+			<type>REFUGEE</type>
+			<image />
+			<image-mimetype />
+			<mailsig />
+			<mailsig-mimetype />
+		</member>
+	</members>
+	<attachments>
+		<attachment>
+			<id>259</id>
+			<name>P027.gif</name>
+			<mime-type>image/gif</mime-type>
+			<content />
+			<attached-by>Anderl</attached-by>
+			<attached-at />
+			<domain>COURSE</domain>
+			<action>NONE</action>
+		</attachment>
+	</attachments>
+	<notes>
+		<note>
+			<id>203</id>
+			<type>COMMON</type>
+			<description>test</description>
+			<action>NONE</action>
+		</note>
+	</notes>
+	<locations>
+		<location>
+			<action>NONE</action>
+			<id>8</id>
+			<name>Auerwandl</name>
+			<description>Schöner Klettergarten im Chiemgau
+				Das Auer Wandl ist leicht zu finden wenn man von der Autobahn A8 kommt,
+				Bernau abfährt und über Marquartstein nach Oberwössen fährt. Kurz
+				nach dem Ende von Oberwössen zweigt rechts direkt nach einer kleinen
+				Brücke und noch vor dem Marsererpass eine kleine Forststraße ab.
+				Dort parkt man und ist in nur 15-20 Minuten Zustieg sehr schnell am
+				Auer Wandl.
+
+				Camping Litzelau
+				Förster Sven Bussemer</description>
+			<zip-code>83246</zip-code>
+			<city>Oberwössen</city>
+			<street>Forstweg</street>
+			<homepage>https://</homepage>
+			<contacts>
+				<contact>
+					<id>16</id>
+					<action>NONE</action>
+					<zname>Bussemer</zname>
+					<vname>Sven</vname>
+					<vname2>Förster</vname2>
+					<title />
+					<phone>08540-8293</phone>
+					<mobile>0173/8645747</mobile>
+					<email>sven.bussemer@baysf.de</email>
+					<phone2 />
+					<mobile2 />
+					<email2 />
+				</contact>
+			</contacts>
+			<attachments />
+			<notes />
+		</location>
+		<location>
+			<action>NONE</action>
+			<id>11</id>
+			<name>Bad Heilbrunn</name>
+			<description>Schöne Plattenkletterei Sandstein
+				Sehr einfache Kletterei
+
+			</description>
+			<zip-code>0</zip-code>
+			<city>Bad Heilbrunn</city>
+			<street>Am Ortsausgang</street>
+			<homepage>https://www.google.de/maps/place/Klettergarten+Bad+Heilbrunn/@47.7334378,11.4471015,15z/data=!4m5!3m4!1s0x0:0x74111215c7ae79fc!8m2!3d47.7334378!4d11.4471015</homepage>
+			<contacts />
+			<attachments />
+			<notes />
+		</location>
+		<location>
+			<action>NONE</action>
+			<id>2</id>
+			<name>Brauneck</name>
+			<description>Stie-Alm.
+				Nette Hütte, leckerer Käse!</description>
+			<zip-code>83661</zip-code>
+			<city>Lenggries</city>
+			<street>Latschenkopf 5</street>
+			<homepage>https://</homepage>
+			<contacts />
+			<attachments />
+			<notes />
+		</location>
+		<location>
+			<action>NONE</action>
+			<id>6</id>
+			<name>BW-Hochschule Neubiberg</name>
+			<description>Super schöne Halle, mit Außenkletterbereich.
+				Da Bundeswehrgelände, immer Ausweis mitnehmen.</description>
+			<zip-code>85577</zip-code>
+			<city>Neubiberg</city>
+			<street>Werner-Heisenberg-Weg 39</street>
+			<homepage>https://</homepage>
+			<contacts>
+				<contact>
+					<id>10</id>
+					<action>NONE</action>
+					<zname>Hornberger</zname>
+					<vname>Lisa-Karoline</vname>
+					<vname2 />
+					<title />
+					<phone>+49 89 6004-4164</phone>
+					<mobile />
+					<email>lisa-karoline.hornberger@unibw.de</email>
+					<phone2 />
+					<mobile2 />
+					<email2 />
+				</contact>
+			</contacts>
+			<attachments />
+			<notes />
+		</location>
+		<location>
+			<action>NONE</action>
+			<id>10</id>
+			<name>Eddy Crash Paddy</name>
+			<description>coolste Boulderhalle ever</description>
+			<zip-code>81671</zip-code>
+			<city>München</city>
+			<street>Lokweg 1</street>
+			<homepage>https://www.kletternmachtspass.de</homepage>
+			<contacts>
+				<contact>
+					<id>25</id>
+					<action>NONE</action>
+					<zname>Plahl</zname>
+					<vname>Benjamin</vname>
+					<vname2 />
+					<title />
+					<phone>089/20003070</phone>
+					<mobile />
+					<email>b.plahl@kletternmachtspass.de</email>
+					<phone2 />
+					<mobile2 />
+					<email2 />
+				</contact>
+			</contacts>
+			<attachments />
+			<notes />
+		</location>
+		<location>
+			<action>NONE</action>
+			<id>12</id>
+			<name>Frauenwasserl</name>
+			<description>Kalkstein bei Oberammergau/Kofel
+				direkt an der Straße
+				leichte Kletterei
+
+			</description>
+			<zip-code>0</zip-code>
+			<city>Oberammergau</city>
+			<street>direkt an der Straße</street>
+			<homepage>https://www.google.de/maps/place/Klettergarten+Frauenwasserl/@47.5889925,11.0565179,15z/data=!4m8!1m2!2m1!1sfrauenwasserl+oberammergau!3m4!1s0x0:0x429e8b378245892!8m2!3d47.5811341!4d11.0673121</homepage>
+			<contacts />
+			<attachments />
+			<notes />
+		</location>
+		<location>
+			<action>NONE</action>
+			<id>1</id>
+			<name>Heavens Gate</name>
+			<description>The best place on earth!</description>
+			<zip-code>81671</zip-code>
+			<city>München</city>
+			<street>Grafinger Straße 6</street>
+			<homepage>https://www.kletternmachtspass.de</homepage>
+			<contacts>
+				<contact>
+					<id>11</id>
+					<action>NONE</action>
+					<zname>Plahl</zname>
+					<vname>Benjamin</vname>
+					<vname2 />
+					<title />
+					<phone>089/2000-30715</phone>
+					<mobile>089/2000-30712</mobile>
+					<email>benni@kletternmachtspass.de</email>
+					<phone2>089/2000-30713</phone2>
+					<mobile2>089/2000-30717</mobile2>
+					<email2 />
+				</contact>
+			</contacts>
+			<attachments />
+			<notes />
+		</location>
+		<location>
+			<action>NONE</action>
+			<id>3</id>
+			<name>High East</name>
+			<description>Schöne Halle mit tollem Außenbereich.
+				Nette Leute on top</description>
+			<zip-code>85551</zip-code>
+			<city>Heimstetten</city>
+			<street>Sonnenallee 2</street>
+			<homepage>http://www.high-east.de/</homepage>
+			<contacts>
+				<contact>
+					<id>24</id>
+					<action>NONE</action>
+					<zname>Ursi</zname>
+					<vname>Ursi</vname>
+					<vname2 />
+					<title />
+					<phone>089 - 92 79 47 96</phone>
+					<mobile />
+					<email>contact@High-east.de</email>
+					<phone2 />
+					<mobile2 />
+					<email2 />
+				</contact>
+			</contacts>
+			<attachments />
+			<notes />
+		</location>
+		<location>
+			<action>NONE</action>
+			<id>4</id>
+			<name>MTV</name>
+			<description>kleine aber feine Kletter- und Boulderhalle mitten in
+				München</description>
+			<zip-code>80337</zip-code>
+			<city>München</city>
+			<street>Häberlstraße 11B</street>
+			<homepage>http://www.mtv-muenchen.de/index.php/klettern</homepage>
+			<contacts>
+				<contact>
+					<id>21</id>
+					<action>NONE</action>
+					<zname>Glatzel</zname>
+					<vname>Roland</vname>
+					<vname2 />
+					<title />
+					<phone> 089/538 860 30</phone>
+					<mobile />
+					<email>klettern@mtv-muenchen.de</email>
+					<phone2 />
+					<mobile2 />
+					<email2 />
+				</contact>
+				<contact>
+					<id>20</id>
+					<action>NONE</action>
+					<zname>Paul</zname>
+					<vname>Michael</vname>
+					<vname2 />
+					<title />
+					<phone>089/538860315</phone>
+					<mobile />
+					<email>michi.paul@mtv-muenchen.de</email>
+					<phone2 />
+					<mobile2 />
+					<email2 />
+				</contact>
+				<contact>
+					<id>22</id>
+					<action>NONE</action>
+					<zname>Schmidt-Modrow</zname>
+					<vname>Jakob</vname>
+					<vname2 />
+					<title />
+					<phone />
+					<mobile />
+					<email />
+					<phone2 />
+					<mobile2 />
+					<email2 />
+				</contact>
+				<contact>
+					<id>23</id>
+					<action>NONE</action>
+					<zname>Sturm</zname>
+					<vname>Andreas</vname>
+					<vname2 />
+					<title />
+					<phone />
+					<mobile />
+					<email />
+					<phone2 />
+					<mobile2 />
+					<email2 />
+				</contact>
+			</contacts>
+			<attachments />
+			<notes />
+		</location>
+		<location>
+			<action>NONE</action>
+			<id>7</id>
+			<name>Naturns</name>
+			<description>Klettergebiet in Italien
+				Pfadfindergelände
+				http://www.pfadfinder.it/de/staemme/stamm-naturns/zeltlagerplatz.html</description>
+			<zip-code>39025</zip-code>
+			<city>Naturno Bozen, Italien</city>
+			<street>Via Kellerbach</street>
+			<homepage>http://www.pfadfinder.it/de/staemme/stamm-naturns/zeltlagerplatz.html</homepage>
+			<contacts />
+			<attachments />
+			<notes />
+		</location>
+		<location>
+			<action>NONE</action>
+			<id>5</id>
+			<name>SVN</name>
+			<description>Sportverein Neuperlach</description>
+			<zip-code>81737</zip-code>
+			<city>München</city>
+			<street>Fritz-Erler-Str. 3</street>
+			<homepage>http://www.svn-muenchen.de/</homepage>
+			<contacts>
+				<contact>
+					<id>13</id>
+					<action>NONE</action>
+					<zname>Basedahl</zname>
+					<vname>Vanessa</vname>
+					<vname2 />
+					<title />
+					<phone>089 / 46098582089</phone>
+					<mobile />
+					<email>sportpark@svn-muenchen.de</email>
+					<phone2 />
+					<mobile2 />
+					<email2 />
+				</contact>
+				<contact>
+					<id>12</id>
+					<action>NONE</action>
+					<zname>Röder</zname>
+					<vname>Bernd</vname>
+					<vname2 />
+					<title />
+					<phone>089 / 46098582</phone>
+					<mobile />
+					<email>sportpark@svn-muenchen.de</email>
+					<phone2 />
+					<mobile2 />
+					<email2 />
+				</contact>
+			</contacts>
+			<attachments />
+			<notes />
+		</location>
+		<location>
+			<action>NONE</action>
+			<id>9</id>
+			<name>Ungarn Döröske</name>
+			<description>Wildniscamp in Ungarn</description>
+			<zip-code>0</zip-code>
+			<city>Döröske</city>
+			<street>Mogyorósi</street>
+			<homepage>https://</homepage>
+			<contacts />
+			<attachments />
+			<notes />
+		</location>
+		<location>
+			<action>NONE</action>
+			<id>13</id>
+			<name>Waldheim Dachstadt</name>
+			<description>altes Bauernhaus
+				viele Betten</description>
+			<zip-code>91338</zip-code>
+			<city>Dachstadt</city>
+			<street>Guttenburger Weg</street>
+			<homepage>https://</homepage>
+			<contacts />
+			<attachments />
+			<notes />
+		</location>
+	</locations>
+	<colors>
+		<color>
+			<id>1</id>
+			<action>NONE</action>
+			<value>rgb(244,255,37)</value>
+			<name>Ausfahrten</name>
+		</color>
+		<color>
+			<id>2</id>
+			<action>NONE</action>
+			<value>rgb(148,255,1)</value>
+			<name>Geflüchtete</name>
+		</color>
+		<color>
+			<id>3</id>
+			<action>NONE</action>
+			<value>rgb(252,160,247)</value>
+			<name>Ki/Ju mit geistiger Behinderung</name>
+		</color>
+		<color>
+			<id>4</id>
+			<action>NONE</action>
+			<value>rgb(51,102,255)</value>
+			<name>externe Gruppen</name>
+		</color>
+		<color>
+			<id>5</id>
+			<action>NONE</action>
+			<value>rgb(255,255,204)</value>
+			<name>Partner-Schulen</name>
+		</color>
+		<color>
+			<id>6</id>
+			<action>NONE</action>
+			<value>rgb(255,51,0)</value>
+			<name>Menschen mit Behinderungen</name>
+		</color>
+		<color>
+			<id>7</id>
+			<action>NONE</action>
+			<value>rgb(255,153,0)</value>
+			<name>Inklusive Klassen</name>
+		</color>
+		<color>
+			<id>8</id>
+			<action>NONE</action>
+			<value>rgb(255,153,102)</value>
+			<name>Schwierige soz. Verhältnisse</name>
+		</color>
+		<color>
+			<id>9</id>
+			<action>NONE</action>
+			<value>rgb(102,153,0)</value>
+			<name>Seelenpflegebedürftige Ki/Ju</name>
+		</color>
+	</colors>
+</course-model>

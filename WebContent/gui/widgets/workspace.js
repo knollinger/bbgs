@@ -1,10 +1,10 @@
 WorkSpace = (function() {
 
     // Keine ContextMenus!
-//    document.body.addEventListener("contextmenu", function(evt) {
-//	evt.preventDefault();
-//	evt.stopPropagation();
-//    }, false);
+    // document.body.addEventListener("contextmenu", function(evt) {
+    // evt.preventDefault();
+    // evt.stopPropagation();
+    // }, false);
 
     // prevent touchmove!
     document.body.addEventListener("touchmove", function(evt) {
@@ -313,16 +313,16 @@ WorkSpaceFrame.prototype.addAction = function(action) {
 WorkSpaceFrame.prototype.makeActionBtn = function(imgUrl, title, onclick) {
 
     var image = document.createElement("img");
-    image.addEventListener("click", onclick);
     image.ondragstart = function() {
 	return false;
     };
     image.src = imgUrl;
 
     var btn = document.createElement("div");
-    btn.className = "workspace-frame-action";
+    btn.className = "action-button";
     btn.title = title;
     btn.appendChild(image);
+    btn.addEventListener("click", onclick);
     return btn;
 }
 
@@ -737,7 +737,7 @@ WorkSpaceDialog.prototype.makeActionBtn = function(imgUrl, title, onclick) {
     image.src = imgUrl;
 
     var btn = document.createElement("div");
-    btn.className = "workspace-frame-action";
+    btn.className = "action-button";
     btn.title = title;
     btn.appendChild(image);
     btn.tabIndex = "0";
@@ -769,13 +769,25 @@ PopupMenu.prototype.makeUI = function() {
 
     var self = this;
     this.ui.addEventListener("blur", function() {
-	UIUtils.removeElement(self.ui);
+	self.close();
     });
     this.ui.addEventListener("keydown", function(evt) {
 	if (evt.keyCode == 27) {
-	    UIUtils.removeElement(self.ui);
+	    self.close();
 	}
     });
+}
+
+/**
+ * 
+ */
+PopupMenu.prototype.close = function() {
+
+    var ui = this.ui;
+    this.ui = null;
+    if (ui) {
+	UIUtils.removeElement(ui);
+    }
 }
 
 /**
@@ -797,6 +809,7 @@ PopupMenu.prototype.makeMenuItem = function(text, onclick) {
 
     var self = this;
     item.addEventListener("click", function() {
+	self.close();
 	onclick();
     });
     this.ui.appendChild(item);

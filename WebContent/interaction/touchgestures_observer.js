@@ -51,6 +51,13 @@ var TouchGesturesObserver = function(evtSource, evtTarget) {
 }
 
 /**
+ * TouchEvents passieren bei Mobilen Geräten auch beim "klicken". Eine
+ * Swipe-Gesture wird also erst nur dann ausgelöst, wenn zwischen touch-start
+ * und touch-end ein gewisser Schwellwert an Bewegung erkannt wurde.
+ */
+TouchGesturesObserver.SWIPE_TRESHOLD = 50;
+
+/**
  * Hier geht es nicht darum, ob das aktuelle Device TouchSupport hat. Eher
  * darum, ob das aktuelle Target diesen verarbeiten kann.
  */
@@ -104,25 +111,29 @@ TouchGesturesObserver.prototype.onTouchEnd = function(evt) {
 	var deltaY = evt.changedTouches[0].pageY - self.touchStartPoint.y;
 	self.touchStartPoint = null;
 
-	// is the complete move more a vertical one or a horizontal one?
-	if (Math.abs(deltaX) >= Math.abs(deltaY)) {
+	// really a swipe gesture?
+	if (Math.abs(deltaX) > TouchGesturesObserver.SWIPE_TRESHOLD || Math.abs(deltaY) > TouchGesturesObserver.SWIPE_TRESHOLD) {
 
-	    // its's more horizontal
-	    handler = self.handleHorizontalMove(deltaX);
-	    value = deltaX;
+	    // is the complete move more a vertical one or a horizontal one?
+	    if (Math.abs(deltaX) >= Math.abs(deltaY)) {
 
-	} else {
+		// its's more horizontal
+		handler = self.handleHorizontalMove(deltaX);
+		value = deltaX;
 
-	    // its's more vertical
-	    handler = self.handleVerticalMove(deltaY);
-	    value = deltaY;
-	}
+	    } else {
 
-	// we got a handler?
-	if (handler) {
-	    evt.preventDefault();
-	    evt.stopPropagation();
-	    handler();
+		// its's more vertical
+		handler = self.handleVerticalMove(deltaY);
+		value = deltaY;
+	    }
+
+	    // we got a handler?
+	    if (handler) {
+		evt.preventDefault();
+		evt.stopPropagation();
+		handler();
+	    }
 	}
     }
     return handler;

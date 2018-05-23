@@ -224,6 +224,34 @@ h1 {
 }
 
 /*---------------------------------------------------------------------------*/
+/**
+ * all about action buttons
+ */
+.action-button {
+	border: 1px solid transparent;
+	border-radius: 2px;
+	margin: 5px;
+	padding: 5px;
+}
+
+.action-button:hover {
+	border-color: #d0d0d0;
+	background: -webkit-linear-gradient(#f8f8f8, #e8e8e8);
+	background: -o-linear-gradient(#f8f8f8, #e8e8e8);
+	background: -moz-linear-gradient(#f8f8f8, #e8e8e8);
+	background: -ms-linear-gradient(#f8f8f8, #e8e8e8);
+	background: linear-gradient(#f8f8f8, #e8e8e8);
+}
+
+.action-button>img {
+	width: 32px;
+}
+
+.action-button:active>img {
+	transform: translate(1px, 1px);
+}
+
+/*---------------------------------------------------------------------------*/
 /*
  * all about the workspace
  */
@@ -389,30 +417,6 @@ h1 {
 .workspace-frame-toolbox:empty {
 	padding: 0;
 	border-bottom: unset;
-}
-
-.workspace-frame-action {
-	border: 1px solid transparent;
-	border-radius: 2px;
-	margin: 5px;
-	padding: 5px;
-}
-
-.workspace-frame-action:hover {
-	border-color: #d0d0d0;
-	background: -webkit-linear-gradient(#f8f8f8, #e8e8e8);
-	background: -o-linear-gradient(#f8f8f8, #e8e8e8);
-	background: -moz-linear-gradient(#f8f8f8, #e8e8e8);
-	background: -ms-linear-gradient(#f8f8f8, #e8e8e8);
-	background: linear-gradient(#f8f8f8, #e8e8e8);
-}
-
-.workspace-frame-action>img {
-	width: 32px;
-}
-
-.workspace-frame-action:active>img {
-	transform: translate(1px, 1px);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1407,7 +1411,7 @@ h1 {
 	height: 100%;
 }
 
-.workspace-frame-content-header {
+.workspace-frame-content-footer {
 	display: -webkit-flex;
 	display: -moz-flex;
 	display: -ms-flex;
@@ -1424,23 +1428,8 @@ h1 {
 	-moz-flex: 0 auto;
 	-ms-flex: 0 auto;
 	flex: 0 auto;
-	padding: 20px 0 20px 0;
-}
-
-.calendar-nav-btn {
-	padding: 5px;
-	-webkit-flex: 0 auto;
-	-moz-flex: 0 auto;
-	-ms-flex: 0 auto;
-	flex: 0 auto;
-}
-
-.calendar-nav-btn>img {
-	width: 24px;
-}
-
-.calendar-nav-btn>img:hover {
-	transform: translate(1px, 1px);
+	padding: 0;
+	margin-top: 10px;
 }
 
 .calendar-title {
@@ -1453,6 +1442,10 @@ h1 {
 	white-space: nowrap;
 	text-align: center;
 	cursor: default;
+}
+
+.calendar-title:hover {
+	text-decoration: underline;
 }
 
 .workspace-frame-content-body {

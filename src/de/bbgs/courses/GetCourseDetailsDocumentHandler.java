@@ -100,7 +100,7 @@ public class GetCourseDetailsDocumentHandler implements IGetDocServiceHandler
             DBUtils.closeQuitly(stmt);
         }
     }
-    
+
     /**
      * @param db
      * @param courseId
@@ -114,7 +114,8 @@ public class GetCourseDetailsDocumentHandler implements IGetDocServiceHandler
         try
         {
             db.duplicateSection("N_TABLE");
-            stmt = conn.prepareStatement("select note from notes where domain='COURSE' and ref_id=? order by timestamp");
+            stmt = conn.prepareStatement(
+                "select note from notes where domain='COURSE' and ref_id=? order by timestamp");
             stmt.setInt(1, courseId);
             rs = stmt.executeQuery();
             while (rs.next())

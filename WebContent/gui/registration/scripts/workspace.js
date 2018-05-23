@@ -140,14 +140,14 @@ WorkSpaceFrame.prototype.setTitle = function(title) {
 WorkSpaceFrame.prototype.addAction = function(iconURL, text, onclick) {
 
     var img = document.createElement("img");
-    img.className = "workspace-frame-action-icon";
+    img.className = "action-button-icon";
     img.src = iconURL;
     img.addEventListener("dragstart", function(evt) {
 	evt.preventDefault();
     });
 
     var btn = document.createElement("div");
-    btn.className = "workspace-frame-action";
+    btn.className = "action-button";
     btn.addEventListener("click", function() {
 	if(onclick) {
 	    onclick();

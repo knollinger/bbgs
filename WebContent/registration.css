@@ -244,7 +244,7 @@ button:-moz-focus-inner {
 	overflow: auto;
 }
 
-.workspace-frame-action {
+.action-button {
 	display: inline-block;
 	border: 1px solid transparent;
 	border-radius: 2px;
@@ -253,7 +253,7 @@ button:-moz-focus-inner {
 	padding: 2px;
 }
 
-.workspace-frame-action:hover {
+.action-button:hover {
 	border-color: #d0d0d0;
 	background: -webkit-linear-gradient(#f8f8f8, #e8e8e8);
 	background: -o-linear-gradient(#f8f8f8, #e8e8e8);
@@ -262,11 +262,11 @@ button:-moz-focus-inner {
 	background: linear-gradient(#f8f8f8, #e8e8e8);
 }
 
-.workspace-frame-action-icon {
+.action-button-icon {
 	width: 22px;
 }
 
-.workspace-frame-action:active>.workspace-frame-action-icon {
+.action-button:active>.action-button-icon {
 	transform: translate(1px, 1px);
 }
 

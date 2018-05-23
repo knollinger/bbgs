@@ -13,8 +13,7 @@ var CourseCalendar = function(mode, date) {
     this.load("gui/courses/course_calendar.html", function() {
 	self.setupUI();
 	self.update();
-	self.createPrintAction();
-	// new TouchGesturesObserver(self.frame, self);
+	new TouchGesturesObserver(self.frame, self);
     });
 
 }
@@ -37,10 +36,12 @@ CourseCalendar.prototype.setupUI = function() {
 
     var self = this;
 
+    this.createEditAction();
+    this.createAddAction();
+    this.createRemoveAction();
+    this.createPrintAction();
     this.createShowWeeklyAction();
     this.createShowMonthlyAction();
-    this.createEditAction();
-    this.createRemoveAction();
 
     // GoBack
     document.getElementById("course_calendar_goback").addEventListener("click", function() {
@@ -60,7 +61,7 @@ CourseCalendar.prototype.setupUI = function() {
     });
 
     // TODAY
-    document.getElementById("course_calendar_today").addEventListener("click", function() {
+    document.getElementById("course_calendar_title").addEventListener("click", function() {
 	self.currentDate = new Date();
 	self.update();
     });
@@ -93,8 +94,9 @@ CourseCalendar.prototype.createShowWeeklyAction = function() {
 	self.mode = CourseCalendar.WEEKLY;
 	self.actionShowWeekly.hide();
 	self.actionShowMonthly.show();
+	self.currSelection = null;
 	self.update();
-    });    
+    });
     this.addAction(this.actionShowWeekly);
     this.actionShowWeekly.hide();
 }
@@ -102,15 +104,16 @@ CourseCalendar.prototype.createShowWeeklyAction = function() {
 /**
  * 
  */
-CourseCalendar.prototype.createShowMonthlyAction = function () {
+CourseCalendar.prototype.createShowMonthlyAction = function() {
 
     var self = this;
     this.actionShowMonthly = new WorkSpaceFrameAction("gui/images/view-calendar-month.svg", "Monats-Ansicht", function() {
 	self.mode = CourseCalendar.MONTHLY;
 	self.actionShowWeekly.show();
 	self.actionShowMonthly.hide();
-	self.update();	
-    });    
+	self.currSelection = null;
+	self.update();
+    });
     this.addAction(this.actionShowMonthly);
     this.actionShowMonthly.show();
 }
@@ -146,6 +149,35 @@ CourseCalendar.prototype.createEditAction = function() {
     });
     this.addAction(this.actionEdit);
     this.actionEdit.hide();
+}
+
+/**
+ * 
+ */
+CourseCalendar.prototype.createAddAction = function() {
+
+    var self = this;
+    this.actionAdd = new WorkSpaceFrameAction("gui/images/course-add.svg", "Kurs/Kurs-Termin hinzu fügen", function() {
+
+	var onSave = function() {
+	    self.update();
+	};
+
+	var menu = new PopupMenu(self.actionAdd.btn);
+	if (self.currSelection) {
+
+	    var courseId = self.model.getValue(self.currSelection + "/course-id");
+	    menu.makeMenuItem("Kurs-Termin hinzu fügen", function() {
+		new CourseEditor(courseId, CourseEditor.NEW_TERMIN, onSave);
+	    });
+	    menu.makeSeparator();
+	}
+
+	menu.makeMenuItem("Einen neuen Kurs anlegen", function() {
+	    new CourseEditor(0, null, onSave);
+	});
+    });
+    this.addAction(this.actionAdd);
 }
 
 /**
@@ -296,7 +328,6 @@ CourseCalendar.prototype.printCurrentCourse = function() {
     new DocumentViewer(url, title);
 }
 
-
 /**
  * von rechts nach links wischen
  */
@@ -309,6 +340,22 @@ CourseCalendar.prototype.swipeToLeft = function() {
  * von links nach rechts wischen
  */
 CourseCalendar.prototype.swipeToRight = function() {
+
+    document.getElementById("course_calendar_goback").click();
+}
+
+/**
+ * von unten nach oben wischen
+ */
+CourseCalendar.prototype.swipeUp = function() {
+
+    document.getElementById("course_calendar_gofore").click();
+}
+
+/**
+ * von oben nach unten wischen
+ */
+CourseCalendar.prototype.swipeDown = function() {
 
     document.getElementById("course_calendar_goback").click();
 }
@@ -395,10 +442,14 @@ CourseCalendar.prototype.updateHeader = function() {
     switch (this.mode) {
     case CourseCalendar.WEEKLY:
 	title = DateTimeUtils.formatDate(this.currentDate, "KW {w}-{yyyy}");
+	UIUtils.getElement("course_calendar_goback").title = "Eine Woche zurück";
+	UIUtils.getElement("course_calendar_gofore").title = "Eine Woche vorwärts";
 	break;
 
     case CourseCalendar.MONTHLY:
 	title = DateTimeUtils.formatDate(this.currentDate, "{M} {yyyy}");
+	UIUtils.getElement("course_calendar_goback").title = "Einen Monat zurück";
+	UIUtils.getElement("course_calendar_gofore").title = "Einen Monat vorwärts";
 	break;
 
     default:
