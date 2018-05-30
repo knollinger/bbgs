@@ -30,7 +30,7 @@ var MainNavigation = function() {
     btn = this.addNavigationButton("gui/images/notes.svg", "Aufgaben-Liste", function() {
 	new TodoTasksOverview();
     });
-    
+     
     this.setTitle("Bayerns beste Gipfelstürmer");
     this.enableBackButton(false);
     this.enableHomeButton(false);

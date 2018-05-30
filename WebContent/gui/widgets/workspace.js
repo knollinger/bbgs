@@ -122,7 +122,6 @@ WorkSpaceFrame.prototype.load = function(url, onload) {
 		    self.setTitle(annotations.dataset.frameTitle || "");
 		    self.enableBackButton((annotations.dataset.hasBackbutton == "yes"));
 		    self.enableSaveButton((annotations.dataset.hasSavebutton == "yes"));
-		    self.enableHelpButton(annotations.dataset.helpUrl);
 		}
 
 		if (onload) {
@@ -181,19 +180,6 @@ WorkSpaceFrame.prototype.enableHomeButton = function(value) {
 	UIUtils.removeClass(this.homeBtn, "hidden");
     } else {
 	UIUtils.addClass(this.homeBtn, "hidden");
-    }
-}
-
-/**
- * 
- */
-WorkSpaceFrame.prototype.enableHelpButton = function(helpUrl) {
-
-    if (helpUrl) {
-	UIUtils.removeClass(this.helpBtn, "hidden");
-	this.helpUrl = helpUrl;
-    } else {
-	UIUtils.addClass(this.helpBtn, "hidden");
     }
 }
 
@@ -902,6 +888,7 @@ MainMenu.prototype.makeMenuItems = function(loggedIn) {
 	this.makeMenuItem("Kennwort ändern", function() {
 	    new ChangePasswordDialog();
 	});
+	this.ui.appendChild(document.createElement("hr"));
     }
 
     this.makeMenuItem("Über das Projekt", function() {

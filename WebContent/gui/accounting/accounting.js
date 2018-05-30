@@ -23,7 +23,7 @@ var AccountingNavigation = function() {
     });
 
     // Übersicht der Buchungsposten
-    this.addNavigationButton("gui/images/planning-item.svg", "Buchungs-Posten verwalten", function() {
+    this.addNavigationButton("gui/images/planning-item.svg", "Buchungs-Posten administrieren", function() {
 	new InvoiceItemsOverview();
     });
 

@@ -18,7 +18,6 @@ import de.bbgs.notes.ENoteDomain;
 import de.bbgs.notes.NotesDBUtil;
 import de.bbgs.service.IXmlServiceHandler;
 import de.bbgs.session.SessionWrapper;
-import de.bbgs.utils.BBGSLog;
 import de.bbgs.utils.ConnectionPool;
 import de.bbgs.utils.DBUtils;
 import de.bbgs.xml.ErrorResponse;
@@ -72,14 +71,12 @@ public class SaveMemberModelHandler implements IXmlServiceHandler
 
             MemberModel model = (MemberModel) request;
             int id = model.coreData.id;
-            BBGSLog.logInfo("Benutzer '%1$s' speichert MemberModel für die Id %2$d", session.getAccountName(),
-                Integer.valueOf(id));
 
             conn = ConnectionPool.getConnection();
             conn.setAutoCommit(false);
 
             if (id == 0)
-            {
+            {                
                 id = MemberDBUtil.createMember(model.coreData, conn);
             }
             else
@@ -96,13 +93,11 @@ public class SaveMemberModelHandler implements IXmlServiceHandler
             NotesDBUtil.handleNoteChanges(model.notes, id, ENoteDomain.MEMBER, conn);
             CourseDBUtil.handleMemberCourseChanges(model.courses, id, conn);
 
-            BBGSLog.logInfo("Model erfolgreich gespeichert");
             conn.commit();
             return new Response();
         }
         catch (SQLException e)
         {
-            BBGSLog.logError("Fehler beim Datenbank-Zugriff.", e);
             return new ErrorResponse(e.getMessage());
         }
         finally

@@ -37,7 +37,6 @@ CourseCalendar.prototype.setupUI = function() {
     var self = this;
 
     this.createEditAction();
-    this.createAddAction();
     this.createRemoveAction();
     this.createPrintAction();
     this.createShowWeeklyAction();
@@ -61,7 +60,7 @@ CourseCalendar.prototype.setupUI = function() {
     });
 
     // TODAY
-    document.getElementById("course_calendar_title").addEventListener("click", function() {
+    document.getElementById("course_calendar_go_today").addEventListener("click", function() {
 	self.currentDate = new Date();
 	self.update();
     });
@@ -124,27 +123,12 @@ CourseCalendar.prototype.createShowMonthlyAction = function() {
 CourseCalendar.prototype.createEditAction = function() {
 
     var self = this;
-    this.actionEdit = new WorkSpaceFrameAction("gui/images/course-edit.svg", "Kurs/Kurs-Termin bearbeiten", function() {
+    this.actionEdit = new WorkSpaceFrameAction("gui/images/course-edit.svg", "Kurs-Termin bearbeiten", function() {
 
 	var courseId = self.model.getValue(self.currSelection + "/course-id");
 	var terminId = self.model.getValue(self.currSelection + "/id");
-	var onSave = function() {
+	new CourseEditor(courseId, terminId, function() {
 	    self.update();
-	};
-
-	var menu = new PopupMenu(self.actionEdit.btn);
-	menu.makeMenuItem("Kurs-Termin bearbeiten", function() {
-	    self.actionEdit.hide();
-	    self.actionRemove.hide();
-	    new CourseEditor(courseId, terminId, onSave);
-	});
-
-	menu.makeSeparator();
-
-	menu.makeMenuItem("Kurs bearbeiten", function() {
-	    self.actionEdit.hide();
-	    self.actionRemove.hide();
-	    new CourseEditor(courseId, null, onSave);
 	});
     });
     this.addAction(this.actionEdit);
@@ -154,49 +138,41 @@ CourseCalendar.prototype.createEditAction = function() {
 /**
  * 
  */
-CourseCalendar.prototype.createAddAction = function() {
-
-    var self = this;
-    this.actionAdd = new WorkSpaceFrameAction("gui/images/course-add.svg", "Kurs/Kurs-Termin hinzu fügen", function() {
-
-	var onSave = function() {
-	    self.update();
-	};
-
-	var menu = new PopupMenu(self.actionAdd.btn);
-	if (self.currSelection) {
-
-	    var courseId = self.model.getValue(self.currSelection + "/course-id");
-	    menu.makeMenuItem("Kurs-Termin hinzu fügen", function() {
-		new CourseEditor(courseId, CourseEditor.NEW_TERMIN, onSave);
-	    });
-	    menu.makeSeparator();
-	}
-
-	menu.makeMenuItem("Einen neuen Kurs anlegen", function() {
-	    new CourseEditor(0, null, onSave);
-	});
-    });
-    this.addAction(this.actionAdd);
-}
-
-/**
- * 
- */
 CourseCalendar.prototype.createRemoveAction = function() {
 
     var self = this;
-    this.actionRemove = new WorkSpaceFrameAction("gui/images/course-remove.svg", "Kurs/Kurs-Termin löschen", function() {
+    this.actionRemove = new WorkSpaceFrameAction("gui/images/course-remove.svg", "Kurs-Termin löschen", function() {
 
-	var menu = new PopupMenu(self.actionRemove.btn);
-	menu.makeMenuItem("Kurs-Termin löschen", function() {
-	    self.removeCurrentTermin();
-	});
+	var name = self.model.getValue(self.currSelection + "/name");
+	var date = self.model.getValue(self.currSelection + "/date");
 
-	menu.makeSeparator();
+	var title = MessageCatalog.getMessage("COURSETERMIN_QUERY_REMOVE_TITLE");
+	var messg = MessageCatalog.getMessage("COURSETERMIN_QUERY_REMOVE", date, name);
+	new MessageBox(MessageBox.QUERY, title, messg, function() {
 
-	menu.makeMenuItem("gesamten Kurs löschen", function() {
-	    self.removeCurrentCourse();
+	    var caller = new ServiceCaller();
+	    caller.onSuccess = function(rsp) {
+		switch (rsp.documentElement.nodeName) {
+		case "remove-course-termin-ok-response":
+		    self.update();
+		    break;
+
+		case "error-response":
+		    var title = MessageCatalog.getMessage("COURSETERMIN_REMOVE_ERROR_TITLE");
+		    var messg = MessageCatalog.getMessage("COURSETERMIN_REMOVE_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
+		    new MessageBox(MessageBox.ERROR, title, messg);
+		    break;
+		}
+	    }
+
+	    caller.onError = function(req, status) {
+		var title = MessageCatalog.getMessage("COURSETERMIN_REMOVE_ERROR_TITLE");
+		var messg = MessageCatalog.getMessage("COURSETERMIN_REMOVE_TECH_ERROR", status);
+		new MessageBox(MessageBox.ERROR, title, messg);
+	    }
+	    var req = XmlUtils.createDocument("remove-course-termin-request");
+	    XmlUtils.setNode(req, "id", self.model.getValue(self.currSelection + "/id"));
+	    caller.invokeService(req);
 	});
     });
     this.addAction(this.actionRemove);
@@ -204,96 +180,29 @@ CourseCalendar.prototype.createRemoveAction = function() {
 }
 
 /**
+ * Die PrintAction ist ein wenig spezieller.
  * 
- */
-CourseCalendar.prototype.removeCurrentTermin = function() {
-
-    var self = this;
-    var name = this.model.getValue(this.currSelection + "/name");
-    var date = this.model.getValue(this.currSelection + "/date");
-
-    var title = MessageCatalog.getMessage("COURSETERMIN_QUERY_REMOVE_TITLE");
-    var messg = MessageCatalog.getMessage("COURSETERMIN_QUERY_REMOVE", date, name);
-    new MessageBox(MessageBox.QUERY, title, messg, function() {
-
-	var caller = new ServiceCaller();
-	caller.onSuccess = function(rsp) {
-	    switch (rsp.documentElement.nodeName) {
-	    case "remove-course-termin-ok-response":
-		self.update();
-		break;
-
-	    case "error-response":
-		var title = MessageCatalog.getMessage("COURSETERMIN_REMOVE_ERROR_TITLE");
-		var messg = MessageCatalog.getMessage("COURSETERMIN_REMOVE_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
-		new MessageBox(MessageBox.ERROR, title, messg);
-		break;
-	    }
-	}
-
-	caller.onError = function(req, status) {
-	    var title = MessageCatalog.getMessage("COURSETERMIN_REMOVE_ERROR_TITLE");
-	    var messg = MessageCatalog.getMessage("COURSETERMIN_REMOVE_TECH_ERROR", status);
-	    new MessageBox(MessageBox.ERROR, title, messg);
-	}
-	var req = XmlUtils.createDocument("remove-course-termin-request");
-	XmlUtils.setNode(req, "id", self.model.getValue(self.currSelection + "/id"));
-	caller.invokeService(req);
-    });
-
-}
-
-/**
+ * Wenn nichts im Kalender ausgewählt ist, dann wird direkt der aktuelle
+ * Kalender gedruckt. Liegt eine AUswahl vor, so wird ein Menu angezeigt. Dieses
+ * liefert die AUswahl, den aktuellen Kalender oder nur den aktuell ausgewählten
+ * Termin zu drucken.
  * 
- */
-CourseCalendar.prototype.removeCurrentCourse = function() {
-
-    var self = this;
-    var name = this.model.getValue(this.currSelection + "/name");
-    var title = MessageCatalog.getMessage("COURSE_QUERY_REMOVE_TITLE");
-    var messg = MessageCatalog.getMessage("COURSE_QUERY_REMOVE", name);
-    new MessageBox(MessageBox.QUERY, title, messg, function() {
-
-	var caller = new ServiceCaller();
-	caller.onSuccess = function(rsp) {
-	    switch (rsp.documentElement.nodeName) {
-	    case "remove-course-ok-response":
-		self.update();
-		break;
-
-	    case "error-response":
-		var title = MessageCatalog.getMessage("COURSE_REMOVE_ERROR_TITLE");
-		var messg = MessageCatalog.getMessage("COURSE_REMOVE_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
-		new MessageBox(MessageBox.ERROR, title, messg);
-		break;
-	    }
-	}
-
-	caller.onError = function(req, status) {
-	    var title = MessageCatalog.getMessage("COURSE_REMOVE_ERROR_TITLE");
-	    var messg = MessageCatalog.getMessage("COURSE_REMOVE_TECH_ERROR_TITLE", status);
-	    new MessageBox(MessageBox.ERROR, title, messg);
-	}
-	var req = XmlUtils.createDocument("remove-course-request");
-	XmlUtils.setNode(req, "id", self.model.getValue(self.currSelection + "/course-id"));
-	caller.invokeService(req);
-    });
-}
-
-/**
- * 
+ * "Drucken" meint hier aber, dass ein PDF mit dem gewünschten Kontent erzeugt
+ * wird. Im Dock-Viewer kann dann DOwnload oder Druck veranlasst werden.
  */
 CourseCalendar.prototype.createPrintAction = function() {
 
     var self = this;
     var action = new WorkSpaceFrameAction("gui/images/print.svg", "Kurs-Kalender drucken", function() {
 
-	var menu = new PopupMenu(action.btn);
-	menu.makeMenuItem("aktuellen Kurs-Kalender drucken", function() {
+	if (!self.currSelection) {
 	    self.printCurrentCalendar();
-	});
+	} else {
 
-	if (self.currSelection) {
+	    var menu = new PopupMenu(action.btn);
+	    menu.makeMenuItem("aktuellen Kurs-Kalender drucken", function() {
+	    });
+
 	    menu.makeSeparator();
 	    menu.makeMenuItem("ausgewählten Kurs drucken", function() {
 		self.printCurrentCourse();
@@ -441,13 +350,13 @@ CourseCalendar.prototype.updateHeader = function() {
     var title;
     switch (this.mode) {
     case CourseCalendar.WEEKLY:
-	title = DateTimeUtils.formatDate(this.currentDate, "KW {w}-{yyyy}");
+	title = DateTimeUtils.formatDate(this.currentDate, "Kurs-Kalender für die KW {w}-{yyyy}");
 	UIUtils.getElement("course_calendar_goback").title = "Eine Woche zurück";
 	UIUtils.getElement("course_calendar_gofore").title = "Eine Woche vorwärts";
 	break;
 
     case CourseCalendar.MONTHLY:
-	title = DateTimeUtils.formatDate(this.currentDate, "{M} {yyyy}");
+	title = DateTimeUtils.formatDate(this.currentDate, "Kurs-Kalender für {M} {yyyy}");
 	UIUtils.getElement("course_calendar_goback").title = "Einen Monat zurück";
 	UIUtils.getElement("course_calendar_gofore").title = "Einen Monat vorwärts";
 	break;
@@ -455,7 +364,7 @@ CourseCalendar.prototype.updateHeader = function() {
     default:
 	break;
     }
-    document.getElementById("course_calendar_title").textContent = title;
+    this.setTitle(title);
 }
 
 /**
@@ -525,19 +434,25 @@ CourseCalendar.prototype.createWeeklyTermin = function(termin) {
 
     var self = this;
 
+    var resultCnr = document.createElement("div");
+
+    var radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "calendar-termin-weekly-sel";
+    radio.className = "hidden";
+    resultCnr.appendChild(radio);
+
     var t = document.createElement("div");
     t.className = "calendar-termin-weekly";
     t.style.backgroundColor = termin.getElementsByTagName("color")[0].textContent;
     t.textContent = termin.getElementsByTagName("name")[0].textContent;
 
     // selectable machen um das aktivieren per click zu visualisieren
-    t.tabIndex = "0";
     t.addEventListener("click", function() {
 	self.currSelection = XmlUtils.getXPathTo(termin);
-	// self.selectedCourse =
-	// parseInt(termin.getElementsByTagName("course-id")[0].textContent);
 	self.actionEdit.show();
 	self.actionRemove.show();
+	radio.click();
     });
     self.prepareInfoPopup(t, termin);
 
@@ -562,7 +477,8 @@ CourseCalendar.prototype.createWeeklyTermin = function(termin) {
     }
     t.style.left = left + "%";
 
-    return t;
+    resultCnr.appendChild(t);
+    return resultCnr;
 }
 
 /**
@@ -656,6 +572,13 @@ CourseCalendar.prototype.updateMonthlyBody = function(body, startDate, endDate) 
 CourseCalendar.prototype.createMonthlyTermin = function(termin) {
 
     var self = this;
+    var resultCnr = document.createElement("div");
+
+    var radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "calendar-termin-monthly-sel";
+    radio.className = "hidden";
+    resultCnr.appendChild(radio);
 
     var t = document.createElement("div");
     t.className = "calendar-termin-monthly";
@@ -663,12 +586,14 @@ CourseCalendar.prototype.createMonthlyTermin = function(termin) {
     t.appendChild(document.createTextNode(termin.getElementsByTagName("name")[0].textContent));
 
     // selectable machen um das aktivieren per click zu visualisieren
-    t.tabIndex = "0";
     t.addEventListener("click", function() {
 	self.currSelection = XmlUtils.getXPathTo(termin);
 	self.actionEdit.show();
 	self.actionRemove.show();
+	radio.click();
     });
     self.prepareInfoPopup(t, termin);
-    return t;
+
+    resultCnr.appendChild(t);
+    return resultCnr;
 }

@@ -64,7 +64,7 @@ public class GetPartnerOverviewHandler implements IXmlServiceHandler
         try
         {
             conn = ConnectionPool.getConnection();
-            
+
             Response okRsp = new Response();
             okRsp.partners.addAll(PartnerDBUtil.getAllPartners(conn));
             rsp = okRsp;

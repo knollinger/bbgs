@@ -7,7 +7,7 @@ var CourseMainNavigation = function() {
     
     var self = this;
     
-    this.addNavigationButton("gui/images/calendar.svg", "Kurskalender anzeigen", function() {
+    this.addNavigationButton("gui/images/calendar.svg", "Kurskalender", function() {
         new CourseCalendar(CourseCalendar.WEEKLY);
     });
 

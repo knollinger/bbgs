@@ -12,7 +12,6 @@ import javax.xml.bind.annotation.XmlType;
 import de.bbgs.attachments.Attachment;
 import de.bbgs.contacts.Contact;
 import de.bbgs.notes.Note;
-import de.bbgs.todolist.TodoTask;
 import de.bbgs.xml.IJAXBObject;
 
 /**

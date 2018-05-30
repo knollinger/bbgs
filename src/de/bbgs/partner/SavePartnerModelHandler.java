@@ -68,13 +68,22 @@ public class SavePartnerModelHandler implements IXmlServiceHandler
         {
             conn = ConnectionPool.getConnection();
             conn.setAutoCommit(false);
-            
-            PartnerModel model = (PartnerModel)request;
-            
-            int partnerId = this.handleCoreDataChanges(model.coreData, conn);
+
+            PartnerModel model = (PartnerModel) request;
+
+            int partnerId = model.coreData.id;
+            if (partnerId == 0)
+            {
+                partnerId = PartnerDBUtil.createPartner(model.coreData, conn);
+            }
+            else
+            {
+                PartnerDBUtil.updatePartner(model.coreData, conn);
+            }
             ContactsDBUtil.handleContactChanges(model.contacts, partnerId, EContactDomain.PARTNER, conn);
             NotesDBUtil.handleNoteChanges(model.notes, partnerId, ENoteDomain.PARTNER, conn);
-            AttachmentsDBUtil.handleAttachmentChanges(model.attachments, partnerId, EAttachmentDomain.PARTNER, session, conn);
+            AttachmentsDBUtil.handleAttachmentChanges(model.attachments, partnerId, EAttachmentDomain.PARTNER, session,
+                conn);
 
             conn.commit();
             rsp = new Response();
@@ -91,27 +100,10 @@ public class SavePartnerModelHandler implements IXmlServiceHandler
     }
 
     /**
-     * @param coreData
-     * @param conn
-     * @return
-     * @throws SQLException 
-     */
-    private int handleCoreDataChanges(Partner coreData, Connection conn) throws SQLException
-    {
-        if(coreData.id == 0) {
-            coreData.id = PartnerDBUtil.createPartner(coreData, conn);
-        }
-        else {
-            PartnerDBUtil.updatePartner(coreData, conn);
-        }        
-        return coreData.id ;
-    }
-
-    /**
      * 
      */
     @XmlRootElement(name = "save-partnermodel-ok-rsp")
-    @XmlType(name="save-partnermodel-ok-rsp")
+    @XmlType(name = "save-partnermodel-ok-rsp")
     public static class Response implements IJAXBObject
     {
     }

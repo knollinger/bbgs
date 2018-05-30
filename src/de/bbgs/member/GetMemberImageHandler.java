@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import de.bbgs.attachments.EAttachmentDomain;
 import de.bbgs.service.IGetDocServiceHandler;
 import de.bbgs.session.SessionWrapper;
-import de.bbgs.utils.BBGSLog;
 import de.bbgs.utils.ConnectionPool;
 
 /**
@@ -81,7 +80,6 @@ public class GetMemberImageHandler implements IGetDocServiceHandler
         }
         catch (Exception e)
         {
-            BBGSLog.logError(e.getStackTrace().toString());
             rsp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }

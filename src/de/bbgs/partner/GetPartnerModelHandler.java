@@ -61,10 +61,9 @@ public class GetPartnerModelHandler implements IXmlServiceHandler
         Connection conn = null;
         try
         {
+            Request req = (Request)request;
             conn = ConnectionPool.getConnection();
             
-            Request req = (Request)request;
-            rsp = PartnerDBUtil.getPartnerModel(req.id, conn);
         }
         catch (SQLException e)
         {

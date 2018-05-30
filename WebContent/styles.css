@@ -102,7 +102,7 @@ thead>tr {
 }
 
 tr {
-	vertical-align: middle;
+	vertical-align: top;
 }
 
 tr:focus {
@@ -170,19 +170,28 @@ td {
 	padding: 5px;
 	cursor: pointer;
 	white-space: nowrap;
-	border-right: 1px dotted #d0d0d0;
+	border: none;
 }
 
 td:last-child {
 	width: 100%;
 	white-space: normal;
-	border-right: 0;
 }
 
 h1 {
 	font-size: 1.5em;
 	margin-top: 10px;
 	font-weight: 600;
+}
+
+ul {
+	apperance: none;
+	margin-left: 10px;
+	list-style-type: none;
+}
+
+li {
+	padding: 5px 0 0 0;
 }
 
 .tabsearch_hide_row {
@@ -1526,6 +1535,13 @@ h1 {
 	display: block;
 }
 
+input[type='radio']:checked+.calendar-termin-weekly {
+	-webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
+	-moz-box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
+	-ms-box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
+	box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);	
+}
+
 .calendar-termin-weekly:last-child {
 	margin-bottom: 5px;
 }
@@ -1587,10 +1603,12 @@ h1 {
 	margin-bottom: 1px;
 }
 
-.calendar-termin-monthly:hover>.calendar-termin-infoicon {
-	display: inline-block;
+input[type='radio']:checked+.calendar-termin-monthly {
+	-webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
+	-moz-box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
+	-ms-box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
+	box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);	
 }
-
 /**
  * all about the accordeon
  */

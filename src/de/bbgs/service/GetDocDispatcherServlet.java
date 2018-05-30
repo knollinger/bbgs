@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.bbgs.session.SessionWrapper;
-import de.bbgs.utils.BBGSLog;
 
 /*---------------------------------------------------------------------------*/
 /**
@@ -35,7 +34,6 @@ public class GetDocDispatcherServlet extends HttpServlet
      */
     public GetDocDispatcherServlet()
     {
-        BBGSLog.logInfo("DOCDISPATCHER_LOAD_SERVLET");
         this.loadAllHandlers();
     }
 
@@ -45,26 +43,21 @@ public class GetDocDispatcherServlet extends HttpServlet
     protected void doGet(HttpServletRequest req, HttpServletResponse rsp) throws ServletException, IOException
     {
         SessionWrapper session = new SessionWrapper(req.getSession());
-        BBGSLog.logInfo("GETDOC_ENTER_HANDLER", session.getAccountName(), req.getRequestURI(), req.getQueryString());
 
         String subCtx = this.extractSubContext(req);
         IGetDocServiceHandler handler = this.handler.get(subCtx);
         if (handler == null)
         {
-            BBGSLog.logInfo("GETDOC_NOT_FOUND", session.getAccountName(), req.getRequestURI(), req.getQueryString());
             this.sendNotFoundRsp(subCtx, rsp);
         }
         else
         {
             if (handler.needsSession() && !session.isValid())
             {
-                BBGSLog.logInfo("GETDOC_SESSION_LOST", session.getAccountName());
                 this.sendSessionLostResponse(rsp);
             }
             else
             {
-                BBGSLog.logInfo("GETDOC_DELIVER_DOCUMENT", req.getRequestURI(), req.getQueryString(),
-                    session.getAccountName());
                 this.handleRequest(handler, req, rsp, session);
             }
         }
@@ -166,14 +159,11 @@ public class GetDocDispatcherServlet extends HttpServlet
     {
         try
         {
-            BBGSLog.logInfo("DOCDISPATCHER_LOAD_HANDLERS");
-
             this.handler = new HashMap<String, IGetDocServiceHandler>();
             ServiceLoader<IGetDocServiceHandler> loader = ServiceLoader.load(IGetDocServiceHandler.class);
             for (IGetDocServiceHandler impl : loader)
             {
                 String responsibleFor = this.trimSlashes(impl.getResponsibleFor());
-                BBGSLog.logInfo("DOCDISPATCHER_LOAD_HANDLER", impl.getClass().getName(), responsibleFor);
                 this.handler.put(responsibleFor, impl);
             }
         }

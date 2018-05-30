@@ -61,9 +61,11 @@ public class RemoveMemberHandler implements IXmlServiceHandler
         Connection conn = null;
         try
         {
+            Request req = (Request) request;
+            
             conn = ConnectionPool.getConnection();
             conn.setAutoCommit(false);
-            Request req = (Request) request;
+            
             MemberDBUtil.deleteMember(req.id, conn);
             conn.commit();
             return new Response();

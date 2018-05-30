@@ -31,12 +31,18 @@ var SessionManager = (function() {
 	    caller.invokeService(req);
 	},
 	
+	/**
+	 * 
+	 */
 	onLoggedIn : function(rsp) {
 	    
 	    MainNavigation.showHomeScreen();
 	    NotificationManager.poll();
 	},
 	
+	/**
+	 * 
+	 */
 	onLoggedOut : function() {
 	    new LogonDialog();
 	}

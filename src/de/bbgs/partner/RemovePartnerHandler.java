@@ -69,10 +69,10 @@ public class RemovePartnerHandler implements IXmlServiceHandler
         Connection conn = null;
         try
         {
+            Request req = (Request)request;
             conn = ConnectionPool.getConnection();
             conn.setAutoCommit(false);
-            
-            Request req = (Request)request;
+
             AttachmentsDBUtil.deleteAttachments(req.id, EAttachmentDomain.PARTNER, conn);
             NotesDBUtil.deleteNotesFor(req.id, ENoteDomain.PARTNER, conn);
             ContactsDBUtil.deleteContactsFor(req.id, EContactDomain.PARTNER, conn);

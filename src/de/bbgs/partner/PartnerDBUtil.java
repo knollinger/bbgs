@@ -13,8 +13,6 @@ import de.bbgs.contacts.ContactsDBUtil;
 import de.bbgs.contacts.EContactDomain;
 import de.bbgs.notes.ENoteDomain;
 import de.bbgs.notes.NotesDBUtil;
-import de.bbgs.todolist.ETaskDomain;
-import de.bbgs.todolist.TodoListDBUtil;
 import de.bbgs.utils.DBUtils;
 
 /**

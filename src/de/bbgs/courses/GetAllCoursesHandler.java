@@ -11,8 +11,6 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import de.bbgs.named_colors.NamedColor;
-import de.bbgs.named_colors.NamedColorsDBUtil;
 import de.bbgs.service.IXmlServiceHandler;
 import de.bbgs.session.SessionWrapper;
 import de.bbgs.utils.ConnectionPool;

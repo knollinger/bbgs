@@ -62,7 +62,6 @@ public class FindMemberHandler implements IXmlServiceHandler
         try
         {
             conn = ConnectionPool.getConnection();
-
             Request req = (Request) request;
             Response rsp = new Response();
             if (req.allMembers)

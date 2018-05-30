@@ -20,7 +20,6 @@ import de.bbgs.notes.NotesDBUtil;
 import de.bbgs.partner.PartnerDBUtil;
 import de.bbgs.service.IXmlServiceHandler;
 import de.bbgs.session.SessionWrapper;
-import de.bbgs.utils.BBGSLog;
 import de.bbgs.utils.ConnectionPool;
 import de.bbgs.utils.DBUtils;
 import de.bbgs.xml.ErrorResponse;
@@ -75,36 +74,21 @@ public class GetMemberModelHandler implements IXmlServiceHandler
             Request req = (Request) request;
             MemberModel model = new MemberModel();
 
-            BBGSLog.logInfo("Benutzer '%1$s' fragt MemberModel für die Id %2$d ab", session.getAccountName(),
-                Integer.valueOf(req.id));
             conn = ConnectionPool.getConnection();
             if (req.id != 0)
             {
-                BBGSLog.logInfo("Ermittle Stammdaten");
                 model.coreData = MemberDBUtil.getMember(req.id, conn);
-
-                BBGSLog.logInfo("Ermittle Angehörige");
                 model.contacts = ContactsDBUtil.getAllContacts(req.id, EContactDomain.MEMBER, conn);
-
-                BBGSLog.logInfo("Ermittle Dateianhänge");
                 model.attachments = AttachmentsDBUtil.getAllAttachments(req.id, EAttachmentDomain.MEMBER, conn);
-
-                BBGSLog.logInfo("Ermittle Notizen");
                 model.notes = NotesDBUtil.getAllNotes(req.id, ENoteDomain.MEMBER, conn);
-
-                BBGSLog.logInfo("Ermittle Kurse");
                 model.courses = CourseDBUtil.getCoursesByMemberId(req.id, conn);
             }
             
-            BBGSLog.logInfo("Ermittle mögliche Partner-Institute");
             model.partner = PartnerDBUtil.getAllCoopPartners(conn);
-            
-            BBGSLog.logInfo("Model erfolgreich geladen");
             return model;
         }
         catch (SQLException e)
         {
-            BBGSLog.logError("Fehler beim Datenbank-Zugriff.", e);
             return new ErrorResponse(e.getMessage());
         }
         finally

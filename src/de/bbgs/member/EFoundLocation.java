@@ -8,6 +8,11 @@ public enum EFoundLocation
     MEMBER,
     
     /**
+     * gefunden in den Kommunikations-Daten
+     */
+    COMMDATA,
+    
+    /**
      * gefunden in Kursen
      */
     COURSES,

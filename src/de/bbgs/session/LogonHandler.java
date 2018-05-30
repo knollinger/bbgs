@@ -13,7 +13,6 @@ import javax.xml.bind.annotation.XmlType;
 import de.bbgs.service.IXmlServiceHandler;
 import de.bbgs.utils.ConnectionPool;
 import de.bbgs.utils.DBUtils;
-import de.bbgs.utils.Messages;
 import de.bbgs.xml.ErrorResponse;
 import de.bbgs.xml.IJAXBObject;
 
@@ -72,7 +71,7 @@ public class LogonHandler implements IXmlServiceHandler
             int memberId = this.verifyUser(uid, pwd, session, conn);
             if (memberId == -1)
             {
-                result = new ErrorResponse(Messages.formatMsg("LOGIN_FAILED"));
+                result = new ErrorResponse("Die Benutzer-Kennung und/oder das Kennwort sind nicht korrekt");
             }
             else
             {

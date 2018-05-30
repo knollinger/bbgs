@@ -25,7 +25,6 @@ import de.bbgs.service.ThreadPool;
 import de.bbgs.session.SessionWrapper;
 import de.bbgs.utils.ConnectionPool;
 import de.bbgs.utils.DBUtils;
-import de.bbgs.utils.Messages;
 import de.bbgs.xml.IJAXBObject;
 
 /**
@@ -111,18 +110,15 @@ public class SendSMSHandler implements IXmlServiceHandler
             }
             catch (IOException e)
             {
-                String msg = Messages.formatMsg("SMS_NOTIFY_GATEWAY_UNREACHABLE");
-                this.sendNotification(msg);
+                this.sendNotification("Sorry, das SMS-Gateway ist leider nicht erreichbar");
             }
             catch (SendSMSException e)
             {
-                String msg = Messages.formatMsg("SMS_NOTIFY_GATEWAY_FAILURE", e.getMessage());
-                this.sendNotification(msg);
+                this.sendNotification("Sorry, da ist was schief gegangen. Ursache: " + e.getMessage());
             }
             catch (Exception e)
             {
-                String msg = Messages.formatMsg("SMS_NOTIFY_SERVER_FAILURE", e.getMessage());
-                this.sendNotification(msg);
+                this.sendNotification("Sorry, da ist was schief gegangen. Ursache: " + e.getMessage());
             }
             finally
             {
