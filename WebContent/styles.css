@@ -826,8 +826,8 @@ li {
 }
 
 .login-account-button>img {
-	height: 50px;
 	width: 50px;
+	height: 50px;
 	border-radius: 50%;
 	border: 1px solid #d0d0d0;
 	-webkit-flex: 0 auto;
@@ -850,12 +850,12 @@ li {
 }
 
 .login-account-button>input[type="radio"]+input[type="password"] {
-	visibility: hidden;
+	display: none;
 }
 
 .login-account-button>input[type="radio"]:checked+input[type="password"]
 	{
-	visibility: visible;
+	display: block;
 	height: 2em;
 	min-width: 1em;
 	margin-left: 1em;
@@ -910,55 +910,104 @@ li {
 }
 
 .navigation-button-box {
-	height: 65%;
 	padding: 10px;
+	display: block;
 }
 
 .navigation-button {
 	cursor: pointer;
-	padding: 5px;
-	margin-top: 10px;
-	border: 1px solid #d0d0d0;
-	border-radius: 2px;
-	vertical-align: top;
-	background: -webkit-linear-gradient(#f8f8f8, #e8e8e8);
-	background: -o-linear-gradient(#f8f8f8, #e8e8e8);
-	background: -moz-linear-gradient(#f8f8f8, #e8e8e8);
-	background: -ms-linear-gradient(#f8f8f8, #e8e8e8);
-	background: linear-gradient(#f8f8f8, #e8e8e8);
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+	margin-bottom: 10px;
 }
 
-.navigation-button:first-child {
-	margin-top: 0;
-}
-
-.navigation-button:active {
-	background: -webkit-linear-gradient(#e8e8e8, #f8f8f8);
-	background: -o-linear-gradient(#e8e8e8, #f8f8f8);
-	background: -moz-linear-gradient(#e8e8e8, #f8f8f8);
-	background: -ms-linear-gradient(#e8e8e8, #f8f8f8);
-	background: linear-gradient(#e8e8e8, #f8f8f8);
-}
-
-.navigation-button>img {
-	width: 32px;
-	height: 32px;
-	vertical-align: middle;
-}
-
-.navigation-button>span {
-	margin-left: 5px;
-	vertical-align: middle;
-	font-weight: 600;
+@media only screen and (max-width: 799px) {
+	.navigation-button-box {
+		display: -webkit-flex;
+		display: -moz-flex;
+		display: -ms-flex;
+		display: flex;
+		-webkit-flex-wrap: wrap;
+		-moz-flex-wrap: wrap;
+		-ms-flex-wrap: wrap;
+		flex-wrap: wrap;
+		-webkit-justify-content: space-evenly;
+		-moz-justify-content: space-evenly;
+		-ms-justify-content: space-evenly;
+		justify-content: space-evenly;
+	}
+	.navigation-button:focus {
+		-webkit-box-shadow: none;
+		-moz-box-shadow: none;
+		-ms-box-shadow: none;
+		box-shadow: none;
+		outline: none;
+	}
+	.navigation-button>img {
+		padding: 5px;
+		display: block;
+		width: 80px;
+		height: 80;
+		border: 1px solid #d0d0d0;
+		border-radius: 5px;
+		margin-bottom: 5px;
+		background: -webkit-linear-gradient(#f8f8f8, #e8e8e8);
+		background: -o-linear-gradient(#f8f8f8, #e8e8e8);
+		background: -moz-linear-gradient(#f8f8f8, #e8e8e8);
+		background: -ms-linear-gradient(#f8f8f8, #e8e8e8);
+		background: linear-gradient(#f8f8f8, #e8e8e8);
+	}
+	.navigation-button>div {
+		display: block;
+		min-width: 80px;
+		max-width: 80px;
+		min-height: 2.5em;
+		max-height: 2.5em;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		text-align: center;
+	}
 }
 
 @media only screen and (min-width: 800px) {
+	.navigation-button {
+		width: 100%;
+		display: flex;
+		display: -webkit-flex;
+		display: -moz-flex;
+		display: -ms-flex;
+		display: flex;
+		-webkit-align-items: center;
+		-moz-align-items: center; .
+		ms-align-items: center;
+		align-items: center;
+		padding: 5px;
+		border: 1px solid #d0d0d0;
+		border-radius: 2px;
+		vertical-align: top;
+		background: -webkit-linear-gradient(#f8f8f8, #e8e8e8);
+		background: -o-linear-gradient(#f8f8f8, #e8e8e8);
+		background: -moz-linear-gradient(#f8f8f8, #e8e8e8);
+		background: -ms-linear-gradient(#f8f8f8, #e8e8e8);
+		background: linear-gradient(#f8f8f8, #e8e8e8);
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.navigation-button:active {
+		background: -webkit-linear-gradient(#e8e8e8, #f8f8f8);
+		background: -o-linear-gradient(#e8e8e8, #f8f8f8);
+		background: -moz-linear-gradient(#e8e8e8, #f8f8f8);
+		background: -ms-linear-gradient(#e8e8e8, #f8f8f8);
+		background: linear-gradient(#e8e8e8, #f8f8f8);
+	}
 	.navigation-button>img {
 		width: 50px;
 		height: 50px;
+		vertical-align: middle;
+	}
+	.navigation-button>div {
+		margin-left: 5px;
+		vertical-align: middle;
+		font-weight: 600;
 	}
 }
 
@@ -1539,7 +1588,7 @@ input[type='radio']:checked+.calendar-termin-weekly {
 	-webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
 	-moz-box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
 	-ms-box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
-	box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);	
+	box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
 }
 
 .calendar-termin-weekly:last-child {
@@ -1607,7 +1656,7 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	-webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
 	-moz-box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
 	-ms-box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
-	box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);	
+	box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
 }
 /**
  * all about the accordeon
@@ -2162,4 +2211,89 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	-moz-flex-direction: column;
 	-ms-flex-direction: column;
 	flex-direction: column;
+}
+
+/*---------------------------------------------------------------------------*/
+/**
+ * filesystem
+ */
+.filesystem-explorer {
+	-webkit-flex: 1;
+	-moz-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: flex;
+	-webkit-flex-direction: column;
+	-moz-flex-direction: column;
+	-ms-flex-direction: column;
+	flex-direction: column;
+}
+
+.filesystem-breadcrumb-cnr {
+	-webkit-flex: 0 auto;
+	-moz-flex: 0 auto;
+	-ms-flex: 0 auto;
+	flex: 0 auto;
+}
+
+.filesystem-view {
+	padding: 10px;
+	-webkit-flex: 1;
+	-moz-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+}
+
+.filesystem-view-entry {
+	width: 100px;
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: flex;
+	-webkit-flex-direction: column;
+	-moz-flex-direction: column;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	align-items: center;
+	overflow: hide;
+	text-overflow: ellipsis;
+	float: left;
+}
+
+.filesystem-view-entry>input[type="radio"] {
+	display: none;
+}
+
+.filesystem-view-entry>img {
+	width: 70px;
+	height: 70px;
+	padding: 10px;
+	border: 1px solid transparent;
+	border-radius: 2px;
+}
+
+.filesystem-view-entry>input[type="radio"]:checked+img {
+	background: -webkit-linear-gradient(#f8f8f8, #e8e8e8);
+	background: -o-linear-gradient(#f8f8f8, #e8e8e8);
+	background: -moz-linear-gradient(#f8f8f8, #e8e8e8);
+	background: -ms-linear-gradient(#f8f8f8, #e8e8e8);
+	background: linear-gradient(#f8f8f8, #e8e8e8);
+	border-color: #d0d0d0;
+}
+
+
+.filesystem-view-entry>input[type="text"] {
+	border: none;
+	padding: none;
+	width: 98%;
+	text-align: center;
+	text-overflow: ellipsis;
+}
+
+.filesystem-view-entry>input:focus {
+	border: none;
+	padding: none;
 }

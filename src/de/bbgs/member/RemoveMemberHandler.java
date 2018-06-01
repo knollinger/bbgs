@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import de.bbgs.logging.AuditLog;
 import de.bbgs.service.IXmlServiceHandler;
 import de.bbgs.session.SessionWrapper;
 import de.bbgs.utils.ConnectionPool;
@@ -66,6 +67,7 @@ public class RemoveMemberHandler implements IXmlServiceHandler
             conn = ConnectionPool.getConnection();
             conn.setAutoCommit(false);
             
+            AuditLog.logRemove(this, session, conn, "REMOVE_MEMBER", Integer.valueOf(req.id));
             MemberDBUtil.deleteMember(req.id, conn);
             conn.commit();
             return new Response();

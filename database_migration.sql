@@ -257,3 +257,23 @@ CREATE TABLE course_member (
 insert into course_member (member_id, course_id) select distinct m.member_id, c.id from course_members m left join course_termins t on t.id = m.termin_id left join courses c on t.ref_id = c.id order by c.id, m.member_id;
 drop table course_members;
 
+/**
+ * create the audit log
+ */
+CREATE TABLE `auditlog` (
+  `uid` INT NOT NULL,
+  `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `type` VARCHAR(10) NOT NULL,
+  `message` VARCHAR(2048) NOT NULL
+);
+
+drop table filesystem;
+CREATE TABLE `filesystem` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `parentId` INT NOT NULL,
+  `blobId` INT NOT NULL,
+  `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_accessed` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `name` VARCHAR(256) NOT NULL,
+  PRIMARY KEY (`id`)
+);

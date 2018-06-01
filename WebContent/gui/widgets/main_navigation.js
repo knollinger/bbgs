@@ -18,13 +18,17 @@ var MainNavigation = function() {
         new CourseMainNavigation();
     });
     
-    btn = this.addNavigationButton("gui/images/money.svg", "Rechnungswesen", function() {
+    btn = this.addNavigationButton("gui/images/money.svg", "Rechnungs-Wesen", function() {
         new AccountingNavigation();
     });
     UIUtils.addClass(btn, "hide-on-mobile");
     
     btn = this.addNavigationButton("gui/images/mail.svg", "Mail/SMS", function() {
         new MailNavigation();
+    });
+
+    btn = this.addNavigationButton("gui/images/document.svg", "Dokumenten-Verwaltung", function() {
+	new FileSystemExplorer();
     });
 
     btn = this.addNavigationButton("gui/images/notes.svg", "Aufgaben-Liste", function() {

@@ -37,7 +37,7 @@ Navigation.prototype.addNavigationButton = function(img, text, onclick) {
     icon.src = img;
     btn.appendChild(icon);
 
-    var span = document.createElement("span");
+    var span = document.createElement("div");
     span.textContent = text;
     btn.appendChild(span);
 

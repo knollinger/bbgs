@@ -79,6 +79,11 @@ de.bbgs.accounting.GetProjectsOverviewHandler
 de.bbgs.accounting.GetProjectModelHandler
 de.bbgs.accounting.SaveProjectModelHandler
 
+#------------------------------------------------------------------------------
+#
+# all about filesystem
+#
+de.bbgs.filesystem.GetFolderContentHandler
 
 #------------------------------------------------------------------------------
 #

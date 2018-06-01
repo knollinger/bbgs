@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import de.bbgs.logging.AuditLog;
 import de.bbgs.service.IXmlServiceHandler;
 import de.bbgs.session.SessionWrapper;
 import de.bbgs.utils.ConnectionPool;
@@ -66,10 +67,12 @@ public class FindMemberHandler implements IXmlServiceHandler
             Response rsp = new Response();
             if (req.allMembers)
             {
+                AuditLog.logQuery(this, session, conn, "GET_ALL_MEMBERS");
                 rsp.members.addAll(this.transform(MemberDBUtil.getAllMembers(conn)));
             }
             else
             {
+                AuditLog.logQuery(this, session, conn, "GET_MEMBERS_BY_QUERY", req.query);
                 rsp.members.addAll(MemberDBUtil.performFulltextSearch(req.query, conn));
             }
             result = rsp;

@@ -201,6 +201,7 @@ CourseCalendar.prototype.createPrintAction = function() {
 
 	    var menu = new PopupMenu(action.btn);
 	    menu.makeMenuItem("aktuellen Kurs-Kalender drucken", function() {
+		self.printCurrentCalendar();
 	    });
 
 	    menu.makeSeparator();

@@ -14,6 +14,7 @@ import de.bbgs.attachments.EAttachmentDomain;
 import de.bbgs.contacts.ContactsDBUtil;
 import de.bbgs.contacts.EContactDomain;
 import de.bbgs.courses.CourseDBUtil;
+import de.bbgs.logging.AuditLog;
 import de.bbgs.notes.ENoteDomain;
 import de.bbgs.notes.NotesDBUtil;
 import de.bbgs.service.IXmlServiceHandler;
@@ -78,11 +79,12 @@ public class SaveMemberModelHandler implements IXmlServiceHandler
             if (id == 0)
             {                
                 id = MemberDBUtil.createMember(model.coreData, conn);
+                AuditLog.logCreate(this, session, conn, "CREATE_MEMBER", Integer.valueOf(id), model.coreData.zname, model.coreData.vname);                
             }
             else
             {
-
                 id = MemberDBUtil.updateMember(model.coreData, conn);
+                AuditLog.logUpdate(this, session, conn, "UPDATE_MEMBER", Integer.valueOf(id), model.coreData.zname, model.coreData.vname);                
             }
             
             MemberDBUtil.handleMemberInternalAttachment(model.coreData.image, model.coreData.imageMimeType, id, EAttachmentDomain.THUMBNAIL, session, conn);

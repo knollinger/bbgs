@@ -15,6 +15,7 @@ import de.bbgs.attachments.EAttachmentDomain;
 import de.bbgs.contacts.ContactsDBUtil;
 import de.bbgs.contacts.EContactDomain;
 import de.bbgs.courses.CourseDBUtil;
+import de.bbgs.logging.AuditLog;
 import de.bbgs.notes.ENoteDomain;
 import de.bbgs.notes.NotesDBUtil;
 import de.bbgs.partner.PartnerDBUtil;
@@ -82,6 +83,7 @@ public class GetMemberModelHandler implements IXmlServiceHandler
                 model.attachments = AttachmentsDBUtil.getAllAttachments(req.id, EAttachmentDomain.MEMBER, conn);
                 model.notes = NotesDBUtil.getAllNotes(req.id, ENoteDomain.MEMBER, conn);
                 model.courses = CourseDBUtil.getCoursesByMemberId(req.id, conn);
+                AuditLog.logQuery(this, session, conn, "GET_MEMBER_BY_ID", Integer.valueOf(req.id), model.coreData.zname, model.coreData.vname);
             }
             
             model.partner = PartnerDBUtil.getAllCoopPartners(conn);

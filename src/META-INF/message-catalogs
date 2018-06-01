@@ -1,0 +1,6 @@
+#------------------------------------------------------------------------------
+#
+# Hier werden alle Packages aufgeführt, welche nach message-catalogen durchsucht 
+# werden sollen
+
+de.bbgs.member
