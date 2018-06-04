@@ -9,14 +9,17 @@ import de.bbgs.xml.IJAXBObject;
  */
 public class FileSystemObject implements IJAXBObject
 {
+    public enum TYPE {
+        FOLDER, FILE
+    }
     @XmlElement(name="id")
     public int id;
     
     @XmlElement(name="parent-id")
     public int parentId;
     
-    @XmlElement(name="blob-id")
-    public int blobId;
+    @XmlElement(name="type")
+    public TYPE type;
 
     @XmlElement(name="created")
     public String created;
@@ -26,4 +29,7 @@ public class FileSystemObject implements IJAXBObject
     
     @XmlElement(name="name")
     public String name;
+
+    @XmlElement(name="mime-type")
+    public String mimetype;
 }

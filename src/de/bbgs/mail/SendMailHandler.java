@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.xml.bind.annotation.XmlElement;
@@ -104,10 +103,11 @@ public class SendMailHandler implements IXmlServiceHandler
                     this.request.attachments);
 
                 InternetAddress[] recipents = this.resolveAdresses(this.request.recipients, conn);
-                for (InternetAddress recipient : recipents)
-                {
-                    this.sendOneMail(recipient, msg);
-                }
+                InternetAddress[] replyTo = {SendMailHelper.resolveAddress(session.getEmail())};
+
+                msg.setRecipients(Message.RecipientType.BCC, recipents);
+                msg.setReplyTo(replyTo);
+                Transport.send(msg);
             }
             catch (Exception e)
             {
@@ -117,23 +117,6 @@ public class SendMailHandler implements IXmlServiceHandler
             finally
             {
                 DBUtils.closeQuitly(conn);
-            }
-        }
-
-        /**
-         * @param recipient
-         * @param msg
-         */
-        private void sendOneMail(InternetAddress recipient, Message msg)
-        {
-            try
-            {
-                msg.setRecipient(Message.RecipientType.TO, recipient);
-                Transport.send(msg);
-            }
-            catch (MessagingException e)
-            {
-                // TODO
             }
         }
 

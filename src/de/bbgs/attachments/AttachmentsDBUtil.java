@@ -93,10 +93,11 @@ public class AttachmentsDBUtil
      * @param conn
      * @throws SQLException 
      */
-    public static void createAttachment(Attachment attachment, int refId, EAttachmentDomain domain, SessionWrapper session,
+    public static int createAttachment(Attachment attachment, int refId, EAttachmentDomain domain, SessionWrapper session,
         Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
+        ResultSet rs = null;
         try
         {
             stmt = conn.prepareStatement("insert into attachments set ref_id=?, domain=?, file_name=?, file=?, mimetype=?, attached_by=?");
@@ -107,9 +108,13 @@ public class AttachmentsDBUtil
             stmt.setString(5, attachment.mimeType);
             stmt.setString(6, session.getAccountName());
             stmt.executeUpdate();
+            rs = stmt.getGeneratedKeys();
+            rs.next();
+            return rs.getInt(1);
         }
         finally
         {
+            DBUtils.closeQuitly(rs);
             DBUtils.closeQuitly(stmt);
         }
     }

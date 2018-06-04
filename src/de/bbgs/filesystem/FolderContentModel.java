@@ -14,7 +14,7 @@ public class FolderContentModel implements IJAXBObject
 {
     @XmlElement(name="parent")
     @XmlElementWrapper(name="parents")
-    public List<FileSystemObject> parents = new ArrayList<>();
+    public List<String> parents = new ArrayList<>();
 
     @XmlElement(name="filesys-object")
     @XmlElementWrapper(name="filesys-objects")

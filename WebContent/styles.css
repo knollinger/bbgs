@@ -356,7 +356,7 @@ li {
 	overflow: auto;
 }
 
-@media only screen and (min-width: 800px) {
+@media only screen and (min-width: 600px) {
 	.workspace-frame-body {
 		display: -webkit-flex;
 		display: flex;
@@ -766,7 +766,7 @@ li {
  */
 .login-header {
 	position: relative;
-	height: 35%;
+	height: 25%;
 	background: url('gui/images/header.jpg');
 	background-size: cover;
 	background-position: center center;
@@ -777,8 +777,14 @@ li {
 	right: 10px;
 	bottom: 10px;
 	color: white;
-	font-size: 36px;
+	font-size: 26px;
 	text-align: right;
+}
+
+@media only screen and (min-width: 600px) {
+	.login-header>span {
+		font-size: 36px;
+	}
 }
 
 .login-account-cnr {
@@ -826,8 +832,8 @@ li {
 }
 
 .login-account-button>img {
-	width: 50px;
-	height: 50px;
+	width: 40px;
+	height: 40px;
 	border-radius: 50%;
 	border: 1px solid #d0d0d0;
 	-webkit-flex: 0 auto;
@@ -894,7 +900,7 @@ li {
 
 .navigation-header {
 	position: relative;
-	height: 33%;
+	height: 25%;
 	background-size: cover;
 	background-position: center center;
 }
@@ -904,23 +910,26 @@ li {
 	right: 10px;
 	bottom: 10px;
 	color: white;
-	font-size: 36px;
+	font-size: 26px;
 	text-align: right;
 	color: white;
 }
 
-.navigation-button-box {
-	padding: 10px;
-	display: block;
+@media only screen and (min-width: 600px) {
+	.navigation-header>span {
+		font-size: 36px;
+	}
 }
 
 .navigation-button {
 	cursor: pointer;
 	margin-bottom: 10px;
+	font-weight: 600;
 }
 
-@media only screen and (max-width: 799px) {
+@media only screen and (max-width: 599px) {
 	.navigation-button-box {
+		padding: 10px 0 10px 10px;
 		display: -webkit-flex;
 		display: -moz-flex;
 		display: -ms-flex;
@@ -934,6 +943,9 @@ li {
 		-ms-justify-content: space-evenly;
 		justify-content: space-evenly;
 	}
+	.navigation-button {
+		margin-right: 10px;
+	}
 	.navigation-button:focus {
 		-webkit-box-shadow: none;
 		-moz-box-shadow: none;
@@ -945,7 +957,7 @@ li {
 		padding: 5px;
 		display: block;
 		width: 80px;
-		height: 80;
+		height: 80px;
 		border: 1px solid #d0d0d0;
 		border-radius: 5px;
 		margin-bottom: 5px;
@@ -967,7 +979,11 @@ li {
 	}
 }
 
-@media only screen and (min-width: 800px) {
+@media only screen and (min-width: 600px) {
+	.navigation-button-box {
+		padding: 10px;
+		display: block;
+	}
 	.navigation-button {
 		width: 100%;
 		display: flex;
@@ -1007,7 +1023,6 @@ li {
 	.navigation-button>div {
 		margin-left: 5px;
 		vertical-align: middle;
-		font-weight: 600;
 	}
 }
 
@@ -1065,7 +1080,7 @@ li {
 	width: calc(100% - 5px) !important;
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 600px) {
 	.grid-col-1 {
 		width: 100% !important;
 	}
@@ -1108,7 +1123,7 @@ li {
 	z-index: 1;
 }
 
-@media only screen and (min-width: 800px) {
+@media only screen and (min-width: 600px) {
 	.mbox-frame {
 		width: 700px;
 	}
@@ -1321,7 +1336,7 @@ li {
 /**
  * auf Mobil-Geräte blenden wir auf den pohne-Inputs eine schaltfläche zur direkt-wahl ein 
  */
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 600px) {
 	.phone-input {
 		padding-right: 30px;
 		background: transparent url("gui/images/phone.svg") no-repeat
@@ -1661,7 +1676,7 @@ input[type='radio']:checked+.calendar-termin-monthly {
 /**
  * all about the accordeon
  */
-@media screen only and (max-width = 800px) {
+@media screen only and (max-width = 600px) {
 	.accordeon-cnr {
 		max-height: unset;
 	}
@@ -1694,7 +1709,7 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	border-width: 1px;
 }
 
-@media only screen and (min-width: 801px) {
+@media only screen and (min-width: 601px) {
 	.accordeon-btn+label {
 		-webkit-flex: 0 auto;
 		-moz-flex: 0 auto;
@@ -1742,7 +1757,7 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	padding: 5px;
 }
 
-@media only screen and (min-width: 801px) {
+@media only screen and (min-width: 601px) {
 	.accordeon-btn:checked+label+.accordeon-content {
 		-webkit-flex: 1;
 		-moz-flex: 1;
@@ -1880,18 +1895,8 @@ input[type='radio']:checked+.calendar-termin-monthly {
 
 .multsel-option {
 	margin: 0.2em 0 0 0;
-	display: -webkit-flex;
-	display: -moz-flex;
-	display: -ms-flex;
-	display: flex;
-	-webkit-flex-direction: row;
-	-moz-flex-direction: row;
-	-ms-flex-direction: row;
-	flex-direction: row;
-	-webkit-align-items: center;
-	-moz-align-items: center;
-	-ms-align-items: center;
-	align-items: center;
+	display: block;
+	padding: 0;
 }
 
 .multsel-option:first-child {
@@ -2030,7 +2035,7 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	box-shadow: 0px 2px 4px rgba(0, 0, 192, 0.5);
 }
 
-@media only screen and (min-width: 800px) {
+@media only screen and (min-width: 600px) {
 	.todolist-task {
 		width: 45%;
 	}
@@ -2222,32 +2227,10 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	-moz-flex: 1;
 	-ms-flex: 1;
 	flex: 1;
-	display: -webkit-flex;
-	display: -moz-flex;
-	display: -ms-flex;
-	display: flex;
-	-webkit-flex-direction: column;
-	-moz-flex-direction: column;
-	-ms-flex-direction: column;
-	flex-direction: column;
-}
-
-.filesystem-breadcrumb-cnr {
-	-webkit-flex: 0 auto;
-	-moz-flex: 0 auto;
-	-ms-flex: 0 auto;
-	flex: 0 auto;
-}
-
-.filesystem-view {
 	padding: 10px;
-	-webkit-flex: 1;
-	-moz-flex: 1;
-	-ms-flex: 1;
-	flex: 1;
 }
 
-.filesystem-view-entry {
+.filesystem-entry {
 	width: 100px;
 	display: -webkit-flex;
 	display: -moz-flex;
@@ -2263,11 +2246,11 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	float: left;
 }
 
-.filesystem-view-entry>input[type="radio"] {
+.filesystem-entry>input[type="radio"] {
 	display: none;
 }
 
-.filesystem-view-entry>img {
+.filesystem-entry>img {
 	width: 70px;
 	height: 70px;
 	padding: 10px;
@@ -2275,7 +2258,7 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	border-radius: 2px;
 }
 
-.filesystem-view-entry>input[type="radio"]:checked+img {
+.filesystem-entry>input[type="radio"]:checked+img {
 	background: -webkit-linear-gradient(#f8f8f8, #e8e8e8);
 	background: -o-linear-gradient(#f8f8f8, #e8e8e8);
 	background: -moz-linear-gradient(#f8f8f8, #e8e8e8);
@@ -2284,16 +2267,21 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	border-color: #d0d0d0;
 }
 
-
-.filesystem-view-entry>input[type="text"] {
+.filesystem-entry>input[type="text"] {
 	border: none;
 	padding: none;
 	width: 98%;
 	text-align: center;
 	text-overflow: ellipsis;
+	background-color: transparent;
 }
 
-.filesystem-view-entry>input:focus {
+.filesystem-entry>input:focus {
 	border: none;
 	padding: none;
+}
+
+.is-dragover {
+	background-color: #f0f0f0;
+	border: 2px dashed #d0d0d0;
 }

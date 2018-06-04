@@ -84,6 +84,9 @@ de.bbgs.accounting.SaveProjectModelHandler
 # all about filesystem
 #
 de.bbgs.filesystem.GetFolderContentHandler
+de.bbgs.filesystem.RenameFileSystemObjectHandler
+de.bbgs.filesystem.RemoveFileSystemObjectHandler
+de.bbgs.filesystem.UploadAttachmentsHandler
 
 #------------------------------------------------------------------------------
 #

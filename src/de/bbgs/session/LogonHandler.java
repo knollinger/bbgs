@@ -10,6 +10,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import de.bbgs.member.Member;
+import de.bbgs.member.MemberDBUtil;
 import de.bbgs.service.IXmlServiceHandler;
 import de.bbgs.utils.ConnectionPool;
 import de.bbgs.utils.DBUtils;
@@ -75,8 +77,11 @@ public class LogonHandler implements IXmlServiceHandler
             }
             else
             {
+                Member m = MemberDBUtil.getMember(memberId, conn);
                 session.setAccountId(memberId);
                 session.setAccountName(uid);
+                session.setEmail(m.email);
+                session.setMailSignature(m.mailsig, m.mailsigMimetype);
                 result = new Response();
             }            
         }

@@ -234,8 +234,15 @@ var MessageCatalog = (function() {
 	QUERY_REMOVE_PLANNING_ITEM : "M&ouml;chtes Du den Planungs-Posten wirklich l&ouml;schen?",
 
 	TITLE_REMOVE_PAYMENT_RECORD : "Bist Du sicher?",
-	QUERY_REMOVE_PAYMENT_RECORD : "M&ouml;chtes Du den Finanzierungs-Posten wirklich l&ouml;schen?"
-
+	QUERY_REMOVE_PAYMENT_RECORD : "M&ouml;chtes Du den Finanzierungs-Posten wirklich l&ouml;schen?",
+	
+	// --------------------------------------------------------------------
+	//
+	// all about the file system
+	//
+	TITLE_REMOVE_FILESYS_OBJ : "Bist Du sicher?",
+	QUERY_REMOVE_FILESYS_FOLDER : "M&ouml;chtes Du den Ordner '{1}' <b>und alle seine Unterordner und Dateien</b> wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
+	QUERY_REMOVE_FILESYS_FILE : "M&ouml;chtes Du die Datei '{1}' wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!"
     }
 
     return {

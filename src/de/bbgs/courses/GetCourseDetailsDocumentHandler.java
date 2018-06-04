@@ -181,8 +181,9 @@ public class GetCourseDetailsDocumentHandler implements IGetDocServiceHandler
         try
         {
             int currMemberId = 0;
-            stmt = conn.prepareStatement(
-                "select * from members m left join contacts c on c.ref_id = m.id where m.id in (select distinct member_id from course_member where course_id = ?) order by m.zname, m.vname");
+//            stmt = conn.prepareStatement(
+//                "select * from members m left join contacts c on c.ref_id = m.id where m.id in (select distinct member_id from course_member where course_id = ?) order by m.zname, m.vname");
+            stmt = conn.prepareStatement("select * from members m left join contacts c on c.ref_id = m.id and c.domain = \"MEMBER\" where m.id in(select distinct member_id from course_member where course_id = ?);");
             stmt.setInt(1, courseId);
             rs = stmt.executeQuery();
             while (rs.next())

@@ -25,7 +25,7 @@ import de.bbgs.xml.JAXBSerializer;
  * Servlet implementation class DispatcherServlet
  */
 @SuppressWarnings("serial")
-@WebServlet(description = "Dispatched anhand der RequestTypen", urlPatterns = {"/xmlservice"}, loadOnStartup=1)
+@WebServlet(description = "Dispatched anhand der RequestTypen", urlPatterns = {"/xmlservice"}, loadOnStartup = 1)
 public class XmlDispatcherServlet extends HttpServlet
 {
     private Map<Class<? extends IJAXBObject>, IXmlServiceHandler> handlers;
@@ -47,15 +47,22 @@ public class XmlDispatcherServlet extends HttpServlet
         ServiceLoader<IXmlServiceHandler> loader = ServiceLoader.load(IXmlServiceHandler.class);
         for (IXmlServiceHandler handler : loader)
         {
-            Class<? extends IJAXBObject> clazz = handler.getResponsibleFor();
-            JAXBSerializer.registerClass(clazz);
+            try
+            {
+                Class<? extends IJAXBObject> clazz = handler.getResponsibleFor();
+                JAXBSerializer.registerClass(clazz);
 
-            Collection<Class<? extends IJAXBObject>> usedClasses = handler.getUsedJaxbClasses();
-            for (Class<? extends IJAXBObject> usedClass : usedClasses)
-            {                
-                JAXBSerializer.registerClass(usedClass);
+                Collection<Class<? extends IJAXBObject>> usedClasses = handler.getUsedJaxbClasses();
+                for (Class<? extends IJAXBObject> usedClass : usedClasses)
+                {
+                    JAXBSerializer.registerClass(usedClass);
+                }
+                this.handlers.put(clazz, handler);
             }
-            this.handlers.put(clazz, handler);
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -63,8 +70,7 @@ public class XmlDispatcherServlet extends HttpServlet
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-        IOException
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
 
         try
@@ -106,9 +112,10 @@ public class XmlDispatcherServlet extends HttpServlet
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
-    
+
     @Override
-    public void init(ServletConfig cfg) {
+    public void init(ServletConfig cfg)
+    {
 
         System.out.println(cfg);
     }
