@@ -146,10 +146,7 @@ ProjectsOverview.prototype.getColumnDescriptor = function() {
 	    radio.name = "projects";
 	    return radio;
 	});
-	ProjectsOverview.collDesc.push(function(td, project) {
-	    return project.getElementsByTagName("name")[0].textContent;
-	});
-
+	ProjectsOverview.collDesc.push("name");
 	ProjectsOverview.collDesc.push(function(td, project) {
 	    return project.getElementsByTagName("from")[0].textContent + " - " + project.getElementsByTagName("until")[0].textContent;
 	});
@@ -517,18 +514,17 @@ ProjectPlanningEditor.prototype.createRemoveAction = function() {
     var self = this;
     var action = new WorkSpaceFrameAction("gui/images/planning-item-remove.svg", "Planungs-Posten hinzu entfernen", function() {
 
-	var title = MessageCatalog.getMessage("");
-	var messg = MessageCatalog.getMessage("");
+	var title = MessageCatalog.getMessage("TITLE_REMOVE_PLANNING_ITEM");
+	var messg = MessageCatalog.getMessage("QUERY_REMOVE_PLANNING_ITEM");
 	if (new MessageBox(MessageBox.QUERY, title, messg, function() {
 
 	    if (self.model.getValue(self.currItem + "/action") == "CREATE") {
 		self.model.removeElement(self.currItem);
 	    } else {
 		self.model.setValue(self.currItem + "/action", "REMOVE");
-		self.actionRemove.hide();
-		self.actionPrint.hide();
 	    }
-	    self.currItemRow.parentElement.removeChild(self.currItemRow);
+	    self.actionRemove.hide();
+	    UIUtils.removeElement(self.currItemRow);
 	    self.currItem = self.currItemRow = null;
 	}));
     });
@@ -872,6 +868,7 @@ ProjectPaymentEditor.prototype.fillTable = function() {
  */
 ProjectPaymentEditor.prototype.renderOnePaymentRecord = function(record) {
 
+    var xpath = XmlUtils.getXPathTo(record);
     var row = document.createElement("tr");
 
     td = document.createElement("td");
@@ -880,26 +877,37 @@ ProjectPaymentEditor.prototype.renderOnePaymentRecord = function(record) {
     row.appendChild(td);
 
     var td = document.createElement("td");
-    var select = this.createKontoSelector(record);
+    var select = this.createKontoSelector(xpath);
     td.appendChild(select);
     row.appendChild(td);
 
     td = document.createElement("td");
-    var input = this.createAmountEntry(record);
+    var input = this.createAmountEntry(xpath);
     td.appendChild(input);
     row.appendChild(td);
 
     // filler
     td = document.createElement("td");
-    var desc = this.createDescriptionEntry(record);
+    var desc = this.createDescriptionEntry(xpath);
     td.appendChild(desc);
     row.appendChild(td);
 
     var self = this;
-    radio.addEventListener("click", function() {
-	self.currRecord = XmlUtils.getXPathTo(record);
+    row.addEventListener("click", function() {
+	radio.checked = true;
+	self.currRecord = xpath;
 	self.currRow = row;
 	self.actionRemove.show();
+    });
+    
+    this.model.addChangeListener(xpath, function() {
+	var action = self.model.evaluateXPath(xpath + "/action")[0];
+	if(action.textContent == "CREATE") {
+	    self.model.removeElement(xpath);
+	}
+	else {
+	    action.textContent = "MODIFY"; 
+	}
     });
 
     return row;
@@ -908,7 +916,7 @@ ProjectPaymentEditor.prototype.renderOnePaymentRecord = function(record) {
 /**
  * 
  */
-ProjectPaymentEditor.prototype.createRadioButton = function(record) {
+ProjectPaymentEditor.prototype.createRadioButton = function() {
 
     var radio = document.createElement("input");
     radio.type = "radio";
@@ -919,7 +927,7 @@ ProjectPaymentEditor.prototype.createRadioButton = function(record) {
 /**
  * 
  */
-ProjectPaymentEditor.prototype.createKontoSelector = function(record) {
+ProjectPaymentEditor.prototype.createKontoSelector = function(xpath) {
 
     var select = document.createElement("select");
     select.className = "inplace-select mandatory";
@@ -938,8 +946,6 @@ ProjectPaymentEditor.prototype.createKontoSelector = function(record) {
 	opt.textContent = allItems[i].getElementsByTagName("name")[0].textContent;
 	select.appendChild(opt);
     }
-
-    var xpath = XmlUtils.getXPathTo(record);
     this.model.createValueBinding(select, xpath + "/from-invoice", "change");
 
     return select;
@@ -948,16 +954,13 @@ ProjectPaymentEditor.prototype.createKontoSelector = function(record) {
 /**
  * 
  */
-ProjectPaymentEditor.prototype.createAmountEntry = function(record) {
+ProjectPaymentEditor.prototype.createAmountEntry = function(xpath) {
 
     var input = document.createElement("input");
     input.placeholder = "Betrag";
     input.className = "inplace-edit currency-input mandatory";
     input.style.width = "6em";
-
-    var xpath = XmlUtils.getXPathTo(record);
     this.model.createCurrencyValueBinding(input, xpath + "/amount", "change");
-
     new NumericInputField(input);
     return input;
 }
@@ -965,13 +968,11 @@ ProjectPaymentEditor.prototype.createAmountEntry = function(record) {
 /**
  * 
  */
-ProjectPaymentEditor.prototype.createDescriptionEntry = function(record) {
+ProjectPaymentEditor.prototype.createDescriptionEntry = function(xpath) {
 
     var input = document.createElement("textarea");
     input.placeholder = "Beschreibung";
     input.className = "inplace-textarea mandatory";
-
-    var xpath = XmlUtils.getXPathTo(record);
     this.model.createValueBinding(input, xpath + "/description", "change");
 
     return input;
@@ -989,7 +990,7 @@ ProjectPaymentEditor.prototype.updateOverallTotal = function() {
 	demand += parseFloat(allAmounts[i].textContent);
     }
 
-    // TODO: bereits finanziert ermitteln
+    // bereits finanziert ermitteln
     var coverage = 0;
     var allCovers = this.model.evaluateXPath("//project-model/proj-item/income-records/invoice-record[action != 'REMOVE']/amount");
     for (var i = 0; i < allCovers.length; i++) {
@@ -1066,7 +1067,20 @@ ProjectOutgoingEditor.prototype.createRemoveAction = function() {
 
     var self = this;
     var action = new WorkSpaceFrameAction("gui/images/money-remove.svg", "Ausgabe entfernen", function() {
-	//
+
+	var amount = CurrencyUtils.formatCurrency(self.model.getValue(self.currentRecord + "/amount"));
+	var title = MessageCatalog.getMessage("TITLE_REMOVE_OUTGOING_RECORD");
+	var messg = MessageCatalog.getMessage("QUERY_REMOVE_OUTGOING_RECORD", amount);
+	new MessageBox(MessageBox.QUERY, title, messg, function() {
+	    if (self.model.getValue(self.currentRecord + "/action") == "CREATE") {
+		self.model.removeElement(self.currentRecord);
+	    } else {
+		self.model.setValue(self.currentRecord + "/action", "REMOVE");
+	    }
+	    UIUtils.removeElement(self.currentRow);
+	    self.currentRecord = self.currentRow = null;
+	    self.actionRemove.hide();
+	});
     });
     this.addAction(action);
     action.hide();
@@ -1227,7 +1241,7 @@ ProjectOutgoingEditor.prototype.createTotalHeader = function(itemXPath) {
 	var total = 0;
 
 	var id = self.model.getValue(itemXPath + "/item-ref");
-	var xpath = "//project-model/proj-item/outgo-records/invoice-record[to-invoice='" + id + "']/amount";
+	var xpath = "//project-model/proj-item/outgo-records/invoice-record[to-invoice='" + id + "' and action != 'REMOVE']/amount";
 	var allAmounts = self.model.evaluateXPath(xpath);
 	for (var i = 0; i < allAmounts.length; i++) {
 	    total += parseFloat(allAmounts[i].textContent);
@@ -1267,6 +1281,14 @@ ProjectOutgoingEditor.prototype.renderOneRecord = function(recordXPath) {
 
     row.appendChild(document.createElement("td"));
 
+    var self = this;
+    row.addEventListener("click", function() {
+	radio.checked = true;
+	self.currentRecord = recordXPath;
+	self.currentRow = row;
+	self.actionRemove.show();
+    });
+
     return row;
 
 }
@@ -1304,7 +1326,7 @@ ProjectOutgoingEditor.prototype.updatePlannedTotal = function() {
 ProjectOutgoingEditor.prototype.updateOutgoingTotal = function() {
 
     var total = 0;
-    var allAmounts = this.model.evaluateXPath("//project-model/proj-item/outgo-records/invoice-record/amount");
+    var allAmounts = this.model.evaluateXPath("//project-model/proj-item/outgo-records/invoice-record[action != 'REMOVE']/amount");
     for (var i = 0; i < allAmounts.length; i++) {
 
 	total += parseFloat(allAmounts[i].textContent);

@@ -394,14 +394,6 @@ CourseTerminAndLocationOverview.prototype.createLocationSelector = function(term
 /**
  * 
  */
-CourseTerminAndLocationOverview.prototype.activate = function() {
-
-    this.actionAdd.show();
-}
-
-/**
- * 
- */
 CourseTerminAndLocationOverview.prototype.createAddAction = function() {
 
     var self = this;
@@ -414,7 +406,6 @@ CourseTerminAndLocationOverview.prototype.createAddAction = function() {
 	});
     });
     this.addAction(action);
-    action.hide();
     return action;
 }
 

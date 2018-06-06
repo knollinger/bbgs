@@ -1,16 +1,197 @@
-<upload-filesystem-objects>
-	<attachment>
-		<name>ralph</name>
-		<mime-type />
-		<data>SGkgUmFscGghCgplcyBpc3Qgc2Now7ZuIHZvbiBEaXIgenUgaMO2cmVuIQoKSG1tbS4uLndhcyBkYXMgbWl0IGRlbiBUw7ZjaHRlcm4gYW5nZWh0LCBkYXMgaXN0IHNjaHdpZXJpZy5EYSBnZWh0cyB1bnMgd29obCDDpGhubGljaC4gIkhpbW1lbGhvY2ggamF1Y2h6ZW5kLi4uenUgdG9kZSBiZXRyw7xidCIuLm5hamEuCgpEYXMgbWl0IGRlbSBpbm5lcmVuIFNjaHdlaW5laHVuZCBrZW5uZSBpY2guIFdhcyBiZWkgbWlyIGRhZ2VnZW4gaGlsZnQgaXN0IHZpZWwgYXJiZWl0IG1pdCBtZWluZW4ga2xldHRlcnp3ZXJnZW4uIERhcyBrb3N0ZXQgWmVpdCB1bmQgTmVydmVuLklzdCA=
-		</data>
-		<parent>4</parent>
-	</attachment>
-	<attachment>
-		<name>sandra.txt</name>
-		<mime-type>text/plain</mime-type>
-		<data>SGkgU3Vuc2hpbmUhCgpJY2ggd2FyIGVpbiBiaXNzZXJsIGdlcGzDpHR0ZXQsIGhhYiBlcnN0IG1hbCBiaXNzZXJsIGRyw7xiZXIgbWVkaXRpZXJlbiBtw7xzc2VuLiAKCk5hamEsIGRpZSBsZXR6dGVuIHp3ZWkgSmFocmUgd2FybiBzaWNoZXIgZsO8ciBrZWluZW4gdm9uIHVucyBzb25kZXJsaWNoIGxlaWNodC4gClVtIHNvIG1laHIgZnJldSBpY2ggbWljaCwgZGFzIGVzIERpciBvZmZlbnNpY2h0bGljaCBndXQgZ2VodC4gVm9uIERlaW5lciBBdXNiaWxkdW5nCnd1c3RlIGljaCBqYSBzY2hvbiwgYWJlciBuZWQgd2llIGVzIGzDpHVmdCwgb2JzIERpciBnZWbDpGxsdCBvYiBEdSB0b2xsZSBLb2xsZWdlbiAKaGFzdC4uLgoKQmVpIG1pciBpc3QgaW0gbGV0emVuIEphaHIgdnVpIHBhc3NpZXJ0LiBJY2ggaGFiIGpldHp0IDEyIEtpbmRlciEgTmFqYSwgbnVyIGVpbmUgCktsZXR0ZXJncnVwcGUsIGFiZXIgZGFzIHNpbmQgbWVpbmUgOi0pCgpEdSBzaWVoc3QsIHdpciBoYWJlbiB1bnMgc2ljaGVyIHZ1aSB6dSBlcnrDpGhsZW4uIEljaCB3w7xyZGUgbWljaCB0aWVyaXNjaCBmcmV1ZW4sIAp3ZW5uIHdpciB3aWVkZXIgaW5zIHJhdHNjaGVuIGtvbW1lbiB3w7xyZGVuLgoKVW5kIG1pciBmZWhsdCBlaW5mYWNoIG1laW5lICJSYXVic2F1Ii4gSWNoIGhhYiB6dW0gQmVpc3BpZWwgbm9jaCBuaWVtYW5kZW4gZ2VmdW5kZW4sIApkZXIgbWl0IG1pciB6dW0gQ2FueW9uaW5nIGdlaGVuIGRhZC4uLmFsbGUgdnVpIHp1IGZlaWdlLiA6LSkKCkFsc28gd2VubiBEdSBtw7ZjaHRlc3QsIGxhc3MgZXMgdW5zIGRvY2ggZWluZmFjaCBub2NobWFsIHZlcnN1Y2hlbi4gVmllbGxlaWNodCAKbWFjaGVuIHdpciBlcnN0IG1hbCBsYW5nc2FtIHVuZCBzY2hyZWliZW4gYSB3ZW5nIGhpbiB1bmQgaGVyPyBVbmQgaXJnZW5kd2Fubgprb21tIGljaCBtYWwgbmFjaCBJbmdvbHN0YWR0LCB3aXIgZ2VoZW4gYXVmIGVpbmVuIEthZmZlIHVuZCBEdSBzdGVsbHN0IG1pciAKRGVpbiBLZXJsY2hlbiB2b3I/IAoKV2VubiB3aXIgYmVpZGUgZGFzIHdvbGxlbiwgdW5zIGdlZ2VuemVpdGlnIFplaXQgZ2ViZW4sIEdlZHVsZCBoYWJlbiB1bmQgZWluZmFjaCAKd2llZGVyIGVocmxpY2ggenVlaW5hbmRlciBzaW5kLi4uZGFubiBzb2xsdGVuIG1lciBkYXMgZG9jaCBoaW4ga3JpZWdlbiwgb2Rlcj8KCgpIYWIgRGljaCB3aXJrbGljaCBsaWViLApEZWluIE9pZGVy
-		</data>
-		<parent>4</parent>
-	</attachment>
-</upload-filesystem-objects>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<project-model>
+	<core-data>
+		<id>1</id>
+		<action>NONE</action>
+		<name>Oster-Ausfahrt 2018 Naturns</name>
+		<description>Klettern mit den Zwergen...Lagerfeuern...Spaß haben</description>
+		<from>03.04.2018</from>
+		<until>07.04.2018</until>
+	</core-data>
+	<attachments>
+		<attachment>
+			<id>258</id>
+			<name>467594.jpg</name>
+			<mime-type>image/jpeg</mime-type>
+			<content />
+			<attached-by>Anderl</attached-by>
+			<attached-at />
+			<domain>PROJECT</domain>
+			<action>NONE</action>
+		</attachment>
+	</attachments>
+	<notes />
+	<planning-items>
+		<planning-item>
+			<id>1</id>
+			<proj-ref>1</proj-ref>
+			<item-ref>3</item-ref>
+			<konto-nr>5800</konto-nr>
+			<action>NONE</action>
+			<amount>240.0</amount>
+		</planning-item>
+		<planning-item>
+			<id>2</id>
+			<proj-ref>1</proj-ref>
+			<item-ref>6</item-ref>
+			<konto-nr>5800</konto-nr>
+			<action>NONE</action>
+			<amount>240.0</amount>
+		</planning-item>
+		<planning-item>
+			<id>3</id>
+			<proj-ref>1</proj-ref>
+			<item-ref>5</item-ref>
+			<konto-nr>5800</konto-nr>
+			<action>NONE</action>
+			<amount>240.0</amount>
+		</planning-item>
+		<planning-item>
+			<id>4</id>
+			<proj-ref>1</proj-ref>
+			<item-ref>4</item-ref>
+			<konto-nr>5800</konto-nr>
+			<action>NONE</action>
+			<amount>240.0</amount>
+		</planning-item>
+		<planning-item>
+			<id>5</id>
+			<proj-ref>1</proj-ref>
+			<item-ref>7</item-ref>
+			<konto-nr>5803</konto-nr>
+			<action>NONE</action>
+			<amount>550.0</amount>
+		</planning-item>
+		<planning-item>
+			<id>6</id>
+			<proj-ref>1</proj-ref>
+			<item-ref>9</item-ref>
+			<konto-nr>5803</konto-nr>
+			<action>NONE</action>
+			<amount>400.0</amount>
+		</planning-item>
+	</planning-items>
+	<proj-item>
+		<id>10</id>
+		<ref_id>1</ref_id>
+		<action>NONE</action>
+		<konto>0</konto>
+		<name />
+		<description />
+		<type>PLANNING</type>
+		<income-records>
+			<invoice-record>
+				<id>3</id>
+				<action>NONE</action>
+				<from-invoice>1</from-invoice>
+				<to-invoice>10</to-invoice>
+				<amount>1800.0</amount>
+				<description>hmmmmm</description>
+				<date>19.04.2018</date>
+				<attachments />
+			</invoice-record>
+			<invoice-record>
+				<id>19</id>
+				<action>NONE</action>
+				<from-invoice>2</from-invoice>
+				<to-invoice>10</to-invoice>
+				<amount>110</amount>
+				<description>Für Gummibärchen</description>
+				<date>06.06.2018</date>
+				<attachments />
+			</invoice-record>
+		</income-records>
+		<outgo-records>
+			<invoice-record>
+				<id>5</id>
+				<action>NONE</action>
+				<from-invoice>10</from-invoice>
+				<to-invoice>3</to-invoice>
+				<amount>120.0</amount>
+				<description />
+				<date>19.04.2018</date>
+				<attachments />
+			</invoice-record>
+			<invoice-record>
+				<id>6</id>
+				<action>NONE</action>
+				<from-invoice>10</from-invoice>
+				<to-invoice>3</to-invoice>
+				<amount>120.0</amount>
+				<description />
+				<date>19.04.2018</date>
+				<attachments />
+			</invoice-record>
+			<invoice-record>
+				<id>7</id>
+				<action>NONE</action>
+				<from-invoice>10</from-invoice>
+				<to-invoice>6</to-invoice>
+				<amount>240.0</amount>
+				<description />
+				<date>19.04.2018</date>
+				<attachments />
+			</invoice-record>
+			<invoice-record>
+				<id>8</id>
+				<action>NONE</action>
+				<from-invoice>10</from-invoice>
+				<to-invoice>5</to-invoice>
+				<amount>240.0</amount>
+				<description />
+				<date>19.04.2018</date>
+				<attachments />
+			</invoice-record>
+			<invoice-record>
+				<id>9</id>
+				<action>NONE</action>
+				<from-invoice>10</from-invoice>
+				<to-invoice>4</to-invoice>
+				<amount>240.0</amount>
+				<description />
+				<date>19.04.2018</date>
+				<attachments />
+			</invoice-record>
+			<invoice-record>
+				<id>10</id>
+				<action>NONE</action>
+				<from-invoice>10</from-invoice>
+				<to-invoice>7</to-invoice>
+				<amount>200.0</amount>
+				<description />
+				<date>19.04.2018</date>
+				<attachments />
+			</invoice-record>
+			<invoice-record>
+				<id>11</id>
+				<action>NONE</action>
+				<from-invoice>10</from-invoice>
+				<to-invoice>7</to-invoice>
+				<amount>300.0</amount>
+				<description />
+				<date>19.04.2018</date>
+				<attachments />
+			</invoice-record>
+			<invoice-record>
+				<id>12</id>
+				<action>NONE</action>
+				<from-invoice>10</from-invoice>
+				<to-invoice>9</to-invoice>
+				<amount>430.0</amount>
+				<description />
+				<date>19.04.2018</date>
+				<attachments />
+			</invoice-record>
+			<invoice-record>
+				<id>13</id>
+				<action>NONE</action>
+				<from-invoice>10</from-invoice>
+				<to-invoice>8</to-invoice>
+				<amount>100.0</amount>
+				<description />
+				<date>19.04.2018</date>
+				<attachments />
+			</invoice-record>
+		</outgo-records>
+	</proj-item>
+</project-model>

@@ -597,8 +597,9 @@ InvoiceRecordsOverview.prototype.createRemoveAction = function() {
     var self = this;
     var action = new WorkSpaceFrameAction("gui/images/money-remove.svg", "Rechnungs-Satz löschen", function() {
 
+	var amount = CurrencyUtils.formatCurrency(self.model.getValue(self.currRecord + "/amount"));
 	var title = MessageCatalog.getMessage("QUERY_REMOVE_INVOICE_RECORD_TITLE");
-	var messg = MessageCatalog.getMessage("QUERY_REMOVE_INVOICE_RECORD", self.model.getValue(self.currRecord + "/amount"));
+	var messg = MessageCatalog.getMessage("QUERY_REMOVE_INVOICE_RECORD", amount);
 	new MessageBox(MessageBox.QUERY, title, messg, function() {
 
 	    self.model.setValue(self.currRecord + "/action", "REMOVE");

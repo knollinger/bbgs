@@ -69,10 +69,8 @@ public class UploadAttachmentsHandler implements IXmlServiceHandler
             conn = ConnectionPool.getConnection();
             conn.setAutoCommit(false);
 
-            for (UploadObj ulo : req.files)
-            {
-                FileSystemDBUtils.createFile(req.parentId, ulo.name, ulo.mimeType, ulo.data, session, conn);
-            }
+            FileSystemDBUtils.createFile(req.parentId, req.name, req.mimeType, req.data, session, conn);
+            
             conn.commit();
             rsp = new Response();
         }
@@ -91,8 +89,13 @@ public class UploadAttachmentsHandler implements IXmlServiceHandler
     /**
      *
      */
-    public static class UploadObj
+    @XmlRootElement(name = "upload-filesystem-objects-req")
+    @XmlType(name = "UploadAttachmentsHandler.Request")
+    public static class Request implements IJAXBObject
     {
+        @XmlElement(name = "parent-id")
+        public int parentId;
+
         @XmlElement(name = "name")
         public String name;
 
@@ -101,20 +104,6 @@ public class UploadAttachmentsHandler implements IXmlServiceHandler
 
         @XmlElement(name = "data")
         public byte[] data;
-    }
-
-    /**
-     *
-     */
-    @XmlRootElement(name = "upload-filesystem-objects-req")
-    @XmlType(name = "UploadAttachmentsHandler.Request")
-    public static class Request implements IJAXBObject
-    {
-        @XmlElement(name = "parent-id")
-        public int parentId;
-
-        @XmlElement(name = "file")
-        List<UploadObj> files = new ArrayList<>();
     }
 
     /**

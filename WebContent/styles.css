@@ -103,6 +103,7 @@ thead>tr {
 
 tr {
 	vertical-align: top;
+	white-space: nowrap;
 }
 
 tr:focus {
@@ -171,11 +172,6 @@ td {
 	cursor: pointer;
 	white-space: nowrap;
 	border: none;
-}
-
-td:last-child {
-	width: 100%;
-	white-space: normal;
 }
 
 h1 {
@@ -1676,11 +1672,6 @@ input[type='radio']:checked+.calendar-termin-monthly {
 /**
  * all about the accordeon
  */
-@media screen only and (max-width = 600px) {
-	.accordeon-cnr {
-		max-height: unset;
-	}
-}
 
 .accordeon-btn {
 	display: none;
@@ -2228,6 +2219,7 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	-ms-flex: 1;
 	flex: 1;
 	padding: 10px;
+	border: 2px dashed transparent;
 }
 
 .filesystem-entry {
@@ -2244,10 +2236,17 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	overflow: hide;
 	text-overflow: ellipsis;
 	float: left;
+	border: 2px dashed transparent;
 }
 
 .filesystem-entry>input[type="radio"] {
-	display: none;
+	width: 0;
+	height: 0;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-ms-appearance: none;
+	padding: 0;
+	border: none;
 }
 
 .filesystem-entry>img {
@@ -2269,16 +2268,10 @@ input[type='radio']:checked+.calendar-termin-monthly {
 
 .filesystem-entry>input[type="text"] {
 	border: none;
-	padding: none;
 	width: 98%;
 	text-align: center;
 	text-overflow: ellipsis;
 	background-color: transparent;
-}
-
-.filesystem-entry>input:focus {
-	border: none;
-	padding: none;
 }
 
 .is-dragover {

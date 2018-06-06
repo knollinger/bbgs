@@ -89,7 +89,7 @@ public class FileSystemDBUtils
 
         try
         {
-            stmt = conn.prepareStatement("select f.*, a.mimetype from filesystem f left join attachments a on a.ref_id = f.id where f.type='FILE' and parentId=? order by name");
+            stmt = conn.prepareStatement("select f.*, a.mimetype from filesystem f left join attachments a on a.domain=\"FILESYS\" and a.ref_id = f.id where f.type='FILE' and parentId=? order by name;");
             stmt.setInt(1, fldrId);
             rs = stmt.executeQuery();
             while (rs.next())

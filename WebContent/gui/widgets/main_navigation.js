@@ -15,7 +15,7 @@ var MainNavigation = function() {
     });
     
     btn = this.addNavigationButton("gui/images/course.svg", "Kurse verwalten", function() {
-        new CourseMainNavigation();sw
+        new CourseMainNavigation();
     });
     
     btn = this.addNavigationButton("gui/images/money.svg", "Rechnungs Wesen", function() {

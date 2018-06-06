@@ -28,7 +28,7 @@ FileSystemExplorer.prototype.setupUI = function() {
     this.createRemoveItemAction();
 
     this.content.className = "filesystem-explorer";
-    
+
     var self = this;
     this.prepareDropArea(this.content, this.currentFolderId, function() {
 	self.loadContent();
@@ -60,11 +60,11 @@ FileSystemExplorer.prototype.createAddFileAction = function() {
 	    self.loadContent();
 	});
     });
-    
+
     this.actionCreateFile = new WorkSpaceFrameAction("gui/images/document-add.svg", "Eine neue Datei erstellen", function() {
 	picker.click();
     });
-    
+
     this.addAction(this.actionCreateFile);
     this.actionCreateFile.btn.appendChild(picker);
 }
@@ -166,7 +166,6 @@ FileSystemExplorer.prototype.createFolderEntry = function(xpath) {
 	new FileSystemExplorer(id);
     }
     entry.addEventListener("dblclick", openFolder);
-    entry.addEventListener("contextmenu", openFolder);
     this.prepareDropArea(entry, id, function() {
 	new FileSystemExplorer(id);
     });
@@ -218,18 +217,23 @@ FileSystemExplorer.prototype.createEntry = function(img, xpath) {
 	evt.stopPropagation();
 	switch (evt.keyCode) {
 	case 13: // ENTER
+	    evt.stopPropagation();
 	    self.renameFileSystemObject(xpath, text.value);
-	    radio.focus(); // just to remove the focus
 	    break;
 
 	case 27: // ESCAPE
-	    text.value = self.model.getValue(xpath + "/name");
-	    radio.focus(); // just to remove the focus
+	    evt.stopPropagation();
+	    radio.focus();
 	    break;
 
 	default:
 	    break;
 	}
+    });
+
+    text.addEventListener("blur", function(evt) {
+	text.value = self.model.getValue(xpath + "/name");
+
     });
 
     var self = this;
@@ -239,6 +243,15 @@ FileSystemExplorer.prototype.createEntry = function(img, xpath) {
 	self.selectedEntry = entry;
 	self.actionRemoveElement.show();
     });
+
+    entry.addEventListener("contextmenu", function(evt) {
+	evt.preventDefault();
+	var created = self.model.getValue(xpath + "/created");
+	var accessed = self.model.getValue(xpath + "/accessed");
+	var msg = MessageCatalog.getMessage("INFO_FSO_METADATA", created, accessed);
+	new ToolTip(icon, ToolTip.infoIcon, msg, ToolTip.INFINITE);
+    });
+
     return entry;
 }
 
@@ -271,6 +284,7 @@ FileSystemExplorer.prototype.renameFileSystemObject = function(xpath, name) {
 	    switch (rsp.documentElement.nodeName) {
 	    case "rename-filesystem-object-ok-rsp":
 		self.model.setValue(xpath + "/name", name);
+		self.updateContent();
 		break;
 
 	    case "error-response":
@@ -305,7 +319,7 @@ FileSystemExplorer.prototype.removeFileSystemObject = function(xpath, entry) {
 	caller.onSuccess = function(rsp) {
 	    switch (rsp.documentElement.nodeName) {
 	    case "remove-filesystem-object-ok-rsp":
-		self.model.removeElement(xpath);
+		self.model.setValue(xpath + "/type", "REMOVED");
 		UIUtils.removeElement(entry);
 		break;
 
@@ -379,41 +393,41 @@ FileSystemExplorer.prototype.prepareDropArea = function(folderElement, folderId,
 FileSystemExplorer.prototype.uploadFiles = function(files, parentId, onfinish) {
 
     var self = this;
-    var req = XmlUtils.createDocument("upload-filesystem-objects-req");
-    XmlUtils.setNode(req, "parent-id", parentId);
 
-    var sendRequest = function() {
+    var i = 0;
+    var transferOneFile = function(name, type, data) {
 
 	var caller = new ServiceCaller();
 	caller.onSuccess = function(rsp) {
-	    onfinish();
-	}
-	caller.onError = function(req, status) {
-	    // TODO: not yet impl
-	}
-	caller.invokeService(req);
-    }
-
-    var i = 0;
-    var loadOneFile = function() {
-	var reader = new FileReader();
-	reader.onloadstart = function() {
-	    BusyIndicator.show();
-	}
-	reader.onload = function(evt) {
-	    BusyIndicator.show();
-	    var node = XmlUtils.createDocument("file");
-	    XmlUtils.setNode(node, "name", files[i].name);
-	    XmlUtils.setNode(node, "mime-type", files[i].type);
-	    XmlUtils.setNode(node, "data", btoa(evt.target.result));
-	    XmlUtils.copyNode(node.documentElement, req.documentElement, true);
 
 	    i++;
 	    if (i < files.length) {
 		loadOneFile();
 	    } else {
-		sendRequest();
+		onfinish();
 	    }
+	}
+
+	caller.onError = function(req, status) {
+
+	}
+
+	var req = XmlUtils.createDocument("upload-filesystem-objects-req");
+	XmlUtils.setNode(req, "parent-id", parentId);
+	XmlUtils.setNode(req, "name", name);
+	XmlUtils.setNode(req, "mime-type", type);
+	XmlUtils.setNode(req, "data", btoa(data));
+	caller.invokeService(req);
+    }
+
+    var loadOneFile = function() {
+
+	var reader = new FileReader();
+	reader.onloadstart = function() {
+	    BusyIndicator.show();
+	}
+	reader.onload = function(evt) {
+	    transferOneFile(files[i].name, files[i].type, evt.target.result);
 	};
 	reader.readAsBinaryString(files[i]);
     }
