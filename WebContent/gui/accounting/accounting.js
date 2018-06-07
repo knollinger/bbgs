@@ -9,7 +9,7 @@ var AccountingNavigation = function() {
 
     // Konten-Übersicht
     this.addNavigationButton("gui/images/money-overview.svg", "Konten-Übersicht", function() {
-	alert("comming soon");
+	new AccountsOverview();
     });
 
     // Übersicht der Einnahmen
@@ -30,6 +30,75 @@ var AccountingNavigation = function() {
     this.setTitle("Rechnungswesen");
 }
 AccountingNavigation.prototype = Object.create(Navigation.prototype);
+
+/*---------------------------------------------------------------------------*/
+/**
+ * Die Übersicht aller Konten mit den aktuellen Konto-Ständen
+ */
+var AccountsOverview = function() {
+
+    WorkSpaceFrame.call(this);
+
+    var self = this;
+    this.load("gui/accounting/accounts-overview.html", function() {
+
+	self.loadModel(function() {
+
+	    self.fillTable();
+	    
+	    var total = CurrencyUtils.formatCurrency(self.model.getValue("//get-accounts-overview-ok-rsp/total"));
+	    UIUtils.getElement("accounts-overview-total").textContent = total;
+	    new TableDecorator("accounts-overview");
+	});
+    });
+}
+AccountsOverview.prototype = Object.create(WorkSpaceFrame.prototype);
+
+/**
+ * 
+ */
+AccountsOverview.prototype.loadModel = function(onsuccess) {
+
+    var self = this;
+
+    var caller = new ServiceCaller();
+    caller.onSuccess = function(rsp) {
+	switch (rsp.documentElement.nodeName) {
+	case "get-accounts-overview-ok-rsp":
+	    self.model = new Model(rsp);
+	    onsuccess();
+	    break;
+
+	case "error-response":
+	    break;
+	}
+    }
+
+    caller.onError = function(req, status) {
+
+    }
+
+    var req = XmlUtils.createDocument("get-accounts-overview-req");
+    caller.invokeService(req);
+}
+
+/**
+ * 
+ */
+AccountsOverview.prototype.fillTable = function() {
+
+    var fields = [];
+    fields.push("");
+    fields.push("konto")
+    fields.push("name")
+    fields.push(function(td, node) {
+	UIUtils.addClass(td, "currency-input");
+	return CurrencyUtils.formatCurrency(node.getElementsByTagName("amount")[0].textContent);
+    });
+    fields.push("");
+
+    this.model.createTableBinding("accounts-overview", fields, "//get-accounts-overview-ok-rsp/items/item");
+}
 
 /*---------------------------------------------------------------------------*/
 /**
@@ -55,7 +124,6 @@ InvoiceItemsOverview.prototype = Object.create(WorkSpaceTabbedFrame.prototype);
 /**
  * 
  */
-
 InvoiceItemsOverview.prototype.loadModel = function(onsuccess) {
     var self = this;
     var caller = new ServiceCaller();
@@ -152,21 +220,21 @@ InvoiceItemsOverview.prototype.setupIncommingEditor = function() {
 InvoiceItemsOverview.prototype.setupOutgoingEditor = function() {
 
     var accountsAndNames = [ {
-	    kto : 0,
-	    name : ""
-	}, {
-	    kto : "5800",
-	    name : "Gehälter"
-	}, {
-	    kto : "5801",
-	    name : "Soz.Abgaben"
-	}, {
-	    kto : "5802",
-	    name : "Trainer"
-	}, {
-	    kto : "5803",
-	    name : "Sachkosten"
-	} ];
+	kto : 0,
+	name : ""
+    }, {
+	kto : "5800",
+	name : "Gehälter"
+    }, {
+	kto : "5801",
+	name : "Soz.Abgaben"
+    }, {
+	kto : "5802",
+	name : "Trainer"
+    }, {
+	kto : "5803",
+	name : "Sachkosten"
+    } ];
 
     this.outgoingTab = this.addTab("gui/images/planning-item-remove.svg", "Ausgehende Rechnungs-Posten");
     var subFrame = new InvoiceItemsEditor(this, this.outgoingTab.contentPane, this.model, accountsAndNames);
@@ -199,31 +267,31 @@ InvoiceItemsEditor.prototype.createContent = function() {
     var thead = document.createElement("thead");
     var tr = document.createElement("tr");
     thead.appendChild(tr);
-    
+
     var th = document.createElement("th");
     th.colSpan = "2";
     tr.appendChild(th);
-    
+
     th = document.createElement("th");
     th.textContent = "Buchungs-Posten";
     tr.appendChild(th);
-    
+
     th = document.createElement("th");
     th.textContent = "Beschreibung";
     tr.appendChild(th);
-    
+
     // create the table body
     this.tbody = document.createElement("tbody");
-    
+
     // create the table
     var table = document.createElement("table");
     table.appendChild(thead);
     table.appendChild(this.tbody);
-    
+
     // put them all into the div
     var div = document.createElement("div");
     div.appendChild(table);
-    
+
     this.targetCnr.appendChild(div);
 }
 
@@ -449,11 +517,11 @@ InvoiceItemsEditor.prototype.createDescriptionInput = function(xpath) {
 /**
  * 
  */
- InvoiceItemsEditor.prototype.itemTypeByAccountNumber = function(accountNumber) {
- 
-     return (parseInt(accountNumber) < 5800) ? "INCOME" : "OUTGO";
- }
- 
+InvoiceItemsEditor.prototype.itemTypeByAccountNumber = function(accountNumber) {
+
+    return (parseInt(accountNumber) < 5800) ? "INCOME" : "OUTGO";
+}
+
 /*---------------------------------------------------------------------------*/
 /*
  * 

@@ -4,7 +4,8 @@
 		<id>1</id>
 		<action>NONE</action>
 		<name>Oster-Ausfahrt 2018 Naturns</name>
-		<description>Klettern mit den Zwergen...Lagerfeuern...Spaß haben</description>
+		<description>Klettern mit den Zwergen...Lagerfeuern...Spaß haben
+		</description>
 		<from>03.04.2018</from>
 		<until>07.04.2018</until>
 	</core-data>
@@ -55,20 +56,20 @@
 			<amount>240.0</amount>
 		</planning-item>
 		<planning-item>
-			<id>5</id>
-			<proj-ref>1</proj-ref>
-			<item-ref>7</item-ref>
-			<konto-nr>5803</konto-nr>
-			<action>NONE</action>
-			<amount>550.0</amount>
-		</planning-item>
-		<planning-item>
 			<id>6</id>
 			<proj-ref>1</proj-ref>
 			<item-ref>9</item-ref>
 			<konto-nr>5803</konto-nr>
 			<action>NONE</action>
 			<amount>400.0</amount>
+		</planning-item>
+		<planning-item>
+			<id>5</id>
+			<proj-ref>1</proj-ref>
+			<item-ref>7</item-ref>
+			<konto-nr>5803</konto-nr>
+			<action>NONE</action>
+			<amount>550.0</amount>
 		</planning-item>
 	</planning-items>
 	<proj-item>
@@ -92,7 +93,7 @@
 			</invoice-record>
 			<invoice-record>
 				<id>19</id>
-				<action>NONE</action>
+				<action>MODIFY</action>
 				<from-invoice>2</from-invoice>
 				<to-invoice>10</to-invoice>
 				<amount>110</amount>

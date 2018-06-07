@@ -536,4 +536,55 @@ public class AccountingDBUtils
             DBUtils.closeQuitly(stmt);
         }
     }
+
+    /**
+     * berechne den Kontostand für ein bestimmtes Item
+     * 
+     * @param id
+     * @param conn
+     * @return
+     * @throws SQLException 
+     */
+    public static double getItemAmount(int id, Connection conn) throws SQLException
+    {
+        double result = AccountingDBUtils.getItemAmount(id,
+            "select sum(amount) as total from invoice_records where to_invoice=?", conn);
+        
+        result -= AccountingDBUtils.getItemAmount(id,
+            "select sum(amount) as total from invoice_records where from_invoice=?", conn);
+
+        return result;
+    }
+
+    /**
+     * @param id
+     * @param sql
+     * @param conn
+     * @return
+     * @throws SQLException 
+     */
+    private static double getItemAmount(int id, String sql, Connection conn) throws SQLException
+    {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            double result = 0.0f;
+
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            if (rs.next())
+            {
+                result = rs.getDouble("total");
+            }
+            return result;
+        }
+        finally
+        {
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+        }
+    }
 }

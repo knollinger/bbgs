@@ -70,6 +70,8 @@ de.bbgs.todolist.SaveTodolistModelHandler
 #
 # all about accounting
 #
+de.bbgs.accounting.GetAccountsOverviewHandler
+
 de.bbgs.accounting.GetInvoiceItemModelHandler
 de.bbgs.accounting.SaveInvoiceItemModelHandler
 de.bbgs.accounting.GetIncommingRecordsModelHandler
