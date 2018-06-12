@@ -902,10 +902,7 @@ ProjectPaymentEditor.prototype.renderOnePaymentRecord = function(record) {
     
     this.model.addChangeListener(xpath, function() {
 	var action = self.model.evaluateXPath(xpath + "/action")[0];
-	if(action.textContent == "CREATE") {
-	    self.model.removeElement(xpath);
-	}
-	else {
+	if(action.textContent != "CREATE") {
 	    action.textContent = "MODIFY"; 
 	}
     });

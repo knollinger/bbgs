@@ -42,6 +42,7 @@ var AccountsOverview = function() {
     var self = this;
     this.load("gui/accounting/accounts-overview.html", function() {
 
+	self.actionPrint = self.createPrintAction();
 	self.loadModel(function() {
 
 	    self.fillTable();
@@ -53,6 +54,23 @@ var AccountsOverview = function() {
     });
 }
 AccountsOverview.prototype = Object.create(WorkSpaceFrame.prototype);
+
+/**
+ * 
+ */
+AccountsOverview.prototype.createPrintAction = function() {
+    
+    var self = this;
+    var title = "AKtuelle Kontostände";
+    var action = new WorkSpaceFrameAction("gui/images/print.svg", title, function() {
+
+	var url = "getDocument/invoice_items_overview.pdf";
+	var title = "Konten-Übersicht";
+	new DocumentViewer(url, title);
+    });
+    this.addAction(action);
+    return action;
+}
 
 /**
  * 

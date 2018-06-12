@@ -1,0 +1,16 @@
+{HEADER}
+= Aktueller Konto-Stand
+Stand: $NOW$
+{/HEADER}
+
+<<<<
+[width="100%", cols="5,>1", options="header"]
+|==========================================================
+| Kontonummer  | Saldo
+{ROW}
+| $KONTO$ - $NAME$ | $AMOUNT$
+{/ROW}
+{FOOTER}
+>| Gesamt: | $TOTAL$
+{/FOOTER}
+|==========================================================

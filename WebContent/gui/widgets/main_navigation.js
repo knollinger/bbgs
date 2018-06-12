@@ -18,7 +18,7 @@ var MainNavigation = function() {
         new CourseMainNavigation();
     });
     
-    btn = this.addNavigationButton("gui/images/money.svg", "Rechnungs-Wesen", function() {
+    btn = this.addNavigationButton("gui/images/money.svg", "Rechnungs Wesen", function() {
         new AccountingNavigation();
     });
     UIUtils.addClass(btn, "hide-on-mobile");

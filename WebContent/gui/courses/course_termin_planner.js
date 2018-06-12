@@ -83,7 +83,7 @@ CourseTerminAndLocationPlanner.prototype.fillLocationsDropdown = function() {
 CourseTerminAndLocationPlanner.prototype.fillTable = function() {
 
     var self = this;
-    var fields = [ "date", "begin", "end", function(termin) {
+    var fields = [ "", "date", "begin", "end", function(td, termin) {
 
 	var result = "";
 	var locId = termin.getElementsByTagName("location-id")[0].textContent;

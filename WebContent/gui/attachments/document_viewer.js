@@ -115,8 +115,8 @@ DocumentViewer.prototype.detectMimeType = function(url, glass) {
     }
 
     xhr.onerror = function(evt) {
-        var title = Messages.getMessage("SVCCALLER_TITLE_ERROR");
-        var msg = Messages.getMessage("SVCCALLER_MSG_TECH_ERROR");
+        var title = MessageCatalog.getMessage("SVCCALLER_TITLE_ERROR");
+        var msg = MessageCatalog.getMessage("SVCCALLER_MSG_TECH_ERROR");
         MessageBox.showWarningMsg(title, msg);
     }
     xhr.send("");
@@ -127,8 +127,8 @@ DocumentViewer.prototype.detectMimeType = function(url, glass) {
  */
 DocumentViewer.prototype.handleSessionLost = function(rspUrl) {
 
-    var title = Messages.getMessage("SVCCALLER_TITLE_ERROR");
-    var msg = Messages.getMessage("SVCCALLER_MSG_SESSION_LOST");
+    var title = MessageCatalog.getMessage("SVCCALLER_TITLE_ERROR");
+    var msg = MessageCatalog.getMessage("SVCCALLER_MSG_SESSION_LOST");
     MessageBox.showInfoMsg(title, msg, function() {
         window.location.href = rspUrl;
     });

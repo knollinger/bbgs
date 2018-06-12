@@ -1449,15 +1449,10 @@ li {
 	background-color: #ffffff;
 	width: 96px;
 	height: 96px;
-	border: 1px solid #d0d0d0;
-	-webkit-box-shadow: 5px 5px 5px #808080;
-	-moz-box-shadow: 5px 5px 5px #808080;
-	-ms-box-shadow: 5px 5px 5px #808080;
-	box-shadow: 5px 5px 5px #808080;
 }
 
 .image-picker {
-	cursor: normal;
+	cursor: pointer;
 }
 
 .image-picker:active {
@@ -2214,11 +2209,52 @@ input[type='radio']:checked+.calendar-termin-monthly {
  * filesystem
  */
 .filesystem-explorer {
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: flex;
+	-webkit-flex-direction: column;
+	-moz-flex-direction: column;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	height: 100%;
+} 
+
+.filesystem-breadcrumb-cnr {
+	-webkit-flex: 0 auto;
+	-moz-flex:  0 auto;
+	-ms-flex:  0 auto;
+	flex:  0 auto;
+	padding: 5px 0 0 0;
+}
+
+.filesystem-breadcrumb-item {
+
+	display: inline;
+	float: left;
+	padding: 4px 20px 4px 4px;
+	background: transparent url("gui/images/arrow-right.svg") no-repeat
+		right center;
+	background-size: 16px 16px;
+	background-color: #f0f0f0;
+	border-width: 1px 0 1px 0;
+	border-color: #d0d0d0;
+	border-style: solid;
+}
+
+.filesystem-breadcrumb-item:first-child {
+	border-left-width: 1px;
+}
+
+.filesystem-breadcrumb-item:last-child {
+	border-right-width: 1px;
+}
+
+.filesystem-view {
 	-webkit-flex: 1;
 	-moz-flex: 1;
 	-ms-flex: 1;
 	flex: 1;
-	padding: 10px;
 	border: 2px dashed transparent;
 }
 

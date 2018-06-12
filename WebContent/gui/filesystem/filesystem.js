@@ -27,10 +27,22 @@ FileSystemExplorer.prototype.setupUI = function() {
     this.createAddFileAction();
     this.createRemoveItemAction();
 
-    this.content.className = "filesystem-explorer";
+    var explorer = document.createElement("div");
+    explorer.className = "filesystem-explorer";
+
+    this.breadcrumb = document.createElement("div");
+    this.breadcrumb.className = "filesystem-breadcrumb-cnr";
+    explorer.appendChild(this.breadcrumb);
+
+    this.view = document.createElement("div");
+    this.view.className = "filesystem-view";
+    explorer.appendChild(this.view);
+
+    this.content.appendChild(explorer);
+    this.content.style.padding = "0"; // Übler Hack
 
     var self = this;
-    this.prepareDropArea(this.content, this.currentFolderId, function() {
+    this.prepareDropArea(this.view, this.currentFolderId, function() {
 	self.loadContent();
     });
 }
@@ -115,33 +127,56 @@ FileSystemExplorer.prototype.loadContent = function() {
  */
 FileSystemExplorer.prototype.updateContent = function() {
 
-    var allParents = this.model.evaluateXPath("//folder-content-model/parents/parent");
-    var title = "Dokumente [Home";
-    for (var i = 0; i < allParents.length; i++) {
+    this.fillBreadCrumb();
 
-	var xpath = XmlUtils.getXPathTo(allParents[i]);
-	title += "/";
-	title += this.model.getValue(xpath);
-    }
-    title += "]";
-    this.setTitle(title);
-
-    UIUtils.clearChilds(this.content);
+    UIUtils.clearChilds(this.view);
     var allFolders = this.model.evaluateXPath("//folder-content-model/filesys-objects/filesys-object[type = 'FOLDER']");
     for (var i = 0; i < allFolders.length; i++) {
 
 	var xpath = XmlUtils.getXPathTo(allFolders[i]);
-	this.content.appendChild(this.createFolderEntry(xpath));
+	this.view.appendChild(this.createFolderEntry(xpath));
     }
-    this.content.appendChild(this.createContentSeparator());
+    this.view.appendChild(this.createContentSeparator());
 
     var allFiles = this.model.evaluateXPath("//folder-content-model/filesys-objects/filesys-object[type = 'FILE']");
     for (var i = 0; i < allFiles.length; i++) {
 
 	var xpath = XmlUtils.getXPathTo(allFiles[i]);
-	this.content.appendChild(this.createFileEntry(xpath));
+	this.view.appendChild(this.createFileEntry(xpath));
     }
-    this.content.appendChild(this.createContentSeparator());
+    this.view.appendChild(this.createContentSeparator());
+}
+
+/**
+ * Befülle die BreadCrumb-Line
+ */
+FileSystemExplorer.prototype.fillBreadCrumb = function() {
+
+    var cnr = UIUtils.getElement(this.breadcrumb);
+    UIUtils.clearChilds(cnr);
+
+    var allParents = this.model.evaluateXPath("//folder-content-model/parents/parent");
+    for (var i = 0; i < allParents.length; i++) {
+
+//	var crumb = document.createElement("div");
+//	crumb.className = "filesystem-breadcrumb-item";
+//	crumb.textContent = allParents[i].textContent;
+//	cnr.appendChild(crumb);
+	var item = this.createBreadcrumbItem(allParents[i]);
+	cnr.appendChild(item);
+    }
+}
+
+/**
+ * Erzeuge ein BreadCrumb-Object
+ */
+FileSystemExplorer.prototype.createBreadcrumbItem = function(item) {
+
+    var cnr = UIUtils.getElement(this.breadcrumb);
+    var crumb = document.createElement("div");
+    crumb.className = "filesystem-breadcrumb-item";
+    crumb.textContent = item.textContent;
+    return crumb;
 }
 
 /**

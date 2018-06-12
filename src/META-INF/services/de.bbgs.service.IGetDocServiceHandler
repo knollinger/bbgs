@@ -8,5 +8,6 @@ de.bbgs.courses.GetCourseDetailsDocumentHandler
 
 de.bbgs.accounting.GetInvoiceRecordsDocumentHandler
 de.bbgs.accounting.PrintProjectHandler
+de.bbgs.accounting.PrintInvoiceItemsOverviewHandler
 
 de.bbgs.todolist.GetPinboardDocumentHandler

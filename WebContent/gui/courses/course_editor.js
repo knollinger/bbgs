@@ -266,7 +266,8 @@ CourseTerminAndLocationOverview.prototype.fillTable = function(terminId) {
 	    var row = this.renderOneRow(tbody, termin, onclick);
 	    if (termin.getElementsByTagName("id")[0].textContent == terminId) {
 		row.click();
-		row.querySelector("input[type='radio']").focus();
+		row.querySelector("input[type='radio']").checked = true;
+		row.querySelector(".inplace-edit").focus();
 	    }
 	}
     }
