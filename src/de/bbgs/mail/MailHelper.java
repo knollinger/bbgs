@@ -17,6 +17,7 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
+import javax.mail.Store;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -39,7 +40,7 @@ import de.bbgs.setup.SetupReader;
  * @author anderl
  *
  */
-class SendMailHelper
+class MailHelper
 {
     /**
      * @param members
@@ -181,10 +182,10 @@ class SendMailHelper
     public static Message composeMessage(MailSenderInfo mailSenderInfo, String subject, String body,
         Collection<Attachment> attachments) throws MessagingException, JAXBException
     {
-        Message msg = new MimeMessage(SendMailHelper.getMailSession());
+        Message msg = new MimeMessage(MailHelper.getMailSession());
         msg.setSubject(subject);
 
-        msg.setFrom(new InternetAddress(SetupReader.getSetup().getEmailSetup().getFrom()));
+        msg.setFrom(new InternetAddress(SetupReader.getSetup().getEmailSetup().send.from));
         msg.setReplyTo(new InternetAddress[]{mailSenderInfo.getInternetAddress()});
 
         // erzeuge den BodyPart. Sollten wir eine Signature in der Session haben, 
@@ -238,9 +239,9 @@ class SendMailHelper
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", setup.isUseStartTLS());
-        props.put("mail.smtp.host", setup.getHost());
-        props.put("mail.smtp.port", setup.getPort());
+        props.put("mail.smtp.starttls.enable", setup.send.useStartTLS);
+        props.put("mail.smtp.host", setup.send.host);
+        props.put("mail.smtp.port", setup.send.port);
 
         javax.mail.Session sess = javax.mail.Session.getDefaultInstance(props, new UIDPwdAuthenticator(setup));
         return sess;
@@ -260,8 +261,8 @@ class SendMailHelper
          */
         public UIDPwdAuthenticator(EmailSetup setup)
         {
-            this.userId = setup.getUser();
-            this.passwd = setup.getPwd();
+            this.userId = setup.send.user;
+            this.passwd = setup.send.passwd;
         }
 
         /* (non-Javadoc)
@@ -273,6 +274,22 @@ class SendMailHelper
         }
     }
 
-
+    /**
+     * @param store
+     */
+    public static void closeQuietly(Store store)
+    {
+        if (store != null)
+        {
+            try
+            {
+                store.close();
+            }
+            catch (Exception e)
+            {
+                // do nothing
+            }
+        }
+    }
 }
 

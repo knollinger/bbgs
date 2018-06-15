@@ -27,12 +27,16 @@ var MainNavigation = function() {
         new MailNavigation();
     });
 
-    btn = this.addNavigationButton("gui/images/document.svg", "Dokumente verwalten", function() {
-	new FileSystemExplorer();
-    });
+//    btn = this.addNavigationButton("gui/images/document.svg", "Dokumente verwalten", function() {
+//	new FileSystemExplorer();
+//    });
 
     btn = this.addNavigationButton("gui/images/notes.svg", "TODO-Liste", function() {
 	new TodoTasksOverview();
+    });
+     
+    btn = this.addNavigationButton("gui/images/certificate.svg", "DSGVO-Übersicht", function() {
+	new DSGVOOverview();
     });
      
     this.setTitle("Bayerns beste Gipfelstürmer");

@@ -109,6 +109,7 @@ public class XmlDispatcherServlet extends HttpServlet
         }
         catch (JAXBException e)
         {
+            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }

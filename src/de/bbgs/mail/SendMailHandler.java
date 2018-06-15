@@ -99,11 +99,11 @@ public class SendMailHandler implements IXmlServiceHandler
             {
                 conn = ConnectionPool.getConnection();
                 MailSenderInfo senderInfo = MailDBUtils.getMailSenderInfo(this.session, conn);
-                Message msg = SendMailHelper.composeMessage(senderInfo, this.request.subject, this.request.body,
+                Message msg = MailHelper.composeMessage(senderInfo, this.request.subject, this.request.body,
                     this.request.attachments);
 
                 InternetAddress[] recipents = this.resolveAdresses(this.request.recipients, conn);
-                InternetAddress[] replyTo = {SendMailHelper.resolveAddress(session.getEmail())};
+                InternetAddress[] replyTo = {MailHelper.resolveAddress(session.getEmail())};
 
                 msg.setRecipients(Message.RecipientType.BCC, recipents);
                 msg.setReplyTo(replyTo);
@@ -130,11 +130,11 @@ public class SendMailHandler implements IXmlServiceHandler
         {
 
             Set<InternetAddress> addresses = new HashSet<>();
-            addresses.addAll(SendMailHelper.resolveMemberAddresses(recipients.members, conn));
-            addresses.addAll(SendMailHelper.resolveMemberTypeAddresses(recipients.memberTypes, conn));
-            addresses.addAll(SendMailHelper.resolveCourseAddresses(recipients.courses, conn));
-            addresses.addAll(SendMailHelper.resolvePartnerAddresses(recipients.partner, conn));
-            addresses.addAll(SendMailHelper.resolveCustomGroupAddresses(recipients.groups, conn));
+            addresses.addAll(MailHelper.resolveMemberAddresses(recipients.members, conn));
+            addresses.addAll(MailHelper.resolveMemberTypeAddresses(recipients.memberTypes, conn));
+            addresses.addAll(MailHelper.resolveCourseAddresses(recipients.courses, conn));
+            addresses.addAll(MailHelper.resolvePartnerAddresses(recipients.partner, conn));
+            addresses.addAll(MailHelper.resolveCustomGroupAddresses(recipients.groups, conn));
 
             InternetAddress[] result = new InternetAddress[addresses.size()];
             addresses.toArray(result);

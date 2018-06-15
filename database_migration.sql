@@ -133,6 +133,8 @@ ALTER TABLE members ALTER COLUMN mobile2 SET DEFAULT '' ;
 ALTER TABLE members ALTER COLUMN email2 SET DEFAULT '' ;
 ALTER TABLE members ALTER COLUMN city SET DEFAULT '' ;
 ALTER TABLE members ALTER COLUMN street SET DEFAULT '' ;
+ALTER TABLE members ADD COLUMN `dsgvo_state` VARCHAR(10) NULL DEFAULT 'NONE';
+ALTER TABLE members ADD COLUMN `dsgvo_date` DATE NULL;
 
 
 update `members` set `vname2` = '' where vname2 is null; 

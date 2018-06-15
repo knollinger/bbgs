@@ -50,6 +50,7 @@ de.bbgs.mail.SaveCustomMailGroupHandler
 de.bbgs.mail.GetAdressbookHandler
 de.bbgs.mail.SendMailHandler
 de.bbgs.sms.SendSMSHandler
+de.bbgs.mail.GetMailboxHandler
 
 #------------------------------------------------------------------------------
 #
@@ -97,3 +98,9 @@ de.bbgs.filesystem.UploadAttachmentsHandler
 de.bbgs.registration.GetRegistrationModelHandler
 de.bbgs.registration.SaveRegistrationModelHandler
 
+
+#------------------------------------------------------------------------------
+#
+# all about the DSGVO bullshit
+#
+de.bbgs.dsgvo.GetDSGVOOverviewHandler

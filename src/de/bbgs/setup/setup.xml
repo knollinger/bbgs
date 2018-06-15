@@ -3,32 +3,35 @@
 	<database>
 		<host>localhost</host>
 		<port>3306</port>
-		<dbname>TEST</dbname>		
+		<dbname>TEST</dbname>
 		<user>root</user>
 		<pwd>Sun12shine</pwd>
 	</database>
-	
+
 	<email>
-<!-- 	
-		<host>localhost</host>
-		<port>25</port>
--->		
-		<host>smtp.gmail.com</host>
-		<port>587</port>
-		<use-start-tls>true</use-start-tls>		
-		<user>bbgs.verwaltung</user>
-		<pwd>Sun12shine</pwd>	
-		<from>info@bayerns-beste-gipfelstuermer-verwaltung.de</from>
+		<send>
+			<host>smtp.gmail.com</host>
+			<port>587</port>
+			<use-start-tls>true</use-start-tls>
+			<user>bbgs.verwaltung</user>
+			<pwd>Sun12shine</pwd>
+			<from>info@bayerns-beste-gipfelstuermer-verwaltung.de</from>
+		</send>
+		<receive>
+			<host>imap.gmail.com</host>
+			<port>993</port>
+			<use-start-tls>true</use-start-tls>
+			<user>bbgs.verwaltung</user>
+			<pwd>Sun12shine</pwd>
+		</receive>
 	</email>
 
-	<!-- 
-	Wir verwenden https://app.sms77.io/ als SMS-Gateway
-	 -->
+	<!-- Wir verwenden https://app.sms77.io/ als SMS-Gateway -->
 	<sms>
 		<user>anderl.knollinger@gmail.com</user>
 		<api-key>7YEvXk0Zu4Mna6vwWBmRteRN7shTkH5r</api-key>
 		<from1>017661006855</from1>
 		<from>BBGS</from>
 		<schedule>60000</schedule>
-	</sms>	
+	</sms>
 </setup>

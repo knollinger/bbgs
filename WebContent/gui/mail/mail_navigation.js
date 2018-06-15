@@ -11,6 +11,10 @@ var MailNavigation = function() {
         new MailEditor();
     });
     
+//    this.addNavigationButton("gui/images/mail-folder.svg", "Postkorb", function() {
+//        new MailBoxViewer();
+//    });
+    
     this.addNavigationButton("gui/images/phone.svg", "SMS senden", function() {
         new SMSEditor();
     });

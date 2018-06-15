@@ -8,112 +8,40 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class EmailSetup
 {
-    private String host;
-    private Integer port;
-    private String user;
-    private String passwd;
-    private String from;
-    private boolean useStartTLS;
+    @XmlElement(name="receive")
+    public ConnectionDesc receive;
+    
+    @XmlElement(name="send")
+    public SendConnectionDesc send;
     
     /**
-     * @return
+     *
      */
-    @XmlElement(name="host")
-    public String getHost()
-    {
-        return host;
+    public static class ConnectionDesc {
+
+        @XmlElement(name="host")
+        public String host;
+        
+        @XmlElement(name="port")
+        public Integer port;
+        
+        @XmlElement(name="user")
+        public String user;
+
+        @XmlElement(name="pwd")
+        public String passwd;
+
+        @XmlElement(name="use-start-tls")
+        public boolean useStartTLS;             
     }
 
     /**
-     * @param host
+     * @author anderl
+     *
      */
-    public void setHost(String host)
-    {
-        this.host = host;
-    }
-
-    /**
-     * @return
-     */
-    @XmlElement(name="port")
-    public Integer getPort()
-    {
-        return port;
-    }
-
-    /**
-     * @param port
-     */
-    public void setPort(Integer port)
-    {
-        this.port = port;
-    }
-
-    /**
-     * @return
-     */
-    @XmlElement(name="user")
-    public String getUser()
-    {
-        return user;
-    }
-
-    /**
-     * @param user
-     */
-    public void setUser(String user)
-    {
-        this.user = user;
-    }
-
-    /**
-     * @return
-     */
-    @XmlElement(name="pwd")
-    public String getPwd()
-    {
-        return passwd;
-    }
-
-    /**
-     * @param pwd
-     */
-    public void setPwd(String pwd)
-    {
-        this.passwd = pwd;
-    }
-
-    /**
-     * @return
-     */
-    @XmlElement(name="from")
-    public String getFrom()
-    {
-        return from;
-    }
-
-    /**
-     * @param from
-     */
-    public void setFrom(String from)
-    {
-        this.from = from;
-    }
-
-    /**
-     * @return
-     */
-    @XmlElement(name="use-start-tls")
-    public boolean isUseStartTLS()
-    {
-        return useStartTLS;
-    }
-
-    /**
-     * @param useStartTLS
-     */
-    public void setUseStartTLS(boolean useStartTLS)
-    {
-        this.useStartTLS = useStartTLS;
+    public static class SendConnectionDesc extends ConnectionDesc {
+        
+        @XmlElement(name="from")
+        public String from;
     }
 }
