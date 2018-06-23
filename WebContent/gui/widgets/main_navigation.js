@@ -35,7 +35,7 @@ var MainNavigation = function() {
 	new TodoTasksOverview();
     });
      
-    btn = this.addNavigationButton("gui/images/certificate.svg", "DSGVO-Übersicht", function() {
+    btn = this.addNavigationButton("gui/images/certificate.svg", "Datenschutz-Erklärung verwalten", function() {
 	new DSGVOOverview();
     });
      

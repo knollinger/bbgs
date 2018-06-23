@@ -21,26 +21,31 @@ DSGVOOverview.prototype.prepareSections = function() {
 
     this.panels = {};
 
-    var tab = this.addTab("gui/images/certificate.svg", "DSGVO noch nicht verschickt");
+    var tab = this.addTab("gui/images/certificate.svg", "Datenschutz-Erklärung noch nicht verschickt");
     var panel = new DSGVOSubPanelNone(this, tab.contentPane, this.model);
     tab.associateTabPane(panel);
     this.panels["NONE"] = panel;
     tab.select();
 
-    var tab = this.addTab("gui/images/certificate.svg", "Noch nicht reagiert");
+    tab = this.addTab("gui/images/certificate.svg", "Noch nicht reagiert");
     panel = new DSGVOSubPanelPending(this, tab.contentPane, this.model);
     tab.associateTabPane(panel);
     this.panels["PENDING"] = panel;
 
-    var tab = this.addTab("gui/images/certificate.svg", "DSGVO abgelehnt");
+    tab = this.addTab("gui/images/certificate.svg", "Datenschutz-Erklärung zugestimmt");
+    panel = new DSGVOSubPanelAccepted(this, tab.contentPane, this.model);
+    tab.associateTabPane(panel);
+    this.panels["ACCEPTED"] = panel;
+    
+    tab = this.addTab("gui/images/certificate.svg", "Datenschutz-Erklärung abgelehnt");
     panel = new DSGVOSubPanelRejected(this, tab.contentPane, this.model);
     tab.associateTabPane(panel);
     this.panels["REJECTED"] = panel;
 
-    var tab = this.addTab("gui/images/certificate.svg", "DSGVO zugestimmt");
-    panel = new DSGVOSubPanelAccepted(this, tab.contentPane, this.model);
+    tab = this.addTab("gui/images/certificate.svg", "Datenschutz-Erklärung  nicht zustellbar");
+    panel = new DSGVOSubPanelNotDeliverable(this, tab.contentPane, this.model);
     tab.associateTabPane(panel);
-    this.panels["ACCEPTED"] = panel;
+    this.panels["NOT_DELIVERABLE"] = panel;
 }
 
 /**
@@ -117,6 +122,12 @@ var DSGVOSubPanelNone = function(parentFrame, targetCnr, model) {
 
     DSGVOSubPanel.call(this, parentFrame, targetCnr, [ "", "Name", "Vorname", "Email" ]);
     this.model = model;
+    this.selected = [];
+
+    this.actionSend = this.createSendAction();
+    this.addAction(this.actionSend);
+    this.actionSend.hide();
+
     this.fillTable();
 }
 DSGVOSubPanelNone.prototype = Object.create(DSGVOSubPanel.prototype);
@@ -124,24 +135,75 @@ DSGVOSubPanelNone.prototype = Object.create(DSGVOSubPanel.prototype);
 /**
  * 
  */
+DSGVOSubPanelNone.prototype.createSendAction = function() {
+
+    var self = this;
+    var title = "Datenschutz-Erklärung zu senden";
+    var action = new WorkSpaceFrameAction("gui/images/mail-send.svg", title, function() {
+	alert("comming soon");
+    });
+    return action;
+}
+
+/**
+ * 
+ */
 DSGVOSubPanelNone.prototype.fillTable = function() {
-    
+
     var fields = [];
     fields.push(function(td, item) {
-	var cb = document.createElement("input");
-	cb.type="checkbox";
-	cb.name="dsgvo_sel_none";
-	return cb;
+	result = document.createElement("input");
+	result.type = "checkbox";
+	result.name = "dsgvo_sel_none";
+	return result;
     });
     fields.push("zname");
     fields.push("vname");
     fields.push("email");
-    
+
+    var self = this;
     var onclick = function(tr, item) {
-	
+
+	var id = item.getElementsByTagName("id")[0].textContent;
+	var cb = tr.querySelector("input[type='checkbox']");
+	if (cb.checked) {
+	    self.selected.pushIfAbsent(id);
+	} else {
+	    self.selected.remove(id);
+	}
+
+	if (self.selected.length) {
+	    self.actionSend.show();
+	} else {
+	    self.actionSend.hide();
+	}
     }
-    
-    var xpath="/get-dsgvo-overview-ok-rsp/dsgvo-item[state='NONE']";
+
+    var xpath = "/get-dsgvo-overview-ok-rsp/dsgvo-item[state='NONE' and email != '']";
+    this.model.createTableBinding(this.table, fields, xpath, onclick);
+}
+
+/*---------------------------------------------------------------------------*/
+var DSGVOSubPanelNotDeliverable = function(parentFrame, targetCnr, model) {
+
+    DSGVOSubPanel.call(this, parentFrame, targetCnr, [ "", "Name", "Vorname", "Email" ]);
+    this.model = model;
+    this.fillTable();
+}
+DSGVOSubPanelNotDeliverable.prototype = Object.create(DSGVOSubPanel.prototype);
+
+/**
+ * 
+ */
+DSGVOSubPanelNotDeliverable.prototype.fillTable = function() {
+
+    var fields = [];
+    fields.push("");
+    fields.push("zname");
+    fields.push("vname");
+    fields.push("");
+
+    var xpath = "/get-dsgvo-overview-ok-rsp/dsgvo-item[email = '']";
     this.model.createTableBinding(this.table, fields, xpath, onclick);
 }
 
@@ -158,25 +220,24 @@ DSGVOSubPanelPending.prototype = Object.create(DSGVOSubPanel.prototype);
  * 
  */
 DSGVOSubPanelPending.prototype.fillTable = function() {
-    
+
     var fields = [];
     fields.push(function(td, item) {
 	var cb = document.createElement("input");
-	cb.type="radio";
-	cb.name="dsgvo_sel_pending";
+	cb.type = "radio";
+	cb.name = "dsgvo_sel_pending";
 	return cb;
     });
     fields.push("zname");
     fields.push("vname");
     fields.push("date");
     fields.push("email");
-    
+
     var onclick = function(tr, item) {
-	
+
     }
-    
-    
-    var xpath="/get-dsgvo-overview-ok-rsp/dsgvo-item[state='PENDING']";
+
+    var xpath = "/get-dsgvo-overview-ok-rsp/dsgvo-item[state='PENDING']";
     this.model.createTableBinding(this.table, fields, xpath, onclick);
 }
 
@@ -193,25 +254,24 @@ DSGVOSubPanelRejected.prototype = Object.create(DSGVOSubPanel.prototype);
  * 
  */
 DSGVOSubPanelRejected.prototype.fillTable = function() {
-    
+
     var fields = [];
     fields.push(function(td, item) {
 	var cb = document.createElement("input");
-	cb.type="radio";
-	cb.name="dsgvo_sel_rejected";
+	cb.type = "radio";
+	cb.name = "dsgvo_sel_rejected";
 	return cb;
     });
     fields.push("zname");
     fields.push("vname");
-    fields.push("date");    
+    fields.push("date");
     fields.push("email");
-    
+
     var onclick = function(tr, item) {
-	
+
     }
-    
-    
-    var xpath="/get-dsgvo-overview-ok-rsp/dsgvo-item[state='REJECTED']";
+
+    var xpath = "/get-dsgvo-overview-ok-rsp/dsgvo-item[state='REJECTED']";
     this.model.createTableBinding(this.table, fields, xpath, onclick);
 }
 /*---------------------------------------------------------------------------*/
@@ -227,23 +287,23 @@ DSGVOSubPanelAccepted.prototype = Object.create(DSGVOSubPanel.prototype);
  * 
  */
 DSGVOSubPanelAccepted.prototype.fillTable = function() {
-    
+
     var fields = [];
     fields.push(function(td, item) {
 	var cb = document.createElement("input");
-	cb.type="radio";
-	cb.name="dsgvo_sel_accepted";
+	cb.type = "radio";
+	cb.name = "dsgvo_sel_accepted";
 	return cb;
     });
     fields.push("zname");
     fields.push("vname");
     fields.push("date");
     fields.push("email");
-    
+
     var onclick = function(tr, item) {
-	
+
     }
-        
-    var xpath="/get-dsgvo-overview-ok-rsp/dsgvo-item[state='ACCEPTED']";
+
+    var xpath = "/get-dsgvo-overview-ok-rsp/dsgvo-item[state='ACCEPTED']";
     this.model.createTableBinding(this.table, fields, xpath, onclick);
 }

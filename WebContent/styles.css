@@ -71,6 +71,7 @@ hr {
 	border: 0;
 	height: 1px;
 	border-top: 1px solid #d0d0d0;
+	margin: 5px 0 5px 0;
 }
 
 button {
@@ -175,7 +176,7 @@ td {
 }
 
 h1 {
-	font-size: 1.5em;
+	font-size: 1em;
 	margin-top: 10px;
 	font-weight: 600;
 }
@@ -215,6 +216,10 @@ iframe {
 
 .clickable {
 	cursor: default;
+}
+
+.disabled {
+	color: #d0d0d0;
 }
 
 .vcenter-to-parent {
@@ -2320,4 +2325,48 @@ input[type='radio']:checked+.calendar-termin-monthly {
 .is-dragover {
 	background-color: #f0f0f0;
 	border: 2px dashed #d0d0d0;
+}
+
+.dsgvo-button {
+	border: 1px solid transparent;
+	border-radius: 5px;
+	padding: 20px;
+	font-weight: 600;
+	display: inline;
+	text-align: center;	
+	color: black;
+}
+
+.dsgvo-accept {
+	border-color: #00a000;
+	background: -webkit-linear-gradient(#00a000, #00f000, #00a000);
+	background: -o-linear-gradient(#00a000, #00f000, #00a000);
+	background: -moz-linear-gradient(#00a000, #00f000, #00a000);
+	background: -ms-linear-gradient(#00a000, #00f000, #00a000);
+	background: linear-gradient(#00a000, #00f000, #00a000);
+}
+
+.dsgvo-accept:active {
+	background: -webkit-linear-gradient(#0fa000, #00a000, #00f000);
+	background: -o-linear-gradient(#00f000, #00a000, #00f000);
+	background: -moz-linear-gradient(#00f000, #00a000, #00f000);
+	background: -ms-linear-gradient(#00f000, #00a000, #00f000);
+	background: linear-gradient(#00f000, #00a000, #00f000);
+}
+
+.dsgvo-deny {
+	border-color: #a00000;
+	background: -webkit-linear-gradient(#a00000, #f00000, #a00000);
+	background: -o-linear-gradient(#a00000, #f00000, #a00000);
+	background: -moz-linear-gradient(#a00000, #f00000, #a00000);
+	background: -ms-linear-gradient(#a00000, #f00000, #a00000);
+	background: linear-gradient(#a00000, #f00000, #a00000);
+}
+
+.dsgvo-deny:active {
+	background: -webkit-linear-gradient(#f00000, #a00000, #f00000);
+	background: -o-linear-gradient(#f00000, #a00000, #f00000);
+	background: -moz-linear-gradient(#f00000, #a00000, #f00000);
+	background: -ms-linear-gradient(#f00000, #a00000, #f00000);
+	background: linear-gradient(#f00000, #a00000, #f00000);
 }

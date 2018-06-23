@@ -104,3 +104,4 @@ de.bbgs.registration.SaveRegistrationModelHandler
 # all about the DSGVO bullshit
 #
 de.bbgs.dsgvo.GetDSGVOOverviewHandler
+de.bbgs.dsgvo.SendDSGVOHandler
