@@ -80,7 +80,7 @@ public class GetDSGVOOverviewHandler implements IXmlServiceHandler
                 i.zname = rs.getString("zname");
                 i.vname = rs.getString("vname");
                 i.email = rs.getString("email");
-                i.state = EDSGVOState.valueOf(rs.getString("dsgvo_state"));
+                i.state = EDSEState.valueOf(rs.getString("dsgvo_state"));
                 i.date = DBUtils.getDate(rs, "dsgvo_date");
                 response.dsgvoItems.add(i);
             }
@@ -125,7 +125,7 @@ public class GetDSGVOOverviewHandler implements IXmlServiceHandler
         public String email;
         
         @XmlElement(name="state")
-        public EDSGVOState state;
+        public EDSEState state;
         
         @XmlElement(name="date")
         public String date;

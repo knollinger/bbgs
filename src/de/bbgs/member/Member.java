@@ -1,11 +1,14 @@
 package de.bbgs.member;
 
+import java.sql.Date;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import de.bbgs.dsgvo.EDSEState;
 import de.bbgs.service.EAction;
-import de.bbgs.xml.IJAXBObject;
 import de.bbgs.xml.EmptyIntegerXmlAdapter;
+import de.bbgs.xml.IJAXBObject;
 
 /**
  * 
@@ -95,7 +98,13 @@ public class Member implements IJAXBObject
 
     @XmlElement(name = "mailsig-mimetype")
     public String mailsigMimetype = "";
-
+    
+    @XmlElement(name="dse-state")
+    public EDSEState dseState;
+    
+    @XmlElement(name="dse-date")
+    public String dseDate;
+    
     /* (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
      */

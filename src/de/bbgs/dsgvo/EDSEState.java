@@ -3,7 +3,7 @@ package de.bbgs.dsgvo;
 /**
  * 
  */
-public enum EDSGVOState
+public enum EDSEState
 {
     /**
      * noch nicht angefordert

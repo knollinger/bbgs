@@ -17,6 +17,7 @@ var MemberEditor = function(id) {
 	self.setupModelListener();
 	self.setupTitlebarListener();
 	self.setupCoreDataEditor();
+	self.setupDSGVODataEditor();
 	self.setupCommDataEditor();
 	self.setupContactsOverview();
 	self.setupAttachmentsOverview();
@@ -101,6 +102,16 @@ MemberEditor.prototype.setupCoreDataEditor = function() {
     var subFrame = new MemberCoreDataEditor(this, this.coreDataTab.contentPane, this.model);
     this.coreDataTab.associateTabPane(subFrame);
     this.coreDataTab.select();
+}
+
+/**
+ * 
+ */
+MemberEditor.prototype.setupDSGVODataEditor = function() {
+
+    this.coreDataTab = this.addTab("gui/images/certificate.svg", "Datenschutz-relevante Angaben");
+    var subFrame = new MemberDSGVODataEditor(this, this.coreDataTab.contentPane, this.model);
+    this.coreDataTab.associateTabPane(subFrame);
 }
 
 /**
@@ -213,7 +224,6 @@ var MemberCoreDataEditor = function(parentFrame, targetCnr, model) {
 	self.model.createValueBinding("edit_member_zipcode", "/member-model/core-data/zip_code");
 	self.model.createValueBinding("edit_member_city", "/member-model/core-data/city");
 	self.model.createValueBinding("edit_member_street", "/member-model/core-data/street");
-	self.model.createValueBinding("edit_member_photoagreement", "/member-model/core-data/photoagreement");
 	self.model.createValueBinding("edit_member_school", "/member-model/core-data/school");
 
 	// instantiate the image picker
@@ -297,17 +307,17 @@ MemberCoreDataEditor.prototype.hiddenFieldsByType = {
  */
 MemberCoreDataEditor.prototype.mandatoryFieldsByType = {
     "" : [ "edit_member_type" ],
-    "TEACHER" : [ "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street", "edit_member_photoagreement" ],
-    "SCOUT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street", "edit_member_photoagreement" ],
-    "EXSCOUT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street", "edit_member_photoagreement" ],
-    "PRAKTIKANT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street", "edit_member_photoagreement" ],
-    "EHRENAMT" : [ "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street", "edit_member_photoagreement" ],
-    "FEST" : [ "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street", "edit_member_photoagreement" ],
-    "SHORT" : [ "edit_member_type", "edit_member_since", "edit_member_until", , "edit_member_zname", "edit_member_vname", "edit_member_photoagreement" ],
-    "STUDENT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_photoagreement" ],
-    "REFUGEE" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_photoagreement" ],
-    "REG_COURSE" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_photoagreement" ],
-    "REG_EVENT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_photoagreement" ]
+    "TEACHER" : [ "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
+    "SCOUT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
+    "EXSCOUT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"],
+    "PRAKTIKANT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"],
+    "EHRENAMT" : [ "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"],
+    "FEST" : [ "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"],
+    "SHORT" : [ "edit_member_type", "edit_member_since", "edit_member_until", , "edit_member_zname", "edit_member_vname"],
+    "STUDENT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"],
+    "REFUGEE" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"],
+    "REG_COURSE" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"],
+    "REG_EVENT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"]
 }
 
 /**
@@ -414,6 +424,45 @@ MemberCoreDataEditor.prototype.onSexChange = function() {
 	thumb.src = url;
     }
 }
+
+/*---------------------------------------------------------------------------*/
+/**
+ * Der SubEditor für die Datenschutz-Angaben
+ */
+
+var MemberDSGVODataEditor = function(parentFrame, targetCnr, model) {
+
+    WorkSpaceTabPane.call(this, parentFrame, targetCnr);
+    this.model = model;
+
+    var self = this;
+    this.load("gui/member/member_editor_dsgvo.html", function() {
+
+	self.model.createValueBinding("edit_member_photoagreement", "//member-model/core-data/photoagreement");
+	
+	var state = self.model.getValue("//member-model/core-data/dse-state");
+	var result = "Datenschutz-Erklärung ";
+	switch(state) {
+	case "NONE":
+	    result += "noch nicht zugestellt";
+	    break;
+	    
+	case "PENDING":
+	    result += "zugestellt am " + self.model.getValue("//member-model/core-data/dse-date");
+	    break;
+	    
+	case "ACCEPTED":
+	    result += "akzeptiert am " + self.model.getValue("//member-model/core-data/dse-date");
+	    break;
+	    
+	case "REJECTED":
+	    result += "abgelehnt am " + self.model.getValue("//member-model/core-data/dse-date");
+	    break;
+	}
+	UIUtils.getElement("edit_member_dse_state").textContent = result;
+    });
+}
+MemberDSGVODataEditor.prototype = Object.create(WorkSpaceTabPane.prototype);
 
 /*---------------------------------------------------------------------------*/
 /**

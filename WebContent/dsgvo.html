@@ -6,7 +6,7 @@
 	Datenschutzerkl&auml;rung</title>
 <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body onload="javascript:DSGVOCustomer.init();">
 	<div id="workspace">
 		<div class="workspace-frame">
 			<div class="workspace-frame-header">
@@ -20,21 +20,28 @@
 
 				<div class="grid-row-0">
 					<h1 class="grid-col-2">
-						Hallo Ihr lieben!<br>
-						Seit dem 25.05.2018 benötigen wir die Einverständnis-Erklärung
-						unserer Mitglieder zu unserer Datenschutz-Erkl&auml;rung. Diese
-						k&ouml;nnt Iht hier einsehen.
+						Hallo Ihr lieben!<br> Seit dem 25.05.2018 benötigen wir die
+						Einverständnis-Erklärung unserer Mitglieder zu unserer
+						Datenschutz-Erkl&auml;rung. Diese k&ouml;nnt Iht hier einsehen.
 					</h1>
 				</div>
 				<iframe class="grid-row-1 grid-col-2"> </iframe>
 				<div class="grid-row-0">
-					<div class="grid-col-1 dsgvo-button dsgvo-accept">Ich stimme
-						zu</div>
-					<div class="grid-col-1 dsgvo-button dsgvo-deny">Ich stimme
-						nicht zu</div>
+					<div class="grid-col-1 dsgvo-button dsgvo-accept" id="dsgvo_accept">Ich
+						stimme zu</div>
+					<div class="grid-col-1 dsgvo-button dsgvo-deny" id="dsgvo_reject">Ich
+						stimme nicht zu</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<div class="hidden" id="dsgvo_email"></div>
 </body>
+
+<script type="text/javascript" src="gui/dsgvo/customer.js"></script>
+<script type="text/javascript" src="gui/widgets/busy_indicator.js"></script>
+<script type="text/javascript" src="gui/utils/uiutils.js"></script>
+
+<script type="text/javascript" src="interaction/servicecaller.js"></script>
+<script type="text/javascript" src="utils/xmlutils.js"></script>
 </html>

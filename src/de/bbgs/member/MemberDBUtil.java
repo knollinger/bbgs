@@ -17,6 +17,7 @@ import de.bbgs.attachments.EAttachmentDomain;
 import de.bbgs.contacts.ContactsDBUtil;
 import de.bbgs.contacts.EContactDomain;
 import de.bbgs.courses.CourseDBUtil;
+import de.bbgs.dsgvo.EDSEState;
 import de.bbgs.mail.MailDBUtils;
 import de.bbgs.session.SessionWrapper;
 import de.bbgs.utils.DBUtils;
@@ -222,7 +223,6 @@ public class MemberDBUtil
         result.zipCode = rs.getInt("zip_code");
         result.city = rs.getString("city");
         result.street = rs.getString("street");
-        result.fotoAgreement = EPhotoAgreement.valueOf(rs.getString("photoagreement"));
         result.phone = rs.getString("phone");
         result.phone2 = rs.getString("phone2");
         result.mobile = rs.getString("mobile");
@@ -233,6 +233,9 @@ public class MemberDBUtil
         result.memberSince = DBUtils.getDate(rs, "member_since");
         result.memberUntil = DBUtils.getDate(rs, "member_until");
         result.school = rs.getInt("school");
+        result.fotoAgreement = EPhotoAgreement.valueOf(rs.getString("photoagreement"));
+        result.dseState = EDSEState.valueOf(rs.getString("dse_state"));
+        result.dseDate = DBUtils.getDate(rs, "dse_date");
         return result;
     }
 
