@@ -73,6 +73,22 @@ var XmlUtils = (function() {
 	    }
 	    return currNode;
 	},
+	
+	/**
+	 * 
+	 */
+	addNode : function(xmlDoc, path, name, value) {
+	  
+	    var result = null;
+	    var cnr = XmlUtils.evaluateXPath(xmlDoc, path)[0];
+	    if(cnr) {
+		
+		result =  xmlDoc.createElement(name);
+		result.textContent = value;
+		cnr.appendChild(result);
+	    }
+	    return result;
+	},
 
 	/**
 	 * Evaluiere den XPath gegen das gegebene Document.

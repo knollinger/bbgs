@@ -52,10 +52,10 @@ Validator.prototype.getAllInputFields = function(parent) {
 	    result.push(childs[j]);
 	}
     }
-    
+
     var childs = parent.getElementsByClassName("multsel-cnr");
     for (var j = 0; j < childs.length; j++) {
-	    result.push(childs[j]);
+	result.push(childs[j]);
     }
     return result;
 }
@@ -65,17 +65,16 @@ Validator.prototype.getAllInputFields = function(parent) {
  * @param elem
  */
 Validator.prototype.assertNotEmpty = function(elem) {
-    
+
     var empty = false;
-    
+
     var val = elem.value;
-    if(Array.isArray(val) ) {
+    if (Array.isArray(val)) {
 	empty = val.length == 0;
+    } else {
+	empty = elem.value == "" || elem.value == "UNDEFINED";
     }
-    else {
-	empty = elem.value == "";
-    }
-    
+
     if (empty) {
 	console.log("assertNotEmpty failed on: " + elem.id);
 	new ToolTip(elem, ToolTip.warningIcon, "Dieses Feld darf nicht leer sein.")

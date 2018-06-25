@@ -36,7 +36,7 @@ var MainNavigation = function() {
     });
      
     btn = this.addNavigationButton("gui/images/certificate.svg", "Datenschutz-Erklärung verwalten", function() {
-	new DSGVOOverview();
+	new DSEOverview();
     });
      
     this.setTitle("Bayerns beste Gipfelstürmer");

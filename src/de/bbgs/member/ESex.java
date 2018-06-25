@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 public enum ESex
 {
-    M, W, U;
+    UNDEFINED, M, W, U;
 
     public String toHumanReadable()
     {

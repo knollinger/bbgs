@@ -98,7 +98,7 @@ MemberEditor.prototype.setupTitlebarListener = function() {
  */
 MemberEditor.prototype.setupCoreDataEditor = function() {
 
-    this.coreDataTab = this.addTab("gui/images/person-edit.svg", "Stamm-Daten");
+    this.coreDataTab = this.addTab("gui/images/person.svg", "Stamm-Daten");
     var subFrame = new MemberCoreDataEditor(this, this.coreDataTab.contentPane, this.model);
     this.coreDataTab.associateTabPane(subFrame);
     this.coreDataTab.select();
@@ -441,22 +441,22 @@ var MemberDSGVODataEditor = function(parentFrame, targetCnr, model) {
 	self.model.createValueBinding("edit_member_photoagreement", "//member-model/core-data/photoagreement");
 	
 	var state = self.model.getValue("//member-model/core-data/dse-state");
-	var result = "Datenschutz-Erklärung ";
+	var result = " Die Datenschutz-Erklärung wurde ";
 	switch(state) {
 	case "NONE":
 	    result += "noch nicht zugestellt";
 	    break;
 	    
 	case "PENDING":
-	    result += "zugestellt am " + self.model.getValue("//member-model/core-data/dse-date");
+	    result += "am " + self.model.getValue("//member-model/core-data/dse-date") + " zugestellt, die Antwort steht noch aus";
 	    break;
 	    
 	case "ACCEPTED":
-	    result += "akzeptiert am " + self.model.getValue("//member-model/core-data/dse-date");
+	    result += "am " + self.model.getValue("//member-model/core-data/dse-date") + " akzeptiert";
 	    break;
 	    
 	case "REJECTED":
-	    result += "abgelehnt am " + self.model.getValue("//member-model/core-data/dse-date");
+	    result += "am " + self.model.getValue("//member-model/core-data/dse-date") + " abgelehnt";
 	    break;
 	}
 	UIUtils.getElement("edit_member_dse_state").textContent = result;

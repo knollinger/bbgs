@@ -25,7 +25,7 @@ import de.bbgs.session.SessionWrapper;
     "/getDocument/*"}, loadOnStartup = 1)
 public class GetDocDispatcherServlet extends HttpServlet
 {
-    private static final String ERR_NOT_FOUND = "F\u00fcr den Dokumenten-Kontext '%1$s' liegt keine Implementierung vor. Am besten haust Du Deinen Admin :-)";
+    private static final String ERR_NOT_FOUND = "F&uuml;r den Dokumenten-Kontext '%1$s' liegt keine Implementierung vor. Am besten haust Du Deinen Admin :-)";
 
     private Map<String, IGetDocServiceHandler> handler;
 
@@ -42,7 +42,7 @@ public class GetDocDispatcherServlet extends HttpServlet
      */
     protected void doGet(HttpServletRequest req, HttpServletResponse rsp) throws ServletException, IOException
     {
-        SessionWrapper session = new SessionWrapper(req.getSession());
+        SessionWrapper session = new SessionWrapper(req);
 
         String subCtx = this.extractSubContext(req);
         IGetDocServiceHandler handler = this.handler.get(subCtx);

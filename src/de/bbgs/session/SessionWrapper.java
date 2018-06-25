@@ -1,5 +1,9 @@
 package de.bbgs.session;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -9,13 +13,22 @@ import javax.servlet.http.HttpSession;
 public class SessionWrapper
 {
     private HttpSession httpSession = null;
+    private URL baseUrl = null;
 
     /**
      * @param httpSession
+     * @throws MalformedURLException 
      */
-    public SessionWrapper(HttpSession httpSession)
+    public SessionWrapper(HttpServletRequest req) throws MalformedURLException
     {
-        this.httpSession = httpSession;
+        this.httpSession = req.getSession();
+
+        // create the complete base-URL
+        URL reqUrl = new URL(req.getRequestURL().toString());
+        String ctxPath = req.getContextPath();
+
+        this.baseUrl = new URL(reqUrl.getProtocol(), reqUrl.getHost(), reqUrl.getPort(), ctxPath);
+        System.out.println(this.baseUrl);
     }
 
     /**
@@ -118,5 +131,13 @@ public class SessionWrapper
     public String getSessionId()
     {
         return this.httpSession.getId();
+    }
+
+    /**
+     * @return
+     */
+    public URL getBaseURL()
+    {
+        return this.baseUrl;
     }
 }

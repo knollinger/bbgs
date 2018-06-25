@@ -22,7 +22,7 @@ var MessageCatalog = (function() {
 	EMPTY_NEW_PWD : "Bitte gebe das neue Kennwort ein",
 	SAME_NEW_PWD : "Das neue Kennwort muss sich vom alten Kennwort unterscheiden",
 	NEW_PWDS_DIFFERENT : "Das neue Kennwort und die Kontroll-Eingabe sind verschieden",
-	
+
 	CHANGE_PWD_ERROR_TITLE : "Fehler beim Kennwort-Wechsel",
 	CHANGE_PWD_ERROR : "Bei der Änderung Deines Kennwortes ist ein Fehler aufgetreten..<br>Antwort vom Server:<br>{1}",
 	CHANGE_PWD_TECH_ERROR : "Bei der Änderung Deines Kennwortes ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
@@ -236,10 +236,19 @@ var MessageCatalog = (function() {
 	TITLE_REMOVE_OUTGOING_RECORD : "Bist Du sicher?",
 	QUERY_REMOVE_OUTGOING_RECORD : "M&ouml;chtes Du den Ausgaben-Posten &uuml;ber &euro; {1} wirklich l&ouml;schen?",
 
-
 	TITLE_REMOVE_PAYMENT_RECORD : "Bist Du sicher?",
 	QUERY_REMOVE_PAYMENT_RECORD : "M&ouml;chtes Du den Finanzierungs-Posten wirklich l&ouml;schen?",
-	
+
+	// --------------------------------------------------------------------
+	//
+	// all about the DSGVO stuff
+	//
+	SEND_DSEMAIL_OK_TITLE : "Datenschutz-Erkl&auml;rungen gesendet",
+	SEND_DSEMAIL_ERR_TITLE : "Fehler beim senden der Datenschutz-Erkl&auml;rung",
+	SEND_DSEMAIL_SUCCESS : "Die Mails mit der Datenschutz-Erklärung wurde erfolgreich zur Zustellung &uuml;bergeben",
+	SEND_DSEMAIL_ERR : "Beim senden der Datenschutz-Erkl&auml;rungen ist ein Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
+	SEND_DSEMAIL_TECHERR : "Beim senden der Datenschutz-Erkl&auml;rungen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
+
 	// --------------------------------------------------------------------
 	//
 	// all about the file system

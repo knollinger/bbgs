@@ -1,7 +1,5 @@
 package de.bbgs.member;
 
-import java.sql.Date;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -40,7 +38,7 @@ public class Member implements IJAXBObject
 
     @XmlElement(name = "sex")
     @XmlJavaTypeAdapter(value = ESex.XMLAdapter.class)
-    public ESex sex = ESex.U;
+    public ESex sex = ESex.UNDEFINED;
 
     @XmlElement(name = "zip_code")
     @XmlJavaTypeAdapter(value = EmptyIntegerXmlAdapter.class)
@@ -51,9 +49,6 @@ public class Member implements IJAXBObject
 
     @XmlElement(name = "street")
     public String street = "";
-
-    @XmlElement(name = "photoagreement")
-    public EPhotoAgreement fotoAgreement = EPhotoAgreement.NONE;
 
     @XmlElement(name = "phone")
     public String phone = "";
@@ -98,7 +93,10 @@ public class Member implements IJAXBObject
 
     @XmlElement(name = "mailsig-mimetype")
     public String mailsigMimetype = "";
-    
+
+    @XmlElement(name = "photoagreement")
+    public EPhotoAgreement fotoAgreement = EPhotoAgreement.NONE;
+
     @XmlElement(name="dse-state")
     public EDSEState dseState;
     

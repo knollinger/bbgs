@@ -40,7 +40,7 @@ import de.bbgs.setup.SetupReader;
  * @author anderl
  *
  */
-class MailHelper
+public class MailHelper
 {
     /**
      * @param members
@@ -233,7 +233,7 @@ class MailHelper
      * @return
      * @throws JAXBException
      */
-    private static Session getMailSession() throws JAXBException
+    public static Session getMailSession() throws JAXBException
     {
         EmailSetup setup = SetupReader.getSetup().getEmailSetup();
 

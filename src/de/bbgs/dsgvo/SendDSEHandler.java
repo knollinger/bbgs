@@ -1,5 +1,6 @@
 package de.bbgs.dsgvo;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -9,13 +10,16 @@ import javax.xml.bind.annotation.XmlType;
 
 import de.bbgs.service.IXmlServiceHandler;
 import de.bbgs.session.SessionWrapper;
+import de.bbgs.utils.ConnectionPool;
+import de.bbgs.utils.DBUtils;
+import de.bbgs.xml.ErrorResponse;
 import de.bbgs.xml.IJAXBObject;
 
 /**
  * @author anderl
  *
  */
-public class SendDSGVOHandler implements IXmlServiceHandler
+public class SendDSEHandler implements IXmlServiceHandler
 {
 
     /* (non-Javadoc)
@@ -54,24 +58,59 @@ public class SendDSGVOHandler implements IXmlServiceHandler
     @Override
     public IJAXBObject handleRequest(IJAXBObject request, SessionWrapper session)
     {
-        return null;
+        IJAXBObject rsp = null;
+        Connection conn = null;
+
+        try
+        {
+            conn = ConnectionPool.getConnection();
+            Request req = (Request) request;
+            this.sendMail(req.sendTo, session, conn);
+            rsp = new Response();
+        }
+        catch (Exception e)
+        {
+            rsp = new ErrorResponse(e.getMessage());
+        }
+        finally
+        {
+            DBUtils.closeQuitly(conn);
+        }
+        return rsp;
+    }
+
+    /**
+     * @param intValue
+     */
+    private void sendMail(int id, SessionWrapper session, Connection conn)
+    {
+        try
+        {
+
+            DSEUtils.sendDSEMail(id, session, conn);
+            DSEUtils.markAsSend(id, conn);
+        }
+        catch (Exception e)
+        {
+            // TODO: logging
+        }
     }
 
     /**
      *
      */
-    @XmlRootElement(name = "send-dsgvo-mail-req")
+    @XmlRootElement(name = "send-dse-mail-req")
     @XmlType(name = "SendDSGVOHandler.Request")
     public static class Request implements IJAXBObject
     {
         @XmlElement(name = "send-to")
-        public Collection<Integer> sendTo = new ArrayList<>();
+        public int sendTo;
     }
 
     /**
      *
      */
-    @XmlRootElement(name = "send-dsgvo-mail-ok-rsp")
+    @XmlRootElement(name = "send-dse-mail-ok-rsp")
     @XmlType(name = "SendDSGVOHandler.Response")
     public static class Response implements IJAXBObject
     {

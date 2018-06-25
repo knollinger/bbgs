@@ -76,7 +76,7 @@ public class XmlDispatcherServlet extends HttpServlet
         try
         {
             IJAXBObject reqObj = JAXBSerializer.readObject(request.getInputStream());
-            SessionWrapper session = new SessionWrapper(request.getSession());
+            SessionWrapper session = new SessionWrapper(request);
 
             IXmlServiceHandler handler = this.handlers.get(reqObj.getClass());
             if (handler == null)
@@ -117,7 +117,5 @@ public class XmlDispatcherServlet extends HttpServlet
     @Override
     public void init(ServletConfig cfg)
     {
-
-        System.out.println(cfg);
     }
 }
