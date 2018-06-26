@@ -11,3 +11,5 @@ de.bbgs.accounting.PrintProjectHandler
 de.bbgs.accounting.PrintInvoiceItemsOverviewHandler
 
 de.bbgs.todolist.GetPinboardDocumentHandler
+
+de.bbgs.dsgvo.AcceptDSEhandler

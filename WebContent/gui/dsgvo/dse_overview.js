@@ -22,28 +22,28 @@ DSEOverview.prototype.prepareSections = function() {
     this.panels = {};
 
     var tab = this.addTab("gui/images/certificate.svg", "Datenschutz-Erklärung noch nicht verschickt");
-    var panel = new DSGVOSubPanelNone(this, tab.contentPane, this.model);
+    var panel = new DSESubPanelNone(this, tab.contentPane, this.model);
     tab.associateTabPane(panel);
     this.panels["NONE"] = panel;
     tab.select();
 
     tab = this.addTab("gui/images/certificate.svg", "Noch nicht reagiert");
-    panel = new DSGVOSubPanelPending(this, tab.contentPane, this.model);
+    panel = new DSESubPanelPending(this, tab.contentPane, this.model);
     tab.associateTabPane(panel);
     this.panels["PENDING"] = panel;
 
     tab = this.addTab("gui/images/certificate.svg", "Datenschutz-Erklärung zugestimmt");
-    panel = new DSGVOSubPanelAccepted(this, tab.contentPane, this.model);
+    panel = new DSESubPanelAccepted(this, tab.contentPane, this.model);
     tab.associateTabPane(panel);
     this.panels["ACCEPTED"] = panel;
 
     tab = this.addTab("gui/images/certificate.svg", "Datenschutz-Erklärung abgelehnt");
-    panel = new DSGVOSubPanelRejected(this, tab.contentPane, this.model);
+    panel = new DSESubPanelRejected(this, tab.contentPane, this.model);
     tab.associateTabPane(panel);
     this.panels["REJECTED"] = panel;
 
     tab = this.addTab("gui/images/certificate.svg", "Datenschutz-Erklärung  nicht zustellbar");
-    panel = new DSGVOSubPanelNotDeliverable(this, tab.contentPane, this.model);
+    panel = new DSESubPanelNotDeliverable(this, tab.contentPane, this.model);
     tab.associateTabPane(panel);
     this.panels["NOT_DELIVERABLE"] = panel;
 }
@@ -63,15 +63,15 @@ DSEOverview.prototype.loadModel = function(onsuccess) {
 	    break;
 
 	case "error-response":
-	    var title = MessageCatalog.getMessage("TITLE_GET_DSGVO_OVERVIEW");
-	    var messg = MessageCatalog.getMessage("GET_DSGVO_OVERVIEW_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
+	    var title = MessageCatalog.getMessage("TITLE_GET_DSE_OVERVIEW");
+	    var messg = MessageCatalog.getMessage("GET_DSE_OVERVIEW_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
 	    new MessageBox(MessageBox.ERROR, title, messg);
 	    break;
 	}
     }
     caller.onError = function(req, status) {
-	var title = MessageCatalog.getMessage("TITLE_GET_DSGVO_OVERVIEW");
-	var messg = MessageCatalog.getMessage("GET_DSGVO_OVERVIEW_TECHERROR", status);
+	var title = MessageCatalog.getMessage("TITLE_GET_DSE_OVERVIEW");
+	var messg = MessageCatalog.getMessage("GET_DSE_OVERVIEW_TECHERROR", status);
 	new MessageBox(MessageBox.ERROR, title, messg);
     }
 
@@ -81,20 +81,20 @@ DSEOverview.prototype.loadModel = function(onsuccess) {
 
 /*---------------------------------------------------------------------------*/
 /**
- * die Basis der DSGVO-Subpanele. Alle Panele bestehen im wesentlichen nur aus
+ * die Basis der DSE-Subpanele. Alle Panele bestehen im wesentlichen nur aus
  * einer Tabelle, sie unterscheiden sich lediglich in bezug auf die Aktions
  */
-var DSGVOSubPanel = function(parentFrame, targetCnr, header) {
+var DSESubPanel = function(parentFrame, targetCnr, header) {
 
     WorkSpaceTabPane.call(this, parentFrame, targetCnr);
     targetCnr.appendChild(this.createTable(header));
 }
-DSGVOSubPanel.prototype = Object.create(WorkSpaceTabPane.prototype);
+DSESubPanel.prototype = Object.create(WorkSpaceTabPane.prototype);
 
 /**
  * 
  */
-DSGVOSubPanel.prototype.createTable = function(header) {
+DSESubPanel.prototype.createTable = function(header) {
 
     var tr = document.createElement("tr");
     for (var i = 0; i < header.length; i++) {
@@ -118,15 +118,17 @@ DSGVOSubPanel.prototype.createTable = function(header) {
 }
 
 /*---------------------------------------------------------------------------*/
-var DSGVOSubPanelNone = function(parentFrame, targetCnr, model) {
+var DSESubPanelNone = function(parentFrame, targetCnr, model) {
 
-    DSGVOSubPanel.call(this, parentFrame, targetCnr, [ "", "Name", "Vorname", "Email" ]);
+    DSESubPanel.call(this, parentFrame, targetCnr, [ "", "Name", "Vorname", "Email" ]);
     this.model = model;
     this.selected = [];
 
     this.actionSend = this.createSendAction();
     this.addAction(this.actionSend);
     this.actionSend.hide();
+    
+    this.createSelectAll();
 
     var self = this;
     this.model.addChangeListener("//get-dsgvo-overview-ok-rsp", function() {
@@ -134,12 +136,12 @@ var DSGVOSubPanelNone = function(parentFrame, targetCnr, model) {
     });
     this.fillTable();
 }
-DSGVOSubPanelNone.prototype = Object.create(DSGVOSubPanel.prototype);
+DSESubPanelNone.prototype = Object.create(DSESubPanel.prototype);
 
 /**
  * 
  */
-DSGVOSubPanelNone.prototype.createSendAction = function() {
+DSESubPanelNone.prototype.createSendAction = function() {
 
     var self = this;
     var title = "Datenschutz-Erklärung zu senden";
@@ -152,7 +154,14 @@ DSGVOSubPanelNone.prototype.createSendAction = function() {
 /**
  * 
  */
-DSGVOSubPanelNone.prototype.fillTable = function() {
+DSESubPanelNone.prototype.createSelectAll = function() {
+    
+}
+
+/**
+ * 
+ */
+DSESubPanelNone.prototype.fillTable = function() {
 
     var fields = [];
     fields.push(function(td, item) {
@@ -190,7 +199,7 @@ DSGVOSubPanelNone.prototype.fillTable = function() {
 /**
  * 
  */
-DSGVOSubPanelNone.prototype.sendDSEMails = function() {
+DSESubPanelNone.prototype.sendDSEMails = function() {
 
     if (this.selected.length) {
 	var id = this.selected[0];
@@ -201,55 +210,18 @@ DSGVOSubPanelNone.prototype.sendDSEMails = function() {
 	    self.sendDSEMails();
 	});
     }
-    // var self = this;
-    // var caller = new ServiceCaller();
-    // caller.onSuccess = function(rsp) {
-    // switch (rsp.documentElement.nodeName) {
-    // case "send-dse-mail-ok-rsp":
-    // var title = MessageCatalog.getMessage("SEND_DSEMAIL_OK_TITLE");
-    // var messg = MessageCatalog.getMessage("SEND_DSEMAIL_SUCCESS");
-    // new MessageBox(MessageBox.INFO, title, messg);
-    // break;
-    //
-    // case "error-response":
-    // var title = MessageCatalog.getMessage("SEND_DSEMAIL_ERR_TITLE");
-    // var messg = MessageCatalog.getMessage("SEND_DSEMAIL_ERR",
-    // rsp.getElementsByTagName("msg")[0].textContent);
-    // new MessageBox(MessageBox.ERROR, title, messg);
-    // break;
-    // }
-    // self.close();
-    // }
-    // caller.onError = function(req, status) {
-    // var title = MessageCatalog.getMessage("SEND_DSEMAIL_ERR_TITLE");
-    // var messg = MessageCatalog.getMessage("SEND_DSEMAIL_TECHERR", status);
-    // new MessageBox(MessageBox.ERROR, title, messg, function() {
-    // self.close();
-    // });
-    // }
-    //
-    // var req = XmlUtils.createDocument("send-dse-mail-req");
-    // for (var i = 0; i < this.selected.length; i++) {
-    // XmlUtils.addNode(req, "//send-dse-mail-req", "send-to",
-    // this.selected[i]);
-    // }
-    // caller.invokeService(req);
-
 }
 
 /**
  * 
  */
-DSGVOSubPanelNone.prototype.sendOneDSEMail = function(id, onsuccess) {
+DSESubPanelNone.prototype.sendOneDSEMail = function(id, onsuccess) {
 
     var self = this;
     var caller = new ServiceCaller();
     caller.onSuccess = function(rsp) {
 	switch (rsp.documentElement.nodeName) {
 	case "send-dse-mail-ok-rsp":
-	    // var title = MessageCatalog.getMessage("SEND_DSEMAIL_OK_TITLE");
-	    // var messg = MessageCatalog.getMessage("SEND_DSEMAIL_SUCCESS");
-	    // new MessageBox(MessageBox.INFO, title, messg);
 	    self.model.setValue("//get-dsgvo-overview-ok-rsp/dsgvo-item[id='" + id + "']/state", "PENDING");
 	    self.model.setValue("//get-dsgvo-overview-ok-rsp/dsgvo-item[id='" + id + "']/date", DateTimeUtils.formatDate(new Date(), "{dd}.{mm}.{yyyy}"));
 	    onsuccess();
@@ -278,9 +250,9 @@ DSGVOSubPanelNone.prototype.sendOneDSEMail = function(id, onsuccess) {
 
 
 /*---------------------------------------------------------------------------*/
-var DSGVOSubPanelPending = function(parentFrame, targetCnr, model) {
+var DSESubPanelPending = function(parentFrame, targetCnr, model) {
 
-    DSGVOSubPanel.call(this, parentFrame, targetCnr, [ "", "Name", "Vorname", "zugesendet am", "Email" ]);
+    DSESubPanel.call(this, parentFrame, targetCnr, [ "", "Name", "Vorname", "zugesendet am", "Email" ]);
     this.model = model;
     
     var self = this;
@@ -290,12 +262,12 @@ var DSGVOSubPanelPending = function(parentFrame, targetCnr, model) {
 
     this.fillTable();
 }
-DSGVOSubPanelPending.prototype = Object.create(DSGVOSubPanel.prototype);
+DSESubPanelPending.prototype = Object.create(DSESubPanel.prototype);
 
 /**
  * 
  */
-DSGVOSubPanelPending.prototype.fillTable = function() {
+DSESubPanelPending.prototype.fillTable = function() {
 
     var fields = [];
     fields.push(function(td, item) {
@@ -318,18 +290,18 @@ DSGVOSubPanelPending.prototype.fillTable = function() {
 }
 
 /*---------------------------------------------------------------------------*/
-var DSGVOSubPanelRejected = function(parentFrame, targetCnr, model) {
+var DSESubPanelRejected = function(parentFrame, targetCnr, model) {
 
-    DSGVOSubPanel.call(this, parentFrame, targetCnr, [ "", "Name", "Vorname", "abgelehnt am", "Email" ]);
+    DSESubPanel.call(this, parentFrame, targetCnr, [ "", "Name", "Vorname", "abgelehnt am", "Email" ]);
     this.model = model;
     this.fillTable();
 }
-DSGVOSubPanelRejected.prototype = Object.create(DSGVOSubPanel.prototype);
+DSESubPanelRejected.prototype = Object.create(DSESubPanel.prototype);
 
 /**
  * 
  */
-DSGVOSubPanelRejected.prototype.fillTable = function() {
+DSESubPanelRejected.prototype.fillTable = function() {
 
     var fields = [];
     fields.push(function(td, item) {
@@ -351,18 +323,18 @@ DSGVOSubPanelRejected.prototype.fillTable = function() {
     this.model.createTableBinding(this.table, fields, xpath, onclick);
 }
 /*---------------------------------------------------------------------------*/
-var DSGVOSubPanelAccepted = function(parentFrame, targetCnr, model) {
+var DSESubPanelAccepted = function(parentFrame, targetCnr, model) {
 
-    DSGVOSubPanel.call(this, parentFrame, targetCnr, [ "", "Name", "Vorname", "zugestimmt am", "Email" ]);
+    DSESubPanel.call(this, parentFrame, targetCnr, [ "", "Name", "Vorname", "zugestimmt am", "Email" ]);
     this.model = model;
     this.fillTable();
 }
-DSGVOSubPanelAccepted.prototype = Object.create(DSGVOSubPanel.prototype);
+DSESubPanelAccepted.prototype = Object.create(DSESubPanel.prototype);
 
 /**
  * 
  */
-DSGVOSubPanelAccepted.prototype.fillTable = function() {
+DSESubPanelAccepted.prototype.fillTable = function() {
 
     var fields = [];
     fields.push(function(td, item) {
@@ -385,18 +357,18 @@ DSGVOSubPanelAccepted.prototype.fillTable = function() {
 }
 
 /*---------------------------------------------------------------------------*/
-var DSGVOSubPanelNotDeliverable = function(parentFrame, targetCnr, model) {
+var DSESubPanelNotDeliverable = function(parentFrame, targetCnr, model) {
 
-    DSGVOSubPanel.call(this, parentFrame, targetCnr, [ "", "Name", "Vorname", "Email" ]);
+    DSESubPanel.call(this, parentFrame, targetCnr, [ "", "Name", "Vorname", "Email" ]);
     this.model = model;
     this.fillTable();
 }
-DSGVOSubPanelNotDeliverable.prototype = Object.create(DSGVOSubPanel.prototype);
+DSESubPanelNotDeliverable.prototype = Object.create(DSESubPanel.prototype);
 
 /**
  * 
  */
-DSGVOSubPanelNotDeliverable.prototype.fillTable = function() {
+DSESubPanelNotDeliverable.prototype.fillTable = function() {
 
     var fields = [];
     fields.push("");

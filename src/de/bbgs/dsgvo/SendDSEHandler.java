@@ -65,7 +65,10 @@ public class SendDSEHandler implements IXmlServiceHandler
         {
             conn = ConnectionPool.getConnection();
             Request req = (Request) request;
-            this.sendMail(req.sendTo, session, conn);
+
+            DSEUtils.sendDSEMail(req.sendTo, session, conn);
+            DSEUtils.markAsSend(req.sendTo, conn);
+
             rsp = new Response();
         }
         catch (Exception e)
@@ -77,23 +80,6 @@ public class SendDSEHandler implements IXmlServiceHandler
             DBUtils.closeQuitly(conn);
         }
         return rsp;
-    }
-
-    /**
-     * @param intValue
-     */
-    private void sendMail(int id, SessionWrapper session, Connection conn)
-    {
-        try
-        {
-
-            DSEUtils.sendDSEMail(id, session, conn);
-            DSEUtils.markAsSend(id, conn);
-        }
-        catch (Exception e)
-        {
-            // TODO: logging
-        }
     }
 
     /**

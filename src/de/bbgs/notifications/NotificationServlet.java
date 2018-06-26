@@ -46,7 +46,7 @@ public class NotificationServlet extends HttpServlet
         IJAXBObject result = null;
         try
         {
-            SessionWrapper session = new SessionWrapper(request.getSession());
+            SessionWrapper session = new SessionWrapper(request);
 
             Response rsp = new Response();
 
