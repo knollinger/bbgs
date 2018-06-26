@@ -209,7 +209,6 @@ public class ProjectsDBUtils
             stmt.setString(2, coreData.description);
             DBUtils.setDate(stmt, 3, coreData.from);
             DBUtils.setDate(stmt, 4, coreData.until);
-            System.out.println(stmt);
             stmt.executeUpdate();
             rs = stmt.getGeneratedKeys();
             rs.next();

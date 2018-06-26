@@ -44,7 +44,6 @@ public class ThreadPool
     {
         if (this.exec == null)
         {
-            System.out.println("startup threadpool");
             int coreSize = Runtime.getRuntime().availableProcessors();
             int maxSize = coreSize * 2;
             int keepAlive = 60;
@@ -53,7 +52,6 @@ public class ThreadPool
             RejectedExecutionHandler rejectedHandler = new ThreadPoolExecutor.CallerRunsPolicy();
             this.exec = new ThreadPoolExecutor(coreSize, maxSize, keepAlive, TimeUnit.SECONDS, queue, factory,
                 rejectedHandler);
-            System.out.println("threadpool started");
 
         }
     }
@@ -67,10 +65,8 @@ public class ThreadPool
         {
             try
             {
-                System.out.println("shutdown threadpool");
                 this.exec.shutdown();
                 this.exec.awaitTermination(60, TimeUnit.SECONDS);
-                System.out.println("threadpool down");
             }
             catch (InterruptedException e)
             {

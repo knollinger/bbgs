@@ -110,6 +110,7 @@ DSESubPanel.prototype.createTable = function(header) {
 
     this.table = document.createElement("table");
     this.table.appendChild(thead);
+    this.tableclassName = "grid-col-1";
 
     var body = document.createElement("tbody");
     this.table.appendChild(body);
@@ -127,7 +128,7 @@ var DSESubPanelNone = function(parentFrame, targetCnr, model) {
     this.actionSend = this.createSendAction();
     this.addAction(this.actionSend);
     this.actionSend.hide();
-    
+
     this.createSelectAll();
 
     var self = this;
@@ -155,7 +156,30 @@ DSESubPanelNone.prototype.createSendAction = function() {
  * 
  */
 DSESubPanelNone.prototype.createSelectAll = function() {
-    
+
+    var selAll = document.createElement("input");
+    selAll.type = "checkbox";
+    selAll.name = "des_none_sel";
+    selAll.id = "des_none_sel";
+
+    var label = document.createElement("label");
+    label.setAttribute("for", "des_none_sel");
+    label.appendChild(selAll);
+    label.appendChild(document.createTextNode("Alle auswählen"));
+    label.className = "grid-col-0";
+
+    var parent = this.table.parentElement;
+    parent.insertBefore(label, this.table);
+
+    var self = this;
+    selAll.addEventListener("click", function() {
+	var allCheckboxes = self.table.querySelectorAll("input[type='checkbox'");
+	for (var i = 0; i < allCheckboxes.length; i++) {
+	    if (allCheckboxes[i].checked != selAll.checked) {
+		allCheckboxes[i].click();
+	    }
+	}
+    });
 }
 
 /**
@@ -202,6 +226,7 @@ DSESubPanelNone.prototype.fillTable = function() {
 DSESubPanelNone.prototype.sendDSEMails = function() {
 
     if (this.selected.length) {
+	
 	var id = this.selected[0];
 	this.selected.splice(0, 1);
 
@@ -233,14 +258,11 @@ DSESubPanelNone.prototype.sendOneDSEMail = function(id, onsuccess) {
 	    new MessageBox(MessageBox.ERROR, title, messg);
 	    break;
 	}
-	self.close();
     }
     caller.onError = function(req, status) {
 	var title = MessageCatalog.getMessage("SEND_DSEMAIL_ERR_TITLE");
 	var messg = MessageCatalog.getMessage("SEND_DSEMAIL_TECHERR", status);
-	new MessageBox(MessageBox.ERROR, title, messg, function() {
-	    self.close();
-	});
+	new MessageBox(MessageBox.ERROR, title, messg);
     }
 
     var req = XmlUtils.createDocument("send-dse-mail-req");
@@ -248,13 +270,12 @@ DSESubPanelNone.prototype.sendOneDSEMail = function(id, onsuccess) {
     caller.invokeService(req);
 }
 
-
 /*---------------------------------------------------------------------------*/
 var DSESubPanelPending = function(parentFrame, targetCnr, model) {
 
     DSESubPanel.call(this, parentFrame, targetCnr, [ "", "Name", "Vorname", "zugesendet am", "Email" ]);
     this.model = model;
-    
+
     var self = this;
     this.model.addChangeListener("//get-dsgvo-overview-ok-rsp", function() {
 	self.fillTable();

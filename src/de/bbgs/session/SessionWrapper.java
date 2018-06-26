@@ -28,7 +28,6 @@ public class SessionWrapper
         String ctxPath = req.getContextPath();
 
         this.baseUrl = new URL(reqUrl.getProtocol(), reqUrl.getHost(), reqUrl.getPort(), ctxPath);
-        System.out.println(this.baseUrl);
     }
 
     /**

@@ -190,7 +190,6 @@ public class DSEUtils
             body = body.replaceAll("_VNAME_", vname);
             body = body.replaceAll("_EMAIL_", email);
             body = body.replaceAll("_BASEURL_", session.getBaseURL().toString());
-            System.out.println(body);
 
             BodyPart msgBodyPart = new MimeBodyPart();
             msgBodyPart.setContent(body, "text/html; charset=utf-8");
