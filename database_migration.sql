@@ -284,18 +284,15 @@ CREATE TABLE `filesystem` (
 CREATE TABLE `mailbox` (
   `id` INT(10) AUTO_INCREMENT,
   `msg-id` VARCHAR(128) NOT NULL,
-  `folder-name` VARCHAR(128) NOT NULL,
   `subject` VARCHAR(512) NOT NULL,
-  `mime-type` VARCHAR(128) NOT NULL,
-  `body` MEDIUMBLOB NOT NULL,
   `from` VARCHAR(256) NOT NULL,
   `sent-date` DATE NOT NULL,
   `recv-date` DATE NOT NULL,
   PRIMARY KEY (`id`));
   
 CREATE TABLE mailbox_folders (
-    ref_id         INT(10) NOT NULL,
-    folder_name    VARCHAR(256) NOT NULL,
+    `ref_id`         INT(10) NOT NULL,
+    `folder_name`    VARCHAR(256),
   	KEY ref_id (ref_id),
   	CONSTRAINT `mailbox_folders_ibfk_1` FOREIGN KEY (`ref_id`) REFERENCES `mailbox` (`id`)
 );
