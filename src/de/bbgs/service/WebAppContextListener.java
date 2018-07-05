@@ -4,6 +4,9 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import de.bbgs.mail.MailFetcher;
+import de.bbgs.utils.ConnectionPool;
+
 /**
  * Der {@link WebAppContextListener} stellt sicher, dass sharedResources 
  * (wie der ConnectionPool und der ThreadPool) vor dem Start der webApp
@@ -21,7 +24,17 @@ public class WebAppContextListener implements ServletContextListener
      */
     public void contextInitialized(ServletContextEvent arg0)
     { 
-        ThreadPool.getInstance().startup();
+        try
+        {
+            ConnectionPool.init();
+            ThreadPool.getInstance().startup();
+            ThreadPool.getInstance().submit(new MailFetcher());
+        }
+        catch (Exception e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -66,7 +66,7 @@ public class SaveProjectModelHandler implements IXmlServiceHandler
         {
             conn = ConnectionPool.getConnection();
             conn.setAutoCommit(false);
-            ProjectsDBUtils.saveProjectModel((ProjectModel)request, session, conn);
+            ProjectsDBUtils.saveProjectModel((ProjectModel)request, conn);
             
             conn.commit();
             rsp = new Response();

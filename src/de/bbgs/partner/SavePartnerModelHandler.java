@@ -82,8 +82,7 @@ public class SavePartnerModelHandler implements IXmlServiceHandler
             }
             ContactsDBUtil.handleContactChanges(model.contacts, partnerId, EContactDomain.PARTNER, conn);
             NotesDBUtil.handleNoteChanges(model.notes, partnerId, ENoteDomain.PARTNER, conn);
-            AttachmentsDBUtil.handleAttachmentChanges(model.attachments, partnerId, EAttachmentDomain.PARTNER, session,
-                conn);
+            AttachmentsDBUtil.handleAttachmentChanges(model.attachments, partnerId, EAttachmentDomain.PARTNER, conn);
 
             conn.commit();
             rsp = new Response();

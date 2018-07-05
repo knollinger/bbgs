@@ -4,13 +4,13 @@
  */
 var ChangePasswordDialog = function() {
 
-    WorkSpaceDialog.call(this, "Kennwort ändern");
+    WorkSpaceFrame.call(this);
 
     var self = this;
     this.load("gui/widgets/change_passwd_dialog.html", function() {
 
-	self.enableCancelButton();
 	UIUtils.getElement("old_pwd").focus();
+	self.showMsg("EMPTY_OLD_PWD");
 	UIUtils.getElement("old_pwd").addEventListener("input", function() {
 	    self.onOldPwdInput();
 	});
@@ -22,7 +22,7 @@ var ChangePasswordDialog = function() {
 	});
     });
 }
-ChangePasswordDialog.prototype = Object.create(WorkSpaceDialog.prototype);
+ChangePasswordDialog.prototype = Object.create(WorkSpaceFrame.prototype);
 
 /**
  * 
@@ -94,13 +94,13 @@ ChangePasswordDialog.prototype.adjustOkBtn = function() {
     ok = ok && oldPwd != newPwd;
     ok = ok && (newPwd == newPwd1);
 
-    this.enableOkButton(ok);
+    this.enableSaveButton(ok);
 }
 
 /**
  * 
  */
-ChangePasswordDialog.prototype.onOk = function() {
+ChangePasswordDialog.prototype.onSave = function() {
 
     var caller = new ServiceCaller();
     caller.onSuccess = function(rsp) {

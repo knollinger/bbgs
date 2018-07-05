@@ -21,7 +21,6 @@ import de.bbgs.named_colors.NamedColorsDBUtil;
 import de.bbgs.notes.ENoteDomain;
 import de.bbgs.notes.NotesDBUtil;
 import de.bbgs.service.EAction;
-import de.bbgs.session.SessionWrapper;
 import de.bbgs.utils.DBUtils;
 
 /**
@@ -281,7 +280,6 @@ public class CourseDBUtil
         return result;
     }
 
- 
 
     public static Collection<Member> getAllMembersByCourseId(int courseId, Connection conn) throws SQLException
     {
@@ -374,7 +372,7 @@ public class CourseDBUtil
      * @param conn
      * @throws SQLException
      */
-    public static void saveCourseModel(CourseModel mdl, SessionWrapper session, Connection conn) throws SQLException
+    public static void saveCourseModel(CourseModel mdl, Connection conn) throws SQLException
     {
         if (mdl.id == 0)
         {
@@ -390,7 +388,7 @@ public class CourseDBUtil
         CourseDBUtil.handleMemberCreations(mdl, conn);
 
         NotesDBUtil.handleNoteChanges(mdl.notes, mdl.id, ENoteDomain.COURSE, conn);
-        AttachmentsDBUtil.handleAttachmentChanges(mdl.attachments, mdl.id, EAttachmentDomain.COURSE, session, conn);
+        AttachmentsDBUtil.handleAttachmentChanges(mdl.attachments, mdl.id, EAttachmentDomain.COURSE, conn);
     }
 
     /**
@@ -738,7 +736,7 @@ public class CourseDBUtil
      * @param conn
      * @throws SQLException
      */
-    public static void saveCourseLocation(Location location, SessionWrapper session, Connection conn)
+    public static void saveCourseLocation(Location location, Connection conn)
         throws SQLException
     {
         if (location.id == 0)
@@ -750,8 +748,7 @@ public class CourseDBUtil
             CourseDBUtil.updateLocation(location, conn);
         }
         ContactsDBUtil.handleContactChanges(location.contacts, location.id, EContactDomain.COURSELOC, conn);
-        AttachmentsDBUtil.handleAttachmentChanges(location.attachments, location.id, EAttachmentDomain.COURSELOC,
-            session, conn);
+        AttachmentsDBUtil.handleAttachmentChanges(location.attachments, location.id, EAttachmentDomain.COURSELOC, conn);
         NotesDBUtil.handleNoteChanges(location.notes, location.id, ENoteDomain.COURSELOC, conn);
     }
 

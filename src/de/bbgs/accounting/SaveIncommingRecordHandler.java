@@ -59,7 +59,7 @@ public class SaveIncommingRecordHandler implements IXmlServiceHandler
             InvoiceRecordsModel mdl = (InvoiceRecordsModel) request;
             conn = ConnectionPool.getConnection();
             conn.setAutoCommit(false);
-            AccountingDBUtils.handleInvoiceRecordsChanges(mdl.records, session, conn);
+            AccountingDBUtils.handleInvoiceRecordsChanges(mdl.records,  conn);
             conn.commit();
             rsp = new Response();
         }

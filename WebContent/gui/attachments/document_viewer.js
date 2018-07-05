@@ -161,6 +161,10 @@ DocumentViewer.prototype.createPlayer = function(url, mimeType, glass) {
         player.appendChild(source);
         break;
 
+    case "multipart":
+	alert("multipart comming soon");
+	break;
+	
     default:
         player = document.createElement("iframe");
         player.className = "docviewer-iframe center-to-parent";

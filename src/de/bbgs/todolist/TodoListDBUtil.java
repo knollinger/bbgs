@@ -10,7 +10,6 @@ import java.util.Collection;
 import de.bbgs.attachments.AttachmentsDBUtil;
 import de.bbgs.attachments.EAttachmentDomain;
 import de.bbgs.service.EAction;
-import de.bbgs.session.SessionWrapper;
 import de.bbgs.utils.DBUtils;
 
 /**
@@ -103,23 +102,22 @@ public class TodoListDBUtil
      * @param conn
      * @throws SQLException
      */
-    public static void handleTodoListChanges(Collection<TodoTask> tasks, int refId, ETaskDomain domain,
-        SessionWrapper session, Connection conn) throws SQLException
+    public static void handleTodoListChanges(Collection<TodoTask> tasks, int refId, ETaskDomain domain, Connection conn) throws SQLException
     {
         for (TodoTask task : tasks)
         {
             switch (task.action)
             {
                 case CREATE :
-                    TodoListDBUtil.createTask(task, refId, domain, session, conn);
+                    TodoListDBUtil.createTask(task, refId, domain, conn);
                     break;
 
                 case MODIFY :
-                    TodoListDBUtil.updateTask(task, refId, domain, session, conn);
+                    TodoListDBUtil.updateTask(task, refId, domain, conn);
                     break;
 
                 case REMOVE :
-                    TodoListDBUtil.removeTask(task, refId, domain, session, conn);
+                    TodoListDBUtil.removeTask(task, refId, domain, conn);
                     break;
 
                 default :
@@ -135,7 +133,7 @@ public class TodoListDBUtil
      * @param conn
      * @throws SQLException 
      */
-    private static void createTask(TodoTask task, int refId, ETaskDomain domain, SessionWrapper session, Connection conn) throws SQLException
+    private static void createTask(TodoTask task, int refId, ETaskDomain domain, Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -156,7 +154,7 @@ public class TodoListDBUtil
             rs = stmt.getGeneratedKeys();
             if(rs.next()) {
                 task.id = rs.getInt(1);
-                AttachmentsDBUtil.handleAttachmentChanges(task.attachments, task.id, EAttachmentDomain.TODOLIST, session, conn);
+                AttachmentsDBUtil.handleAttachmentChanges(task.attachments, task.id, EAttachmentDomain.TODOLIST, conn);
             }
         }
         finally
@@ -173,7 +171,7 @@ public class TodoListDBUtil
      * @param conn
      * @throws SQLException 
      */
-    private static void updateTask(TodoTask task, int refId, ETaskDomain domain, SessionWrapper session, Connection conn) throws SQLException
+    private static void updateTask(TodoTask task, int refId, ETaskDomain domain, Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
         try
@@ -190,7 +188,7 @@ public class TodoListDBUtil
             stmt.setInt(7, task.userId);
             stmt.setInt(8, task.id);
             stmt.executeUpdate();
-            AttachmentsDBUtil.handleAttachmentChanges(task.attachments, task.id, EAttachmentDomain.TODOLIST, session, conn);
+            AttachmentsDBUtil.handleAttachmentChanges(task.attachments, task.id, EAttachmentDomain.TODOLIST, conn);
         }
         finally
         {
@@ -205,7 +203,7 @@ public class TodoListDBUtil
      * @param conn
      * @throws SQLException 
      */
-    private static void removeTask(TodoTask task, int refId, ETaskDomain domain, SessionWrapper session, Connection conn) throws SQLException
+    private static void removeTask(TodoTask task, int refId, ETaskDomain domain, Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
         try

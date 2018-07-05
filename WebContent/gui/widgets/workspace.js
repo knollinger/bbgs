@@ -918,14 +918,14 @@ MainMenu.prototype.logout = function() {
  */
 var AboutDialog = function() {
 
-    WorkSpaceDialog.call(this, "Über das Projekt");
+  WorkSpaceFrame.call(this);
 
     var self = this;
     this.load("gui/widgets/about.html", function() {
 	self.enableOkButton();
     });
 }
-AboutDialog.prototype = Object.create(WorkSpaceDialog.prototype);
+AboutDialog.prototype = Object.create(WorkSpaceFrame.prototype);
 
 /*---------------------------------------------------------------------------*/
 /**
@@ -933,11 +933,11 @@ AboutDialog.prototype = Object.create(WorkSpaceDialog.prototype);
  */
 var LicenceDialog = function() {
 
-    WorkSpaceDialog.call(this, "Opensource Lizenzen");
+    WorkSpaceFrame.call(this);
 
     var self = this;
     this.load("gui/widgets/licences.html", function() {
 	self.enableOkButton();
     });
 }
-LicenceDialog.prototype = Object.create(WorkSpaceDialog.prototype);
+LicenceDialog.prototype = Object.create(WorkSpaceFrame.prototype);

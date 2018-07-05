@@ -51,5 +51,10 @@ public enum EAttachmentDomain
     /**
      * Attachments für ein Projekt
      */
-    PROJECT
+    PROJECT,
+    
+    /**
+     * Der Content von EMails
+     */
+    EMAIL
 }

@@ -10,7 +10,6 @@ import java.util.List;
 import de.bbgs.attachments.Attachment;
 import de.bbgs.attachments.AttachmentsDBUtil;
 import de.bbgs.attachments.EAttachmentDomain;
-import de.bbgs.session.SessionWrapper;
 import de.bbgs.utils.DBUtils;
 
 /**
@@ -192,8 +191,7 @@ public class FileSystemDBUtils
      * @param conn
      * @throws SQLException 
      */
-    public static void createFile(int parentId, String name, String mimeType, byte[] data, SessionWrapper session,
-        Connection conn) throws SQLException
+    public static void createFile(int parentId, String name, String mimeType, byte[] data, Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -213,7 +211,7 @@ public class FileSystemDBUtils
                 a.name = name;
                 a.mimeType = mimeType;
                 a.content = data;
-                AttachmentsDBUtil.createAttachment(a, fsoId, EAttachmentDomain.FILESYS, session, conn);
+                AttachmentsDBUtil.createAttachment(a, fsoId, EAttachmentDomain.FILESYS, conn);
             }
         }
         finally

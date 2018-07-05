@@ -1989,7 +1989,98 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	color: #808080;
 }
 
-/*---------------------------------------------------------------------------*
+/*---------------------------------------------------------------------------*/
+/**
+ * all about the Mailbox
+ */
+.mail-subpanel-content {
+	display: block;
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+
+.mail-cnr {
+    width: 100%;
+    border-width: 0 0 1px 0;
+    border-style: solid;
+    border-color: #d0d0d0;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex: 0 auto;
+    -moz-flex: 0 auto;
+    -ms-flex: 0 auto;
+    flex: 0 auto;
+    align-items: center;
+}
+
+.mail-cnr>input[type="radio"] {
+    -webkit-flex: 0 auto;
+    -moz-flex: 0 auto;
+    -ms-flex: 0 auto;
+    flex: 0 auto;
+    margin-right: 10px;
+}
+
+.mail-envelope {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    padding: 5px;
+}
+
+.mail-envelope-row {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: -webkit-row;
+    flex-direction: -moz-row;
+    flex-direction: -ms-row;
+    flex-direction: row;
+    margin-bottom: 5px;
+}
+
+.mail-envelope-subject {
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    font-weight: 600;
+}
+
+.mail-envelope-label {
+    -webkit-flex: 0 auto;
+    -moz-flex: 0 auto;
+    -ms-flex: 0 auto;
+    flex: 0 auto;
+    min-width: 3em;
+}
+
+.mail-envelope-address {
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+ 
+/*---------------------------------------------------------------------------*/
 /**
  * all about the todolist
  */

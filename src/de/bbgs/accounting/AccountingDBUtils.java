@@ -12,7 +12,6 @@ import de.bbgs.attachments.AttachmentsDBUtil;
 import de.bbgs.attachments.EAttachmentDomain;
 import de.bbgs.service.EAction;
 import de.bbgs.session.AccountDBUtil;
-import de.bbgs.session.SessionWrapper;
 import de.bbgs.utils.DBUtils;
 
 /**
@@ -349,23 +348,22 @@ public class AccountingDBUtils
      * @param conn
      * @throws SQLException
      */
-    public static void handleInvoiceRecordsChanges(Collection<? extends InvoiceRecord> records, SessionWrapper session,
-        Connection conn) throws SQLException
+    public static void handleInvoiceRecordsChanges(Collection<? extends InvoiceRecord> records, Connection conn) throws SQLException
     {
         for (InvoiceRecord record : records)
         {
             switch (record.action)
             {
                 case CREATE :
-                    AccountingDBUtils.createInvoiceRecord(record, session, conn);
+                    AccountingDBUtils.createInvoiceRecord(record, conn);
                     break;
 
                 case MODIFY :
-                    AccountingDBUtils.updateInvoiceRecord(record, session, conn);
+                    AccountingDBUtils.updateInvoiceRecord(record, conn);
                     break;
 
                 case REMOVE :
-                    AccountingDBUtils.deleteInvoiceRecord(record, session, conn);
+                    AccountingDBUtils.deleteInvoiceRecord(record, conn);
                     break;
 
                 default :
@@ -377,11 +375,10 @@ public class AccountingDBUtils
 
     /**
      * @param rec
-     * @param session
      * @param conn
      * @throws SQLException
      */
-    public static void createInvoiceRecord(InvoiceRecord rec, SessionWrapper session, Connection conn)
+    public static void createInvoiceRecord(InvoiceRecord rec, Connection conn)
         throws SQLException
     {
         PreparedStatement stmt = null;
@@ -400,8 +397,7 @@ public class AccountingDBUtils
             if (rs.next())
             {
                 rec.id = rs.getInt(1);
-                AttachmentsDBUtil.handleAttachmentChanges(rec.attachments, rec.id, EAttachmentDomain.ACCRECORD, session,
-                    conn);
+                AttachmentsDBUtil.handleAttachmentChanges(rec.attachments, rec.id, EAttachmentDomain.ACCRECORD, conn);
             }
         }
         finally
@@ -413,11 +409,10 @@ public class AccountingDBUtils
 
     /**
      * @param rec
-     * @param session
      * @param conn
      * @throws SQLException
      */
-    public static void updateInvoiceRecord(InvoiceRecord rec, SessionWrapper session, Connection conn)
+    public static void updateInvoiceRecord(InvoiceRecord rec, Connection conn)
         throws SQLException
     {
         PreparedStatement stmt = null;
@@ -431,8 +426,7 @@ public class AccountingDBUtils
             DBUtils.setDate(stmt, 5, rec.date);
             stmt.setInt(6, rec.id);
             stmt.executeUpdate();
-            AttachmentsDBUtil.handleAttachmentChanges(rec.attachments, rec.id, EAttachmentDomain.ACCRECORD, session,
-                conn);
+            AttachmentsDBUtil.handleAttachmentChanges(rec.attachments, rec.id, EAttachmentDomain.ACCRECORD, conn);
         }
         finally
         {
@@ -442,11 +436,10 @@ public class AccountingDBUtils
 
     /**
      * @param rec
-     * @param session
      * @param conn
      * @throws SQLException
      */
-    public static void deleteInvoiceRecord(InvoiceRecord rec, SessionWrapper session, Connection conn)
+    public static void deleteInvoiceRecord(InvoiceRecord rec, Connection conn)
         throws SQLException
     {
         PreparedStatement stmt = null;

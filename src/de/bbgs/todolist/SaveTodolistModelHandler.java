@@ -61,7 +61,7 @@ public class SaveTodolistModelHandler implements IXmlServiceHandler
             TodoListModel mdl = (TodoListModel)request;
             
             conn = ConnectionPool.getConnection();
-            TodoListDBUtil.handleTodoListChanges(mdl.tasks, 0, ETaskDomain.COMMON, session, conn);
+            TodoListDBUtil.handleTodoListChanges(mdl.tasks, 0, ETaskDomain.COMMON, conn);
             result = new Response();
         }
         catch (SQLException e)

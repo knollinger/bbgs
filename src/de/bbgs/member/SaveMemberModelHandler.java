@@ -87,11 +87,11 @@ public class SaveMemberModelHandler implements IXmlServiceHandler
                 AuditLog.logUpdate(this, session, conn, "UPDATE_MEMBER", Integer.valueOf(id), model.coreData.zname, model.coreData.vname);                
             }
             
-            MemberDBUtil.handleMemberInternalAttachment(model.coreData.image, model.coreData.imageMimeType, id, EAttachmentDomain.THUMBNAIL, session, conn);
-            MemberDBUtil.handleMemberInternalAttachment(model.coreData.mailsig, model.coreData.mailsigMimetype, id, EAttachmentDomain.MAILSIG, session, conn);
+            MemberDBUtil.handleMemberInternalAttachment(model.coreData.image, model.coreData.imageMimeType, id, EAttachmentDomain.THUMBNAIL, conn);
+            MemberDBUtil.handleMemberInternalAttachment(model.coreData.mailsig, model.coreData.mailsigMimetype, id, EAttachmentDomain.MAILSIG, conn);
 
             ContactsDBUtil.handleContactChanges(model.contacts, id, EContactDomain.MEMBER, conn);
-            AttachmentsDBUtil.handleAttachmentChanges(model.attachments, id, EAttachmentDomain.MEMBER, session, conn);
+            AttachmentsDBUtil.handleAttachmentChanges(model.attachments, id, EAttachmentDomain.MEMBER, conn);
             NotesDBUtil.handleNoteChanges(model.notes, id, ENoteDomain.MEMBER, conn);
             CourseDBUtil.handleMemberCourseChanges(model.courses, id, conn);
 

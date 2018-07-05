@@ -60,7 +60,7 @@ public class SaveCourseLocationModelHandler implements IXmlServiceHandler
         {
             conn = ConnectionPool.getConnection();
             conn.setAutoCommit(false);
-            CourseDBUtil.saveCourseLocation((Location)request, session, conn);
+            CourseDBUtil.saveCourseLocation((Location)request, conn);
             conn.commit();
             return new Response();
         }

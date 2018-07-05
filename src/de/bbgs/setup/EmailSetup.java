@@ -32,7 +32,10 @@ public class EmailSetup
         public String passwd;
 
         @XmlElement(name="use-start-tls")
-        public boolean useStartTLS;             
+        public boolean useStartTLS;  
+        
+        @XmlElement(name="protocol")
+        public String protocol;
     }
 
     /**

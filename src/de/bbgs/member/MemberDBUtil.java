@@ -19,7 +19,6 @@ import de.bbgs.contacts.EContactDomain;
 import de.bbgs.courses.CourseDBUtil;
 import de.bbgs.dsgvo.EDSEState;
 import de.bbgs.mail.MailDBUtils;
-import de.bbgs.session.SessionWrapper;
 import de.bbgs.utils.DBUtils;
 
 /**
@@ -142,7 +141,7 @@ public class MemberDBUtil
      * @throws SQLException
      */
     public static void handleMemberInternalAttachment(byte[] data, String mimeType, int memberId,
-        EAttachmentDomain domain, SessionWrapper session, Connection conn) throws SQLException
+        EAttachmentDomain domain, Connection conn) throws SQLException
     {
         if (data != null && data.length != 0 && mimeType != null && mimeType.length() != 0)
         {
@@ -158,12 +157,11 @@ public class MemberDBUtil
                 {
                     DBUtils.closeQuitly(stmt);
                     stmt = conn.prepareStatement(
-                        "insert into attachments set domain=?, ref_id=?, file=?, mimetype=?, attached_by=?, file_name=?");
+                        "insert into attachments set domain=?, ref_id=?, file=?, mimetype=?, file_name=?");
                     stmt.setString(1, domain.name());
                     stmt.setInt(2, memberId);
                     stmt.setBlob(3, new ByteArrayInputStream(data));
                     stmt.setString(4, mimeType);
-                    stmt.setString(5, session.getAccountName());
                     stmt.setString(6, domain.name());
                     stmt.executeUpdate();
                 }

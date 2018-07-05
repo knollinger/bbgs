@@ -66,7 +66,7 @@ public class SaveCourseModelHandler implements IXmlServiceHandler
             CourseModel model = (CourseModel) request;
 
             conn = ConnectionPool.getConnection();
-            CourseDBUtil.saveCourseModel(model, session, conn);
+            CourseDBUtil.saveCourseModel(model, conn);
             rsp = new Response();
         }
         catch (SQLException e)

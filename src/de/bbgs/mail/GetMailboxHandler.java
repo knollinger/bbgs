@@ -1,25 +1,21 @@
 package de.bbgs.mail;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.Properties;
 
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.search.SearchTerm;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import de.bbgs.service.IXmlServiceHandler;
 import de.bbgs.session.SessionWrapper;
-import de.bbgs.setup.EmailSetup;
-import de.bbgs.setup.SetupReader;
+import de.bbgs.utils.ConnectionPool;
+import de.bbgs.utils.DBUtils;
 import de.bbgs.xml.ErrorResponse;
 import de.bbgs.xml.IJAXBObject;
 
@@ -66,15 +62,31 @@ public class GetMailboxHandler implements IXmlServiceHandler
     public IJAXBObject handleRequest(IJAXBObject request, SessionWrapper session)
     {
         IJAXBObject rsp = null;
-        Store store = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
 
         try
         {
-            store = this.getMailbox();
-
             Response response = new Response();
-            response.inbox = this.readFolder(store, "INBOX");
-            response.sent = this.readFolder(store, "[Gmail]/Sent Mail");
+
+            conn = ConnectionPool.getConnection();
+            stmt = conn.prepareStatement(
+                "select m.*, f.folder_name from mailbox m left join `mailbox_folders` f on m.`id`=f.`ref_id` order by  f.`folder_name`, m.`sent-date` DESC");
+            rs = stmt.executeQuery();
+            while (rs.next())
+            {
+                MessageDesc desc = new MessageDesc();
+                desc.id = rs.getInt("m.id");
+                desc.folderName = rs.getString("f.folder_name");
+                desc.from = rs.getString("m.from");
+                desc.to = this.getRecipients(desc.id, conn);
+                desc.folderName = rs.getString("f.folder_name");
+                desc.sent = DBUtils.getDate(rs, "m.sent-date");
+                desc.received = DBUtils.getDate(rs, "m.recv-date");
+                desc.subject = rs.getString("m.subject");
+                response.messages.add(desc);
+            }
             rsp = response;
         }
         catch (Exception e)
@@ -83,103 +95,44 @@ public class GetMailboxHandler implements IXmlServiceHandler
         }
         finally
         {
-            MailHelper.closeQuietly(store);
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+            DBUtils.closeQuitly(conn);
         }
 
         return rsp;
     }
 
     /**
-     * @param store
-     * @param string
+     * @param id
+     * @param conn
      * @return
-     * @throws MessagingException 
+     * @throws SQLException
      */
-    private FolderDesc readFolder(Store store, String folderName) throws MessagingException
+    public Collection<String> getRecipients(int id, Connection conn) throws SQLException
     {
-        Folder f = store.getFolder(folderName);
-        f.open(Folder.READ_ONLY);
+        Collection<String> result = new ArrayList<>();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
 
-        FolderDesc result = new FolderDesc();
-        result.name = f.getFullName();
-        result.unread = f.getUnreadMessageCount();
-
-        MailMatcher matcher = new MailMatcher(new Date(), new Date());
-        for (Message m : f.search(matcher))
+        try
         {
-
-            MessageDesc d = new MessageDesc();
-            d.subject = m.getSubject();
-            d.from = m.getFrom().toString();
-            d.to = m.getAllRecipients().toString();
-            d.date = m.getSentDate();
-            result.messages.add(d);
-        }
-        f.close(false);
-        return result;
-    }
-
-    /**
-     * @return
-     * @throws JAXBException
-     * @throws MessagingException
-     */
-    private Store getMailbox() throws JAXBException, MessagingException
-    {
-        Properties props = new Properties();
-        props.setProperty("mail.store.protocol", "imaps");
-        Session session = Session.getDefaultInstance(props, null);
-        Store store = session.getStore("imaps");
-
-        EmailSetup setup = SetupReader.getSetup().getEmailSetup();
-        String host = setup.receive.host;
-        int port = setup.receive.port;
-        String userid = setup.receive.user;
-        String passwd = setup.receive.passwd;
-        store.connect(host, port, userid, passwd);
-
-        return store;
-    }
-
-    /**
-     * 
-     * @author anderl
-     *
-     */
-    private class MailMatcher extends SearchTerm
-    {
-        private Date from;
-        private Date until;
-
-        /**
-         * @param from
-         * @param until
-         */
-        public MailMatcher(Date from, Date until)
-        {
-            this.from = from;
-            this.until = until;
-        }
-
-        /* (non-Javadoc)
-         * @see javax.mail.search.SearchTerm#match(javax.mail.Message)
-         */
-        @Override
-        public boolean match(Message msg)
-        {
-            try
+            stmt = conn.prepareStatement("select * from mailbox_recipients where ref_id=?");
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            while (rs.next())
             {
-                Date sent = msg.getSentDate();
-                return (sent.compareTo(this.from) >= 0 && sent.compareTo(this.until) <= 0);
+                result.add(rs.getString("to"));
             }
-            catch (MessagingException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            return false;
+            return result;
+        }
+        finally
+        {
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
         }
     }
+
 
     @XmlRootElement(name = "get-mailbox-req")
     @XmlType(name = "GetMailboxHandler.Request")
@@ -193,36 +146,35 @@ public class GetMailboxHandler implements IXmlServiceHandler
      */
     public static class MessageDesc
     {
+        @XmlElement(name = "id")
+        public int id;
+
+        @XmlElement(name = "folder")
+        public String folderName;
+
+        @XmlElement(name = "from")
         public String from;
-        public String to;
-        public Date date;
+
+        @XmlElementWrapper(name = "recipients")
+        @XmlElement(name = "to")
+        public Collection<String> to = new ArrayList<>();
+
+        @XmlElement(name = "sent")
+        public String sent;
+
+        @XmlElement(name = "recv")
+        public String received;
+
+        @XmlElement(name = "subject")
         public String subject;
     }
 
-    /**
-     * @author anderl
-     *
-     */
-    public static class FolderDesc
-    {
 
-        @XmlElement(name = "name")
-        public String name;
-
-        @XmlElement(name = "unread")
-        public int unread;
-
-        @XmlElement(name = "message")
-        public Collection<MessageDesc> messages = new ArrayList<>();
-    }
     @XmlRootElement(name = "get-mailbox-ok-rsp")
     @XmlType(name = "GetMailboxHandler.Response")
     public static class Response implements IJAXBObject
     {
-        @XmlElement(name = "inbox")
-        public FolderDesc inbox = new FolderDesc();
-
-        @XmlElement(name = "sent")
-        public FolderDesc sent = new FolderDesc();
+        @XmlElement(name = "msg")
+        public Collection<MessageDesc> messages = new ArrayList<>();
     }
 }

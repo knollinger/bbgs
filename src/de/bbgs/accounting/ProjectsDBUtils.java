@@ -13,7 +13,6 @@ import de.bbgs.attachments.EAttachmentDomain;
 import de.bbgs.notes.ENoteDomain;
 import de.bbgs.notes.NotesDBUtil;
 import de.bbgs.service.EAction;
-import de.bbgs.session.SessionWrapper;
 import de.bbgs.utils.DBUtils;
 
 /**
@@ -168,7 +167,7 @@ public class ProjectsDBUtils
      * @param conn
      * @throws SQLException 
      */
-    public static void saveProjectModel(ProjectModel mdl, SessionWrapper session, Connection conn) throws SQLException
+    public static void saveProjectModel(ProjectModel mdl, Connection conn) throws SQLException
     {
         int projId = mdl.coreData.id;
         switch (mdl.coreData.action)
@@ -186,9 +185,9 @@ public class ProjectsDBUtils
         }
 
         NotesDBUtil.handleNoteChanges(mdl.notes, projId, ENoteDomain.PROJECT, conn);
-        AttachmentsDBUtil.handleAttachmentChanges(mdl.attachments, projId, EAttachmentDomain.PROJECT, session, conn);
+        AttachmentsDBUtil.handleAttachmentChanges(mdl.attachments, projId, EAttachmentDomain.PROJECT, conn);
         ProjectsDBUtils.savePlanningItems(projId, mdl.planningItems, conn);
-        ProjectsDBUtils.saveProjectItem(projId, mdl.projAccount, session, conn);
+        ProjectsDBUtils.saveProjectItem(projId, mdl.projAccount, conn);
     }
 
     /**
@@ -254,8 +253,7 @@ public class ProjectsDBUtils
      * @param conn
      * @throws SQLException 
      */
-    private static void saveProjectItem(int projId, ProjectInvoiceItem projItem, SessionWrapper session,
-        Connection conn) throws SQLException
+    private static void saveProjectItem(int projId, ProjectInvoiceItem projItem, Connection conn) throws SQLException
     {
         int itemId = projItem.id;
         projItem.refId = projId;
@@ -277,13 +275,13 @@ public class ProjectsDBUtils
         {
             r.to = itemId;
         }
-        AccountingDBUtils.handleInvoiceRecordsChanges(projItem.incomeRecords, session, conn);
+        AccountingDBUtils.handleInvoiceRecordsChanges(projItem.incomeRecords, conn);
 
         for (InvoiceRecord r : projItem.outgoRecords)
         {
             r.from = itemId;
         }
-        AccountingDBUtils.handleInvoiceRecordsChanges(projItem.outgoRecords, session, conn);
+        AccountingDBUtils.handleInvoiceRecordsChanges(projItem.outgoRecords, conn);
     }
 
     /**

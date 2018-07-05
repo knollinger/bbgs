@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -69,7 +68,7 @@ public class UploadAttachmentsHandler implements IXmlServiceHandler
             conn = ConnectionPool.getConnection();
             conn.setAutoCommit(false);
 
-            FileSystemDBUtils.createFile(req.parentId, req.name, req.mimeType, req.data, session, conn);
+            FileSystemDBUtils.createFile(req.parentId, req.name, req.mimeType, req.data, conn);
             
             conn.commit();
             rsp = new Response();

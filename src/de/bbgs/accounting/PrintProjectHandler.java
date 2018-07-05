@@ -1,12 +1,5 @@
 package de.bbgs.accounting;
 
-import de.bbgs.pdf.DocBuilder;
-import de.bbgs.pdf.PDFCreator;
-import de.bbgs.pdf.DocBuilder.DocPart;
-import de.bbgs.service.IGetDocServiceHandler;
-import de.bbgs.session.SessionWrapper;
-import de.bbgs.utils.ConnectionPool;
-import de.bbgs.utils.DBUtils;
 import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.Date;
@@ -15,8 +8,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import de.bbgs.pdf.DocBuilder;
+import de.bbgs.pdf.DocBuilder.DocPart;
+import de.bbgs.pdf.PDFCreator;
+import de.bbgs.service.IGetDocServiceHandler;
+import de.bbgs.session.SessionWrapper;
+import de.bbgs.utils.ConnectionPool;
+import de.bbgs.utils.DBUtils;
 
 /**
  * @author anderl

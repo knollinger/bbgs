@@ -18,9 +18,6 @@ public class Attachment
 	@XmlElement(name = "content")
 	public byte[] content = {};
 
-	@XmlElement(name = "attached-by")
-	public String attachedBy = "";
-
 	@XmlElement(name = "attached-at")
 	public String attachDate = "";
     

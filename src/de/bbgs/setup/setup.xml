@@ -23,6 +23,7 @@
 			<use-start-tls>true</use-start-tls>
 			<user>bbgs.verwaltung</user>
 			<pwd>Sun12shine</pwd>
+			<protocol>imaps</protocol>
 		</receive>
 	</email>
 

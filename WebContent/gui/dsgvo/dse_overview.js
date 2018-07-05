@@ -306,7 +306,7 @@ DSESubPanelPending.prototype.fillTable = function() {
 
     }
 
-    var xpath = "/get-dsgvo-overview-ok-rsp/dsgvo-item[state='PENDING']";
+    var xpath = "//get-dsgvo-overview-ok-rsp/dsgvo-item[state='PENDING']";
     this.model.createTableBinding(this.table, fields, xpath, onclick);
 }
 
@@ -315,6 +315,17 @@ var DSESubPanelRejected = function(parentFrame, targetCnr, model) {
 
     DSESubPanel.call(this, parentFrame, targetCnr, [ "", "Name", "Vorname", "abgelehnt am", "Email" ]);
     this.model = model;
+    
+    this.actionRemove = new WorkSpaceFrameAction("gui/images/person-remove.svg", "Ein Mitglied löschen", function() {
+	self.removeMember();
+    });
+    this.addAction(this.actionRemove);
+    this.actionRemove.hide();
+
+    var self = this;
+    this.model.addChangeListener("//get-dsgvo-overview-ok-rsp", function() {
+	self.fillTable();
+    });
     this.fillTable();
 }
 DSESubPanelRejected.prototype = Object.create(DSESubPanel.prototype);
@@ -336,12 +347,55 @@ DSESubPanelRejected.prototype.fillTable = function() {
     fields.push("date");
     fields.push("email");
 
+    var self = this;
     var onclick = function(tr, item) {
-
+	self.selection = item;
+	self.actionRemove.show();
     }
 
     var xpath = "/get-dsgvo-overview-ok-rsp/dsgvo-item[state='REJECTED']";
     this.model.createTableBinding(this.table, fields, xpath, onclick);
+}
+
+/**
+ * 
+ */
+DSESubPanelRejected.prototype.removeMember = function() {
+
+    var self = this;
+    var xpath = XmlUtils.getXPathTo(this.selection);
+    var zname = this.model.getValue(xpath + "/zname");
+    var vname = this.model.getValue(xpath + "/vname");
+    var messg = MessageCatalog.getMessage("QUERY_REMOVE_MEMBER", zname, vname);
+    var title = MessageCatalog.getMessage("QUERY_REMOVE_MEMBER_TITLE");
+    new MessageBox(MessageBox.QUERY, title, messg, function() {
+
+	var caller = new ServiceCaller();
+	caller.onSuccess = function(rsp) {
+	    switch (rsp.documentElement.nodeName) {
+	    case "delete-member-ok-rsp":
+		self.model.removeElement(xpath);
+		self.selection = null;
+		self.actionRemove.hide();
+		break;
+
+	    case "error-response":
+		var messg = MessageCatalog.getMessage("MEMBER_REMOVE_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
+		var title = MessageCatalog.getMessage("MEMBER_REMOVE_ERROR_TITLE");
+		new MessageBox(MessageBox.ERROR, title, messg);
+		break;
+	    }
+	}
+	caller.onError = function(req, status) {
+	    var messg = MessageCatalog.getMessage("MEMBER_REMOVE_TECH_ERROR", status);
+	    var title = MessageCatalog.getMessage("MEMBER_REMOVE_ERROR_TITLE");
+	    new MessageBox(MessageBox.ERROR, title, messg);
+	}
+
+	var req = XmlUtils.createDocument("delete-member-req");
+	XmlUtils.setNode(req, "id", self.selection.getElementsByTagName("id")[0].textContent);
+	caller.invokeService(req);
+    });
 }
 /*---------------------------------------------------------------------------*/
 var DSESubPanelAccepted = function(parentFrame, targetCnr, model) {
@@ -358,12 +412,7 @@ DSESubPanelAccepted.prototype = Object.create(DSESubPanel.prototype);
 DSESubPanelAccepted.prototype.fillTable = function() {
 
     var fields = [];
-    fields.push(function(td, item) {
-	var cb = document.createElement("input");
-	cb.type = "radio";
-	cb.name = "dsgvo_sel_accepted";
-	return cb;
-    });
+    fields.push("");
     fields.push("zname");
     fields.push("vname");
     fields.push("date");
