@@ -69,21 +69,6 @@ de.bbgs.todolist.SaveTodolistModelHandler
 
 #------------------------------------------------------------------------------
 #
-# all about accounting
-#
-de.bbgs.accounting.GetAccountsOverviewHandler
-
-de.bbgs.accounting.GetInvoiceItemModelHandler
-de.bbgs.accounting.SaveInvoiceItemModelHandler
-de.bbgs.accounting.GetIncommingRecordsModelHandler
-de.bbgs.accounting.SaveIncommingRecordHandler
-
-de.bbgs.accounting.GetProjectsOverviewHandler
-de.bbgs.accounting.GetProjectModelHandler
-de.bbgs.accounting.SaveProjectModelHandler
-
-#------------------------------------------------------------------------------
-#
 # all about filesystem
 #
 de.bbgs.filesystem.GetFolderContentHandler
@@ -105,3 +90,16 @@ de.bbgs.registration.SaveRegistrationModelHandler
 #
 de.bbgs.dsgvo.GetDSEOverviewHandler
 de.bbgs.dsgvo.SendDSEHandler
+
+#------------------------------------------------------------------------------
+#
+# all about accounting
+#
+de.bbgs.accounting.GetInvoiceItemsHandler
+de.bbgs.accounting.SaveInvoiceItemsHandler
+
+de.bbgs.accounting.GetAllIncommingsHandler
+de.bbgs.accounting.SaveIncommingsHandler
+
+de.bbgs.accounting.GetAllProjectsHandler
+de.bbgs.accounting.GetProjectModelHandler

@@ -64,7 +64,7 @@ MailBoxViewer.prototype.renderOneMsg = function(msg) {
     if (folderName) {
 
 	var panel = this.getSubPanelForFolderName(folderName.textContent);
-	
+
 	panel.addMessage(XmlUtils.getXPathTo(msg));
     }
 }
@@ -106,7 +106,7 @@ var MailBoxFolderSubPanel = function(parentFrame, targetCnr, name, model) {
     this.content = document.createElement("div");
     this.content.className = "mail-subpanel-content";
     this.targetCnr.appendChild(this.content);
-    
+
     this.actionShow = this.createShowAction();
     this.actionRemove = this.createRemoveAction();
 }
@@ -117,7 +117,14 @@ MailBoxFolderSubPanel.prototype = Object.create(WorkSpaceTabPane.prototype);
  */
 MailBoxFolderSubPanel.prototype.createShowAction = function() {
 
+    var self = this;
     var action = new WorkSpaceFrameAction("gui/images/mail-show.svg", "Mail anzeigen", function() {
+
+	// var title = self.model.getValue(self.currSel + "/subject");
+	var blobId = self.model.getValue(self.currSel + "/blob-id");
+	// var url = "getDocument/mail-content?blob-id=" + blobId;
+	// new DocumentViewer(url, title);
+	new MailViewer(self.model, self.currSel);
     });
     this.addAction(action);
     action.hide();
@@ -143,29 +150,28 @@ MailBoxFolderSubPanel.prototype.addMessage = function(xpath) {
 
     var cnr = document.createElement("div");
     cnr.className = "mail-cnr";
-    
+
     var radio = document.createElement("input");
-    radio.type = "radio",
-    radio.name = "mail-sel";
+    radio.type = "radio", radio.name = "mail-sel";
     radio.className = "mail-selector";
     cnr.appendChild(radio);
-    
+
     var envelope = document.createElement("div");
     envelope.className = "mail-envelope";
     cnr.appendChild(envelope);
-    
+
     envelope.appendChild(this.createHeaderRow(xpath));
     envelope.appendChild(this.createFromRow(xpath));
     envelope.appendChild(this.createRecipientsRow(xpath));
-    
+
     var self = this;
     cnr.addEventListener("click", function() {
 	radio.click();
 	self.actionShow.show();
 	self.actionRemove.show();
+	self.currSel = xpath;
     });
-    
-    
+
     this.content.appendChild(cnr);
 }
 
@@ -173,20 +179,20 @@ MailBoxFolderSubPanel.prototype.addMessage = function(xpath) {
  * 
  */
 MailBoxFolderSubPanel.prototype.createHeaderRow = function(xpath) {
-    
+
     var row = document.createElement("div");
     row.className = "mail-envelope-row";
-    
+
     var subject = document.createElement("div");
     subject.className = "mail-envelope-subject";
     subject.textContent = this.model.getValue(xpath + "/subject");
     row.appendChild(subject);
-    
+
     var date = document.createElement("div");
     date.className = "mail-envelope-label";
     date.textContent = this.model.getValue(xpath + "/sent");
     row.appendChild(date);
-    
+
     return row;
 }
 
@@ -194,7 +200,7 @@ MailBoxFolderSubPanel.prototype.createHeaderRow = function(xpath) {
  * 
  */
 MailBoxFolderSubPanel.prototype.createFromRow = function(xpath) {
-    
+
     var row = document.createElement("div");
     row.className = "mail-envelope-row";
 
@@ -202,22 +208,21 @@ MailBoxFolderSubPanel.prototype.createFromRow = function(xpath) {
     label.className = "mail-envelope-label";
     label.textContent = "Von: ";
     row.appendChild(label);
-    
+
     var address = document.createElement("div");
     address.className = "mail-envelope-address";
     address.textContent = this.model.getValue(xpath + "/from");
     row.appendChild(address);
-    
-    return row;
-    
-}
 
+    return row;
+
+}
 
 /**
  * 
  */
 MailBoxFolderSubPanel.prototype.createRecipientsRow = function(xpath) {
-    
+
     var row = document.createElement("div");
     row.className = "mail-envelope-row";
 
@@ -225,21 +230,52 @@ MailBoxFolderSubPanel.prototype.createRecipientsRow = function(xpath) {
     label.className = "mail-envelope-label";
     label.textContent = "An: ";
     row.appendChild(label);
-    
+
     var address = document.createElement("div");
     address.className = "mail-envelope-address";
-    
+
     address.textContent = "";
     var allRecipients = this.model.evaluateXPath(xpath + "/recipients/to");
-    for(var i = 0; i < allRecipients.length; i++) {
-	if(address.textContent != "") {
+    for (var i = 0; i < allRecipients.length; i++) {
+	if (address.textContent != "") {
 	    address.textContent += ", ";
 	}
 	address.textContent += allRecipients[i].textContent;
     }
 
     row.appendChild(address);
-    
+
     return row;
-    
+
 }
+
+/*---------------------------------------------------------------------------*/
+/**
+ * MailViewer
+ */
+var MailViewer = function(model, xpath) {
+
+    WorkSpaceFrame.call(this);
+
+    this.model = model;
+    this.xpath = xpath;
+    var self = this;
+    this.load("gui/mail/mail_viewer.html", function() {
+
+	UIUtils.getElement("mail-viewer-subject").textContent = self.model.getValue(self.xpath + "/subject");
+	UIUtils.getElement("mail-viewer-date").textContent = self.model.getValue(self.xpath + "/sent") ;
+	UIUtils.getElement("mail-viewer-from").textContent = self.model.getValue(self.xpath + "/from");
+
+	var allRecipients = self.model.evaluateXPath(self.xpath + "/recipients/to");
+	var value = "";
+	for (var i = 0; i < allRecipients.length; i++) {
+	    value += allRecipients[i].textContent + ", ";
+	}
+	UIUtils.getElement("mail-viewer-to").textContent = value;
+
+	var blobId = self.model.getValue(self.xpath + "/blob-id");
+	var url = "getDocument/mail-content?blob-id=" + blobId;
+	UIUtils.getElement("mail-viewer-iframe").src = url;
+    });
+}
+MailViewer.prototype = Object.create(WorkSpaceFrame.prototype);

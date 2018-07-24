@@ -18,7 +18,7 @@ var MainNavigation = function() {
         new CourseMainNavigation();
     });
     
-    btn = this.addNavigationButton("gui/images/money.svg", "Rechnungs Wesen", function() {
+    btn = this.addNavigationButton("gui/images/money.svg", "Buchhaltung", function() {
         new AccountingNavigation();
     });
     UIUtils.addClass(btn, "hide-on-mobile");
@@ -26,10 +26,6 @@ var MainNavigation = function() {
     btn = this.addNavigationButton("gui/images/mail.svg", "Mail/SMS", function() {
         new MailNavigation();
     });
-
-//    btn = this.addNavigationButton("gui/images/document.svg", "Dokumente verwalten", function() {
-//	new FileSystemExplorer();
-//    });
 
     btn = this.addNavigationButton("gui/images/notes.svg", "TODO-Liste", function() {
 	new TodoTasksOverview();

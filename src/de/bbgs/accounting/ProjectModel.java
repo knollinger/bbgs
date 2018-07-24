@@ -8,8 +8,6 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import de.bbgs.attachments.Attachment;
-import de.bbgs.notes.Note;
 import de.bbgs.xml.IJAXBObject;
 
 /**
@@ -21,40 +19,21 @@ import de.bbgs.xml.IJAXBObject;
 public class ProjectModel implements IJAXBObject
 {
     @XmlElement(name="core-data")
-    public Project coreData  = new Project();
-
-    @XmlElementWrapper(name="attachments")
-    @XmlElement(name="attachment")
-    public Collection<Attachment> attachments = new ArrayList<>();
-
-    @XmlElementWrapper(name="notes")
-    @XmlElement(name="note")
-    public Collection<Note> notes = new ArrayList<>();
-
-    @XmlElementWrapper(name="planning-items")
+    public ProjectDescription coreData = new ProjectDescription();
+    
+    @XmlElement(name="project-item")
+    public InvoiceItem projectItem = new InvoiceItem();
+    
     @XmlElement(name="planning-item")
+    @XmlElementWrapper(name="planning-items")
     public Collection<PlanningItem> planningItems = new ArrayList<>();
 
-    @XmlElement(name="proj-item")
-    public ProjectInvoiceItem projAccount = new ProjectInvoiceItem();
+    @XmlElement(name="invoice-record")
+    @XmlElementWrapper(name="invoice-records")
+    public Collection<InvoiceRecord> invoiceRecords = new ArrayList<>();
 
-    @XmlElementWrapper(name="invoice-items")
-    @XmlElement(name="invoice-item")
+    @XmlElement(name="inout-item")
+    @XmlElementWrapper(name="inout-items")
     public Collection<InvoiceItem> invoiceItems = new ArrayList<>();
-    
-    /**
-     * Präsentiert das InvoiceItem für das Projekt und hält alle InvoiceRecords,
-     * welche auf das Projekt referenzieren
-     */
-    public static class ProjectInvoiceItem extends InvoiceItem
-    {
-        @XmlElementWrapper(name = "income-records")
-        @XmlElement(name = "invoice-record")
-        public Collection<InvoiceRecord> incomeRecords = new ArrayList<>();
-
-        @XmlElementWrapper(name = "outgo-records")
-        @XmlElement(name = "invoice-record")
-        public Collection<InvoiceRecord> outgoRecords = new ArrayList<>();
-    }
 
 }

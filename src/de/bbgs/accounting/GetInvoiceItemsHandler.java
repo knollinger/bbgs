@@ -15,8 +15,13 @@ import de.bbgs.utils.DBUtils;
 import de.bbgs.xml.ErrorResponse;
 import de.bbgs.xml.IJAXBObject;
 
-public class SaveInvoiceItemModelHandler implements IXmlServiceHandler
+/**
+ * Liefert die Liste aller InvoiceItems
+ *
+ */
+public class GetInvoiceItemsHandler implements IXmlServiceHandler
 {
+
     /* (non-Javadoc)
      * @see de.bbgs.service.IXmlServiceHandler#needsSession()
      */
@@ -32,7 +37,7 @@ public class SaveInvoiceItemModelHandler implements IXmlServiceHandler
     @Override
     public Class<? extends IJAXBObject> getResponsibleFor()
     {
-        return InvoiceItemModel.class;
+        return Request.class;
     }
 
     /* (non-Javadoc)
@@ -42,8 +47,8 @@ public class SaveInvoiceItemModelHandler implements IXmlServiceHandler
     public Collection<Class<? extends IJAXBObject>> getUsedJaxbClasses()
     {
         Collection<Class<? extends IJAXBObject>> result = new ArrayList<>();
-        result.add(InvoiceItemModel.class);
-        result.add(Response.class);
+        result.add(Request.class);
+        result.add(InvoiceItemsModel.class);
         return result;
     }
 
@@ -53,18 +58,15 @@ public class SaveInvoiceItemModelHandler implements IXmlServiceHandler
     @Override
     public IJAXBObject handleRequest(IJAXBObject request, SessionWrapper session)
     {
-        IJAXBObject rsp = null;
         Connection conn = null;
+        IJAXBObject rsp = null;
         try
         {
             conn = ConnectionPool.getConnection();
-            conn.setAutoCommit(false);
-
-            InvoiceItemModel mdl = (InvoiceItemModel) request;
-            AccountingDBUtils.handleInvoiceItemModelChanges(mdl, conn);
             
-            conn.commit();
-            rsp = new Response();
+            InvoiceItemsModel result = new InvoiceItemsModel();
+            result.items.addAll(AccountingDBUtils.getAllInvoiceItems(conn));
+            rsp = result;
         }
         catch (SQLException e)
         {
@@ -77,10 +79,13 @@ public class SaveInvoiceItemModelHandler implements IXmlServiceHandler
         return rsp;
     }
 
-    @XmlRootElement(name = "save-invoice-items-ok-rsp")
-    @XmlType(name = "SaveInvoiceItemModelHandler.Response")
-    public static class Response implements IJAXBObject
+    /**
+     * Das Request-Objekt
+     *
+     */
+    @XmlRootElement(name = "get-invoice-items-req")
+    @XmlType(name = "GetInvoiceItemsHandler.Request")
+    public static class Request implements IJAXBObject
     {
-
     }
 }

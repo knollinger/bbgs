@@ -16,9 +16,9 @@ import de.bbgs.xml.ErrorResponse;
 import de.bbgs.xml.IJAXBObject;
 
 /**
- * 
+ * liefert die Übersicht aller Kurse welche als Projekt markiert sind (Ausfahrten, Tages-Ausflüge, ...)
  */
-public class SaveIncommingRecordHandler implements IXmlServiceHandler
+public class GetAllProjectsHandler implements IXmlServiceHandler
 {
 
     /* (non-Javadoc)
@@ -36,15 +36,15 @@ public class SaveIncommingRecordHandler implements IXmlServiceHandler
     @Override
     public Class<? extends IJAXBObject> getResponsibleFor()
     {
-        return InvoiceRecordsModel.class;
+        return Request.class;
     }
 
     @Override
     public Collection<Class<? extends IJAXBObject>> getUsedJaxbClasses()
     {
         Collection<Class<? extends IJAXBObject>> result = new ArrayList<>();
-        result.add(InvoiceRecordsModel.class);
-        result.add(Response.class);
+        result.add(Request.class);
+        result.add(ProjectsModel.class);
         return result;
     }
 
@@ -56,12 +56,11 @@ public class SaveIncommingRecordHandler implements IXmlServiceHandler
 
         try
         {
-            InvoiceRecordsModel mdl = (InvoiceRecordsModel) request;
             conn = ConnectionPool.getConnection();
-            conn.setAutoCommit(false);
-            AccountingDBUtils.handleInvoiceRecordsChanges(mdl.records,  conn);
-            conn.commit();
-            rsp = new Response();
+            
+            ProjectsModel response = new ProjectsModel();
+            response.projects.addAll(AccountingDBUtils.getAllProjects(conn));
+            rsp = response;
         }
         catch (SQLException e)
         {
@@ -73,11 +72,9 @@ public class SaveIncommingRecordHandler implements IXmlServiceHandler
         }
         return rsp;
     }
-
-    @XmlRootElement(name = "save-invoice-record-ok-rsp")
-    @XmlType(name = "SaveInvoiceRecordHandler.Response")
-    public static class Response implements IJAXBObject
+    @XmlRootElement(name = "get-all-projects-req")
+    @XmlType(name = "GetAllProjectsHandler.Request")
+    public static class Request implements IJAXBObject
     {
     }
-
 }

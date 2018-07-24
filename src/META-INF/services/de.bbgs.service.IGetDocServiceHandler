@@ -6,10 +6,12 @@ de.bbgs.attachments.GetAttachmentHandler
 de.bbgs.courses.GetCourseOverviewDocumentHandler
 de.bbgs.courses.GetCourseDetailsDocumentHandler
 
-de.bbgs.accounting.GetInvoiceRecordsDocumentHandler
-de.bbgs.accounting.PrintProjectHandler
-de.bbgs.accounting.PrintInvoiceItemsOverviewHandler
-
 de.bbgs.todolist.GetPinboardDocumentHandler
 
 de.bbgs.dsgvo.AcceptDSEhandler
+
+de.bbgs.accounting.PrintIncommingsHandler
+
+de.bbgs.mail.GetMailContentHandler
+
+

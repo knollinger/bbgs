@@ -1,39 +1,24 @@
 package de.bbgs.accounting;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import de.bbgs.accounting.ProjectModel.ProjectInvoiceItem;
-import de.bbgs.attachments.AttachmentsDBUtil;
-import de.bbgs.attachments.EAttachmentDomain;
 import de.bbgs.service.EAction;
-import de.bbgs.session.AccountDBUtil;
 import de.bbgs.utils.DBUtils;
 
 /**
+ * Die Datenbank-Werkzeuge für die Buchhaltung
  *
  */
 public class AccountingDBUtils
 {
-    private static final String DELETE_ITEM_SQL = "delete from invoice_items where id=?";
-    private static final String UPDATE_ITEM_SQL = "update invoice_items set ref_id=?, name=?, description=?, konto=?, type=? where id=?";
-    private static final String CREATE_ITEM_SQL = "insert into invoice_items set ref_id=?, name=?, description=?, konto=?, type=?";
-    private static final String GET_ITEMS_SQL = "select * from invoice_items order by konto, name";
-    private static final String GET_ITEMS_BYTYPE_SQL = "select * from invoice_items where type=? order by konto, name";
-    private static final String GET_PROJECT_ITEM_SQL = "select * from invoice_items where ref_id=? order by konto, name";
-    private static final String GET_ITEMS_BYPROJECT_SQL = "select * from invoice_items where ref_id=? order by konto, name";
-
-    private static final String GET_ALL_INCOMMING_RECORDS_SQL = "select i.*, r.* from invoice_items i left join invoice_records r on r.to_invoice = i.id where i.type='INCOME' order by r.date, i.konto";
-
-    private static final String CREATE_RECORD_SQL = "insert into invoice_records set from_invoice=?, to_invoice=?, amount=?, description=?, date=?";
-    private static final String UPDATE_RECORD_SQL = "update invoice_records set from_invoice=?, to_invoice=?, amount=?, description=?, date=? where id=?";
-    private static final String DELETE_RECORD_SQL = "delete from invoice_records where id=?";
-
     /**
+     * liefere alle InvoiceItems
      * @param conn
      * @return
      * @throws SQLException 
@@ -42,22 +27,20 @@ public class AccountingDBUtils
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
-
         try
         {
             Collection<InvoiceItem> result = new ArrayList<>();
-            stmt = conn.prepareStatement(GET_ITEMS_SQL);
+            stmt = conn.prepareStatement("select * from invoice_items order by konto, name");
             rs = stmt.executeQuery();
             while (rs.next())
             {
-                InvoiceItem item = new InvoiceItem();
-                item.action = EAction.NONE;
-                item.id = rs.getInt("id");
-                item.kontoNr = rs.getInt("konto");
-                item.name = rs.getString("name");
-                item.description = rs.getString("description");
-                item.type = EInvoiceItemType.valueOf(rs.getString("type"));
-                result.add(item);
+                InvoiceItem i = new InvoiceItem();
+                i.id = rs.getInt("id");
+                i.refId = rs.getInt("ref_id");
+                i.account = rs.getInt("konto");
+                i.name = rs.getString("name");
+                i.description = rs.getString("description");
+                result.add(i);
             }
             return result;
         }
@@ -69,131 +52,13 @@ public class AccountingDBUtils
     }
 
     /**
-     * @param conn
-     * @return
-     * @throws SQLException 
-     */
-    public static Collection<InvoiceItem> getAllInvoiceItemsByType(EInvoiceItemType type, Connection conn)
-        throws SQLException
-    {
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        try
-        {
-            Collection<InvoiceItem> result = new ArrayList<>();
-            stmt = conn.prepareStatement(GET_ITEMS_BYTYPE_SQL);
-            stmt.setString(1, type.name());
-            rs = stmt.executeQuery();
-            while (rs.next())
-            {
-                InvoiceItem item = new InvoiceItem();
-                item.action = EAction.NONE;
-                item.id = rs.getInt("id");
-                item.refId = rs.getInt("ref_id");
-                item.kontoNr = rs.getInt("konto");
-                item.name = rs.getString("name");
-                item.description = rs.getString("description");
-                item.type = EInvoiceItemType.valueOf(rs.getString("type"));
-                result.add(item);
-            }
-            return result;
-        }
-        finally
-        {
-            DBUtils.closeQuitly(rs);
-            DBUtils.closeQuitly(stmt);
-        }
-    }
-
-    /**
-     * @param conn
-     * @return
-     * @throws SQLException 
-     */
-    public static ProjectInvoiceItem getProjectItem(int projId, Connection conn) throws SQLException
-    {
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        try
-        {
-            ProjectInvoiceItem result = new ProjectInvoiceItem();
-            if (projId == 0)
-            {
-                result.action = EAction.CREATE;
-                result.type = EInvoiceItemType.PLANNING;
-            }
-            else
-            {
-                stmt = conn.prepareStatement(GET_PROJECT_ITEM_SQL);
-                stmt.setInt(1, projId);
-                rs = stmt.executeQuery();
-                rs.next();
-
-                result.action = EAction.NONE;
-                result.id = rs.getInt("id");
-                result.refId = rs.getInt("ref_id");
-                result.kontoNr = rs.getInt("konto");
-                result.name = rs.getString("name");
-                result.description = rs.getString("description");
-                result.type = EInvoiceItemType.valueOf(rs.getString("type"));
-            }
-            return result;
-        }
-        finally
-        {
-            DBUtils.closeQuitly(rs);
-            DBUtils.closeQuitly(stmt);
-        }
-    }
-
-    /**
-     * @param conn
-     * @return
-     * @throws SQLException 
-     */
-    public static Collection<InvoiceItem> getAllInvoiceItemsByProject(int projectId, Connection conn)
-        throws SQLException
-    {
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        try
-        {
-            Collection<InvoiceItem> result = new ArrayList<>();
-            stmt = conn.prepareStatement(GET_ITEMS_BYPROJECT_SQL);
-            stmt.setInt(1, projectId);
-            rs = stmt.executeQuery();
-            while (rs.next())
-            {
-                InvoiceItem item = new InvoiceItem();
-                item.action = EAction.NONE;
-                item.id = rs.getInt("id");
-                item.refId = rs.getInt("ref_id");
-                item.kontoNr = rs.getInt("konto");
-                item.name = rs.getString("name");
-                item.description = rs.getString("description");
-                item.type = EInvoiceItemType.valueOf(rs.getString("type"));
-                result.add(item);
-            }
-            return result;
-        }
-        finally
-        {
-            DBUtils.closeQuitly(rs);
-            DBUtils.closeQuitly(stmt);
-        }
-    }
-
-    /**
-     * @param mdl
+     * @param items
      * @param conn
      * @throws SQLException 
      */
-    public static void handleInvoiceItemModelChanges(InvoiceItemModel mdl, Connection conn) throws SQLException
+    public static void saveAllInvoiceItems(Collection<InvoiceItem> items, Connection conn) throws SQLException
     {
-        for (InvoiceItem item : mdl.items)
+        for (InvoiceItem item : items)
         {
             switch (item.action)
             {
@@ -206,7 +71,7 @@ public class AccountingDBUtils
                     break;
 
                 case REMOVE :
-                    AccountingDBUtils.removeInvoiceItem(item, conn);
+                    AccountingDBUtils.removeInvoiceItem(item.id, conn);
                     break;
 
                 default :
@@ -220,119 +85,177 @@ public class AccountingDBUtils
      * @param conn
      * @throws SQLException 
      */
-    public static void createInvoiceItem(InvoiceItem item, Connection conn) throws SQLException
-    {
-        PreparedStatement stmt = null;
-        try
-        {
-            item.sanitizeType();
-            stmt = conn.prepareStatement(CREATE_ITEM_SQL);
-            stmt.setInt(1, item.refId);
-            stmt.setString(2, item.name);
-            stmt.setString(3, item.description);
-            stmt.setInt(4, item.kontoNr);
-            stmt.setString(5, item.type.name());
-            stmt.executeUpdate();
-        }
-        finally
-        {
-            DBUtils.closeQuitly(stmt);
-        }
-    }
-
-    /**
-     * @param item
-     * @param conn
-     * @throws SQLException 
-     */
-    public static void updateInvoiceItem(InvoiceItem item, Connection conn) throws SQLException
-    {
-        PreparedStatement stmt = null;
-        try
-        {
-            item.sanitizeType();
-            stmt = conn.prepareStatement(UPDATE_ITEM_SQL);
-            stmt.setInt(1, item.refId);
-            stmt.setString(2, item.name);
-            stmt.setString(3, item.description);
-            stmt.setInt(4, item.kontoNr);
-            stmt.setString(5, item.type.name());
-            stmt.setInt(6, item.id);
-            stmt.executeUpdate();
-        }
-        finally
-        {
-            DBUtils.closeQuitly(stmt);
-        }
-    }
-
-    /**
-     * @param item
-     * @param conn
-     * @throws SQLException 
-     */
-    public static void removeInvoiceItem(InvoiceItem item, Connection conn) throws SQLException
-    {
-        PreparedStatement stmt = null;
-        try
-        {
-            stmt = conn.prepareStatement(DELETE_ITEM_SQL);
-            stmt.setInt(1, item.id);
-            stmt.executeUpdate();
-        }
-        finally
-        {
-            DBUtils.closeQuitly(stmt);
-        }
-    }
-
-    /**
-     * @throws SQLException 
-     * 
-     */
-    public static InvoiceRecordsModel getIncommingRecords(Connection conn) throws SQLException
+    private static int createInvoiceItem(InvoiceItem item, Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try
         {
-            InvoiceRecordsModel result = new InvoiceRecordsModel();
-            stmt = conn.prepareStatement(GET_ALL_INCOMMING_RECORDS_SQL);
-            rs = stmt.executeQuery();
+            stmt = conn.prepareStatement("insert into invoice_items set ref_id=?, konto=?, name=?, description=?");
+            stmt.setInt(1, item.refId);
+            stmt.setInt(2, item.account);
+            stmt.setString(3, item.name);
+            stmt.setString(4, item.description);
+            stmt.executeUpdate();
+            rs = stmt.getGeneratedKeys();
+            rs.next();
+            return rs.getInt(1);
+        }
+        finally
+        {
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+        }
+    }
 
-            int lastId = -1;
+    /**
+     * @param item
+     * @param conn
+     * @throws SQLException 
+     */
+    private static void updateInvoiceItem(InvoiceItem item, Connection conn) throws SQLException
+    {
+        PreparedStatement stmt = null;
+
+        try
+        {
+            stmt = conn.prepareStatement(
+                "update invoice_items set ref_id=?, konto=?, name=?, description=? where id=?");
+            stmt.setInt(1, item.refId);
+            stmt.setInt(2, item.account);
+            stmt.setString(3, item.name);
+            stmt.setString(4, item.description);
+            stmt.setInt(5, item.id);
+            stmt.executeUpdate();
+        }
+        finally
+        {
+            DBUtils.closeQuitly(stmt);
+        }
+    }
+
+    /**
+     * @param id
+     * @param conn
+     * @throws SQLException 
+     */
+    private static void removeInvoiceItem(int id, Connection conn) throws SQLException
+    {
+        PreparedStatement stmt = null;
+
+        try
+        {
+            stmt = conn.prepareStatement("delete from invoice_items where id=?");
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
+        finally
+        {
+            DBUtils.closeQuitly(stmt);
+        }
+    }
+
+    /**
+     * @param conn
+     * @return
+     * @throws SQLException 
+     */
+    public static Collection<InvoiceItem> getAllIncommingItems(Connection conn) throws SQLException
+    {
+        Collection<InvoiceItem> result = new ArrayList<>();
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try
+        {
+            stmt = conn.prepareStatement("select * from invoice_items where konto >= 5730 and konto < 5800");
+            rs = stmt.executeQuery();
             while (rs.next())
             {
-                int id = rs.getInt("i.id");
-                if (lastId != id)
-                {
-
-                    InvoiceItem item = new InvoiceItem();
-                    item.id = id;
-                    item.refId = -1;
-                    item.action = EAction.NONE;
-                    item.kontoNr = rs.getInt("i.konto");
-                    item.name = rs.getString("i.name");
-                    item.description = rs.getString("description");
-                    item.type = EInvoiceItemType.valueOf(rs.getString("i.type"));
-                    result.items.add(item);
-                    lastId = id;
-                }
-
-                InvoiceRecord r = new InvoiceRecord();
-                r.id = rs.getInt("r.id");
-                r.action = EAction.NONE;
-                r.from = 0;
-                r.to = rs.getInt("r.to_invoice");
-                r.amount = rs.getDouble("r.amount");
-                r.description = rs.getString("r.description");
-                r.date = DBUtils.getDate(rs, "r.date");
-                //r.attachments = new ArrayList<>();   
-                result.records.add(r);
+                InvoiceItem i = new InvoiceItem();
+                i.id = rs.getInt("id");
+                i.refId = rs.getInt("ref_id");
+                i.account = rs.getInt("konto");
+                i.name = rs.getString("name");
+                i.description = rs.getString("description");
+                result.add(i);
             }
+            return result;
+        }
+        finally
+        {
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+        }
+    }
 
-            result.users.addAll(AccountDBUtil.getAllAccounts(conn));
+    /**
+     * @param from
+     * @param until
+     * @param conn
+     * @return
+     * @throws SQLException 
+     */
+    public static Collection<InvoiceRecord> getAllIncommingRecordsBetween(Date from, Date until, Connection conn)
+        throws SQLException
+    {
+        Collection<InvoiceRecord> result = new ArrayList<>();
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try
+        {
+            stmt = conn.prepareStatement("select * from invoice_records where date between ? and ? order by date");
+            stmt.setDate(1, from);
+            stmt.setDate(2, until);
+            rs = stmt.executeQuery();
+            while (rs.next())
+            {
+                InvoiceRecord r = new InvoiceRecord();
+                r.id = rs.getInt("id");
+                r.amount = rs.getDouble("amount");
+                r.source = rs.getInt("source");
+                r.target = rs.getInt("target");
+                r.description = rs.getString("description");
+                r.date = rs.getDate("date");
+                result.add(r);
+            }
+            return result;
+        }
+        finally
+        {
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+        }
+    }
+
+    /**
+     * @param conn
+     * @return
+     * @throws SQLException 
+     */
+    public static Collection<InvoiceRecord> getAllIncommingRecords(Connection conn) throws SQLException
+    {
+        Collection<InvoiceRecord> result = new ArrayList<>();
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try
+        {
+            stmt = conn.prepareStatement("select * from invoice_records order by date");
+            rs = stmt.executeQuery();
+            while (rs.next())
+            {
+                InvoiceRecord r = new InvoiceRecord();
+                r.id = rs.getInt("id");
+                r.amount = rs.getDouble("amount");
+                r.source = rs.getInt("source");
+                r.target = rs.getInt("target");
+                r.description = rs.getString("description");
+                r.date = rs.getDate("date");
+                result.add(r);
+            }
             return result;
         }
         finally
@@ -344,61 +267,57 @@ public class AccountingDBUtils
 
     /**
      * @param records
-     * @param session
      * @param conn
-     * @throws SQLException
+     * @throws SQLException 
      */
-    public static void handleInvoiceRecordsChanges(Collection<? extends InvoiceRecord> records, Connection conn) throws SQLException
+    public static void saveAllIncommings(Collection<InvoiceRecord> records, Connection conn) throws SQLException
     {
         for (InvoiceRecord record : records)
         {
             switch (record.action)
             {
                 case CREATE :
-                    AccountingDBUtils.createInvoiceRecord(record, conn);
+                    AccountingDBUtils.createIncomming(record, conn);
                     break;
 
                 case MODIFY :
-                    AccountingDBUtils.updateInvoiceRecord(record, conn);
+                    AccountingDBUtils.updateIncomming(record, conn);
                     break;
 
                 case REMOVE :
-                    AccountingDBUtils.deleteInvoiceRecord(record, conn);
+                    AccountingDBUtils.removeIncomming(record.id, conn);
                     break;
 
                 default :
                     break;
-
             }
         }
     }
 
     /**
-     * @param rec
+     * @param record
      * @param conn
+     * @return
      * @throws SQLException
      */
-    public static void createInvoiceRecord(InvoiceRecord rec, Connection conn)
-        throws SQLException
+    private static int createIncomming(InvoiceRecord record, Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try
         {
-            stmt = conn.prepareStatement(CREATE_RECORD_SQL);
-            stmt.setInt(1, rec.from);
-            stmt.setInt(2, rec.to);
-            stmt.setDouble(3, rec.amount);
-            stmt.setString(4, rec.description);
-            DBUtils.setDate(stmt, 5, rec.date);
+            stmt = conn.prepareStatement(
+                "insert into invoice_records set source=?, target=?, amount=?, description=?, date=?");
+            stmt.setInt(1, record.source);
+            stmt.setInt(2, record.target);
+            stmt.setDouble(3, record.amount);
+            stmt.setString(4, record.description);
+            stmt.setDate(5, record.date);
             stmt.executeUpdate();
             rs = stmt.getGeneratedKeys();
-            if (rs.next())
-            {
-                rec.id = rs.getInt(1);
-                AttachmentsDBUtil.handleAttachmentChanges(rec.attachments, rec.id, EAttachmentDomain.ACCRECORD, conn);
-            }
+            rs.next();
+            return rs.getInt(1);
         }
         finally
         {
@@ -408,46 +327,24 @@ public class AccountingDBUtils
     }
 
     /**
-     * @param rec
+     * @param record
      * @param conn
      * @throws SQLException
      */
-    public static void updateInvoiceRecord(InvoiceRecord rec, Connection conn)
-        throws SQLException
+    private static void updateIncomming(InvoiceRecord record, Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
-        try
-        {
-            stmt = conn.prepareStatement(UPDATE_RECORD_SQL);
-            stmt.setInt(1, rec.from);
-            stmt.setInt(2, rec.to);
-            stmt.setDouble(3, rec.amount);
-            stmt.setString(4, rec.description);
-            DBUtils.setDate(stmt, 5, rec.date);
-            stmt.setInt(6, rec.id);
-            stmt.executeUpdate();
-            AttachmentsDBUtil.handleAttachmentChanges(rec.attachments, rec.id, EAttachmentDomain.ACCRECORD, conn);
-        }
-        finally
-        {
-            DBUtils.closeQuitly(stmt);
-        }
-    }
 
-    /**
-     * @param rec
-     * @param conn
-     * @throws SQLException
-     */
-    public static void deleteInvoiceRecord(InvoiceRecord rec, Connection conn)
-        throws SQLException
-    {
-        PreparedStatement stmt = null;
         try
         {
-            AttachmentsDBUtil.deleteAttachments(rec.id, EAttachmentDomain.ACCRECORD, conn);
-            stmt = conn.prepareStatement(DELETE_RECORD_SQL);
-            stmt.setInt(1, rec.id);
+            stmt = conn.prepareStatement(
+                "update invoice_records set source=?, target=?, amount=?, description=?, date=? where id=?");
+            stmt.setInt(1, record.source);
+            stmt.setInt(2, record.target);
+            stmt.setDouble(3, record.amount);
+            stmt.setString(4, record.description);
+            stmt.setDate(5, record.date);
+            stmt.setInt(6, record.id);
             stmt.executeUpdate();
         }
         finally
@@ -457,32 +354,56 @@ public class AccountingDBUtils
     }
 
     /**
-     * @param itemId
+     * @param id
      * @param conn
-     * @return
      * @throws SQLException
      */
-    public static Collection<InvoiceRecord> getIncommingRecordsByItemId(int itemId, Connection conn) throws SQLException
+    private static void removeIncomming(int id, Connection conn) throws SQLException
+    {
+        PreparedStatement stmt = null;
+
+        try
+        {
+            stmt = conn.prepareStatement("delete from invoice_records where id=?");
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
+        finally
+        {
+            DBUtils.closeQuitly(stmt);
+        }
+    }
+
+    /*-----------------------------------------------------------------------*/
+    /*
+     * All about projects
+     */
+
+    /**
+     * @return die Liste aller als Projekt markierten Kurse, niemals <code>null</code>
+     * @throws SQLException 
+     */
+    public static Collection<? extends ProjectDescription> getAllProjects(Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
+
         try
         {
-            Collection<InvoiceRecord> result = new ArrayList<>();
-            stmt = conn.prepareStatement("select * from invoice_records where to_invoice=?");
-            stmt.setInt(1, itemId);
+            Collection<ProjectDescription> result = new ArrayList<>();
+
+            stmt = conn.prepareStatement(
+                "select c.id, c.name, c.description, min(t.date) AS start, max(t.date) AS end from courses c left join course_termins t on c.id = t.ref_id where c.type=\"ONETIME\" group by c.id order by start, c.name;");
             rs = stmt.executeQuery();
             while (rs.next())
             {
-                InvoiceRecord r = new InvoiceRecord();
-                r.action = EAction.NONE;
-                r.id = rs.getInt("id");
-                r.amount = rs.getDouble("amount");
-                r.date = DBUtils.getDate(rs, "date");
-                r.description = rs.getString("description");
-                r.from = rs.getInt("from_invoice");
-                r.to = rs.getInt("to_invoice");
-                result.add(r);
+                ProjectDescription p = new ProjectDescription();
+                p.id = rs.getInt("c.id");
+                p.name = rs.getString("c.name");
+                p.description = rs.getString("c.description");
+                p.from = rs.getDate("start");
+                p.until = rs.getDate("end");
+                result.add(p);
             }
             return result;
         }
@@ -494,85 +415,205 @@ public class AccountingDBUtils
     }
 
     /**
-     * @param itemId
-     * @param conn
-     * @return
-     * @throws SQLException
-     */
-    public static Collection<InvoiceRecord> getOutgoingRecordsByItemId(int itemId, Connection conn) throws SQLException
-    {
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try
-        {
-            Collection<InvoiceRecord> result = new ArrayList<>();
-            stmt = conn.prepareStatement("select * from invoice_records where from_invoice=?");
-            stmt.setInt(1, itemId);
-            rs = stmt.executeQuery();
-            while (rs.next())
-            {
-                InvoiceRecord r = new InvoiceRecord();
-                r.action = EAction.NONE;
-                r.id = rs.getInt("id");
-                r.amount = rs.getDouble("amount");
-                r.date = DBUtils.getDate(rs, "date");
-                r.description = rs.getString("description");
-                r.from = rs.getInt("from_invoice");
-                r.to = rs.getInt("to_invoice");
-                result.add(r);
-            }
-            return result;
-        }
-        finally
-        {
-            DBUtils.closeQuitly(rs);
-            DBUtils.closeQuitly(stmt);
-        }
-    }
-
-    /**
-     * berechne den Kontostand für ein bestimmtes Item
+     * Lade das Model des Projektes mit der angegebenen ID
      * 
      * @param id
      * @param conn
      * @return
      * @throws SQLException 
      */
-    public static double getItemAmount(int id, Connection conn) throws SQLException
+    public static ProjectModel getProjectModel(int id, Connection conn) throws SQLException
     {
-        double result = AccountingDBUtils.getItemAmount(id,
-            "select sum(amount) as total from invoice_records where to_invoice=?", conn);
-        
-        result -= AccountingDBUtils.getItemAmount(id,
-            "select sum(amount) as total from invoice_records where from_invoice=?", conn);
-
-        return result;
+        ProjectModel model = new ProjectModel();
+        model.coreData = AccountingDBUtils.getProjectCoreData(id, conn);
+        model.planningItems = AccountingDBUtils.getProjectPlanningItems(id, conn);
+        model.projectItem = AccountingDBUtils.getProjectItem(id, conn);
+        model.invoiceRecords = AccountingDBUtils.getProjectInvoiceRecords(model.projectItem.id, conn);
+        model.invoiceItems = AccountingDBUtils.getInOutInvoiceItems(conn);
+        return model;
     }
 
     /**
      * @param id
-     * @param sql
      * @param conn
      * @return
      * @throws SQLException 
      */
-    private static double getItemAmount(int id, String sql, Connection conn) throws SQLException
+    private static ProjectDescription getProjectCoreData(int id, Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try
         {
-            double result = 0.0f;
-
-            stmt = conn.prepareStatement(sql);
+            stmt = conn.prepareStatement(
+                "select c.id, c.name, c.description, min(t.date) AS start, max(t.date) AS end from courses c left join course_termins t on c.id = t.ref_id where c.id=? group by c.id");
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
             if (rs.next())
             {
-                result = rs.getDouble("total");
+                ProjectDescription c = new ProjectDescription();
+                c.id = id;
+                c.name = rs.getString("c.name");
+                c.description = rs.getString("c.description");
+                c.from = rs.getDate("start");
+                c.until = rs.getDate("end");
+                return c;
             }
-            return result;
+        }
+        finally
+        {
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+        }
+        return null;
+    }
+
+    /**
+     * @param projectId
+     * @param conn
+     * @return
+     * @throws SQLException 
+     */
+    private static Collection<PlanningItem> getProjectPlanningItems(int projectId, Connection conn) throws SQLException
+    {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            Collection<PlanningItem> response = new ArrayList<>();
+
+            stmt = conn.prepareStatement("select * from planning_items where proj_id=?");
+            stmt.setInt(1, projectId);
+            rs = stmt.executeQuery();
+            while (rs.next())
+            {
+                PlanningItem p = new PlanningItem();
+                p.action = EAction.NONE;
+                p.id = rs.getInt("id");
+                p.projId = rs.getInt("proj_id");
+                p.invItemId = rs.getInt("invoice_item_id");
+                p.amount = rs.getDouble("amount");
+                p.description = rs.getString("description");
+                response.add(p);
+            }
+            return response;
+        }
+        finally
+        {
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+        }
+    }
+    /**
+     * @param projId
+     * @param conn
+     * @return
+     * @throws SQLException 
+     */
+    private static InvoiceItem getProjectItem(int projId, Connection conn) throws SQLException
+    {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            stmt = conn.prepareStatement("select * from invoice_items where ref_id=? and konto=?");
+            stmt.setInt(1, projId);
+            stmt.setInt(2, 0);
+            rs = stmt.executeQuery();
+            if (rs.next())
+            {
+                InvoiceItem i = new InvoiceItem();
+                i.id = rs.getInt("id");
+                i.action = EAction.NONE;
+                i.refId = rs.getInt("ref_id");
+                i.account = 0;
+                i.name = rs.getString("name");
+                i.description = rs.getString("description");
+                return i;
+            }
+        }
+        finally
+        {
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+        }
+        return null;
+    }
+
+
+    /**
+     * @param planningItemId
+     * @param conn
+     * @return
+     * @throws SQLException 
+     */
+    private static Collection<InvoiceRecord> getProjectInvoiceRecords(int planningItemId, Connection conn)
+        throws SQLException
+    {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            Collection<InvoiceRecord> response = new ArrayList<>();
+
+            stmt = conn.prepareStatement("select * from invoice_records where source=? or target=?");
+            stmt.setInt(1, planningItemId);
+            stmt.setInt(2, planningItemId);
+            rs = stmt.executeQuery();
+            while (rs.next())
+            {
+                InvoiceRecord r = new InvoiceRecord();
+                r.action = EAction.NONE;
+                r.id = rs.getInt("id");
+                r.source = rs.getInt("source");
+                r.target = rs.getInt("target");
+                r.amount = rs.getDouble("amount");
+                r.description = rs.getString("description");
+                r.date = rs.getDate("date");
+                response.add(r);
+            }
+            return response;
+        }
+        finally
+        {
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+        }
+    }
+
+    /**
+     * @param id
+     * @param conn
+     * @return
+     * @throws SQLException 
+     */
+    private static Collection<InvoiceItem> getInOutInvoiceItems(Connection conn) throws SQLException
+    {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            Collection<InvoiceItem> response = new ArrayList<>();
+
+            stmt = conn.prepareStatement("select * from invoice_items where konto != 0");
+            rs = stmt.executeQuery();
+            while (rs.next())
+            {
+                InvoiceItem r = new InvoiceItem();
+                r.action = EAction.NONE;
+                r.id = rs.getInt("id");
+                r.refId = rs.getInt("ref_id");
+                r.account = rs.getInt("konto");
+                r.name = rs.getString("name");
+                r.description = rs.getString("description");
+                response.add(r);
+            }
+            return response;
         }
         finally
         {

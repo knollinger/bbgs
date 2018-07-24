@@ -228,6 +228,10 @@ var CourseTerminAndLocationOverview = function(parentFrame, targetCnr, model, te
 	self.actionRemove = self.createRemoveAction();
 
 	new TableDecorator("edit_termin_overview");
+
+	self.model.addChangeListener("//course-model/termine", function() {
+	    self.fillTable();
+	});
 	self.fillTable(terminId);
 
 	if (terminId == CourseEditor.NEW_TERMIN) {

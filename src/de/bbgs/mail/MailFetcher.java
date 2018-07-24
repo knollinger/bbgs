@@ -30,7 +30,7 @@ import de.bbgs.utils.DBUtils;
  */
 public class MailFetcher implements Runnable
 {
-    private static String[] foldersToScan = {"INBOX", "[Gmail]/Gesendet", "[Gmail]/Spam"};
+//    private static String[] foldersToScan = {"INBOX", "[Gmail]/Gesendet", "[Gmail]/Spam"};
     /* (non-Javadoc)
      * @see java.lang.Runnable#run()
      */
@@ -42,39 +42,36 @@ public class MailFetcher implements Runnable
         {
             conn = ConnectionPool.getConnection();
             conn.setAutoCommit(false);
-            Store s = this.getStore();
-
-            for (String folderName : foldersToScan)
-            {
-                Folder f = s.getFolder(folderName);
-                this.enumFolder(f, conn);
-            }
-
-            //            this.enumFolder(s.getDefaultFolder(), conn);
-
-
-            s.close();
+//            Store s = this.getStore();
+//
+//            for (String folderName : foldersToScan)
+//            {
+//                Folder f = s.getFolder(folderName);
+//                this.enumFolder(f, conn);
+//            }
+//
+//            s.close();
         }
-        catch (JAXBException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch (MessagingException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+//        catch (JAXBException e)
+//        {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//        catch (MessagingException e)
+//        {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
         catch (SQLException e)
         {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        catch (IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+//        catch (IOException e)
+//        {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
         catch (Exception e)
         {
             // TODO Auto-generated catch block

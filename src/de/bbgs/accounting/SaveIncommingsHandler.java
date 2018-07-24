@@ -15,8 +15,13 @@ import de.bbgs.utils.DBUtils;
 import de.bbgs.xml.ErrorResponse;
 import de.bbgs.xml.IJAXBObject;
 
-public class GetIncommingRecordsModelHandler implements IXmlServiceHandler
+/**
+ * Liefert die Liste aller InvoiceItems
+ *
+ */
+public class SaveIncommingsHandler implements IXmlServiceHandler
 {
+
     /* (non-Javadoc)
      * @see de.bbgs.service.IXmlServiceHandler#needsSession()
      */
@@ -32,7 +37,7 @@ public class GetIncommingRecordsModelHandler implements IXmlServiceHandler
     @Override
     public Class<? extends IJAXBObject> getResponsibleFor()
     {
-        return Request.class;
+        return InvoiceRecordsModel.class;
     }
 
     /* (non-Javadoc)
@@ -42,8 +47,8 @@ public class GetIncommingRecordsModelHandler implements IXmlServiceHandler
     public Collection<Class<? extends IJAXBObject>> getUsedJaxbClasses()
     {
         Collection<Class<? extends IJAXBObject>> result = new ArrayList<>();
-        result.add(Request.class);
-        result.add(InvoiceRecordsModel.class);
+        result.add(InvoiceItemsModel.class);
+        result.add(Response.class);
         return result;
     }
 
@@ -53,13 +58,18 @@ public class GetIncommingRecordsModelHandler implements IXmlServiceHandler
     @Override
     public IJAXBObject handleRequest(IJAXBObject request, SessionWrapper session)
     {
-        IJAXBObject rsp = null;
         Connection conn = null;
+        IJAXBObject rsp = null;
         try
         {
             conn = ConnectionPool.getConnection();
-            InvoiceRecordsModel model = AccountingDBUtils.getIncommingRecords(conn);
-            rsp = model;
+            conn.setAutoCommit(false);
+            
+            InvoiceRecordsModel model = (InvoiceRecordsModel)request;
+            AccountingDBUtils.saveAllIncommings(model.records, conn);
+            
+            conn.commit();
+            rsp = new Response();
         }
         catch (SQLException e)
         {
@@ -72,9 +82,13 @@ public class GetIncommingRecordsModelHandler implements IXmlServiceHandler
         return rsp;
     }
 
-    @XmlRootElement(name = "get-incomming-record-model-req")
-    @XmlType(name = "GetIncommingRecordsModelHandler.Request")
-    public static class Request implements IJAXBObject
+    /**
+     * Das Request-Objekt
+     *
+     */
+    @XmlRootElement(name = "save-incommings-ok-rsp")
+    @XmlType(name = "SaveIncommingsHandler.Response")
+    public static class Response implements IJAXBObject
     {
     }
 }

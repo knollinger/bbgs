@@ -71,8 +71,10 @@ public class GetMailboxHandler implements IXmlServiceHandler
             Response response = new Response();
 
             conn = ConnectionPool.getConnection();
-            stmt = conn.prepareStatement(
-                "select m.*, f.folder_name from mailbox m left join `mailbox_folders` f on m.`id`=f.`ref_id` order by  f.`folder_name`, m.`sent-date` DESC");
+            stmt = conn.prepareStatement("select m.*, f.folder_name, b.id from mailbox m \n"
+                + "    left join `mailbox_folders` f on m.`id`=f.`ref_id` \n"
+                + "    left join `attachments` b on b.ref_id = m.id and b.domain=\"EMAIL\" \n"
+                + "    order by  f.`folder_name`, m.`sent-date` DESC;");
             rs = stmt.executeQuery();
             while (rs.next())
             {
@@ -85,6 +87,7 @@ public class GetMailboxHandler implements IXmlServiceHandler
                 desc.sent = DBUtils.getDate(rs, "m.sent-date");
                 desc.received = DBUtils.getDate(rs, "m.recv-date");
                 desc.subject = rs.getString("m.subject");
+                desc.blobId = rs.getInt("b.id");
                 response.messages.add(desc);
             }
             rsp = response;
@@ -167,6 +170,9 @@ public class GetMailboxHandler implements IXmlServiceHandler
 
         @XmlElement(name = "subject")
         public String subject;
+
+        @XmlElement(name = "blob-id")
+        public int blobId;
     }
 
 

@@ -196,48 +196,8 @@ ALTER TABLE `contacts` CHANGE COLUMN `mobile2` `mobile2` VARCHAR(20) DEFAULT '';
 ALTER TABLE `contacts` CHANGE COLUMN `email` `email` VARCHAR(512) DEFAULT '';
 ALTER TABLE `contacts` CHANGE COLUMN `email2` `email2` VARCHAR(512) DEFAULT '';
 
-
-CREATE TABLE `invoice_items` (
-  `id`    INT(10) auto_increment,  
-  `ref_id`    INT(10) NOT NULL,  
-  `type`  VARCHAR(10) NOT NULL,
-  `konto` INT NOT NULL,
-  `name` VARCHAR(256) NOT NULL,
-  `description` VARCHAR(2048) NOT NULL,
-  PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `invoice_records` (
-  `id` INT(10) AUTO_INCREMENT,
-  `from_invoice` INT(10) NOT NULL,
-  `to_invoice` INT(10) NOT NULL,
-  `amount` DOUBLE NOT NULL,
-  `description` VARCHAR(256) NOT NULL,
-  `date` DATE NOT NULL,
-  PRIMARY KEY (`id`)  
-);
-
 drop table acc_records;
 drop table accounting_posts;
-
-CREATE TABLE `projects` (
-  `id` INT(10) auto_increment,
-  `name` VARCHAR(256) NOT NULL,
-  `description` VARCHAR(2048) NOT NULL,
-  `from` DATE NOT NULL,
-  `until` DATE NOT NULL,
-  PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `planning_items` (
-  `id` INT(10) NOT NULL AUTO_INCREMENT,
-  `proj_ref` INT(10) NOT NULL,
-  `item_ref` INT(10) NOT NULL,
-  `amount` DOUBLE NOT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`proj_ref`) REFERENCES `projects` (`id`),
-  FOREIGN KEY (`item_ref`) REFERENCES `invoice_items` (`id`)
-);
 
  /* Named Colors */
 delete from named_colors where domain="TASKLIST";
@@ -270,16 +230,6 @@ CREATE TABLE `auditlog` (
 );
 
 drop table filesystem;
-CREATE TABLE `filesystem` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `parentId` INT NOT NULL,
-  `type` VARCHAR(10) NOT NULL,
-  `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `last_accessed` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `name` VARCHAR(256) NOT NULL,
-  PRIMARY KEY (`id`)
-);
-
 
 CREATE TABLE `mailbox` (
   `id` INT(10) AUTO_INCREMENT,
@@ -306,3 +256,35 @@ CREATE TABLE mailbox_recipients (
 
 ALTER TABLE `attachments` 
 DROP COLUMN `attached_by`;
+
+
+CREATE TABLE `invoice_items` (
+  `id` INT(10) NOT NULL AUTO_INCREMENT,
+  `ref_id` INT(10) NULL,
+  `konto` INT(10) NOT NULL,
+  `name` VARCHAR(256) NOT NULL,
+  `description` VARCHAR(2048) NOT NULL,
+  PRIMARY KEY (`id`));
+  
+insert into invoice_items (ref_id, konto, name, description) 
+	select id, '0', name, 'Planungs-Konto' from courses where type="ONETIME";
+
+CREATE TABLE `invoice_records` (
+  `id` INT(10) NOT NULL AUTO_INCREMENT,
+  `source` INT(10) NOT NULL,
+  `target` INT(10) NOT NULL,
+  `amount` DOUBLE NOT NULL,
+  `description` VARCHAR(2048) NOT NULL,
+  `date` DATE NOT NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `planning_items` (
+  `id` INT(10) NOT NULL AUTO_INCREMENT,
+  `proj_id` INT(10) NOT NULL,
+  `invoice_item_id` INT(10) NOT NULL,
+  `amount` DOUBLE NOT NULL,
+  `description` VARCHAR(2048) NOT NULL,
+  PRIMARY KEY (`id`),
+    FOREIGN KEY (`proj_id`) REFERENCES `courses` (`id`),
+    FOREIGN KEY (`invoice_item_id`) REFERENCES `invoice_items` (`id`)
+);

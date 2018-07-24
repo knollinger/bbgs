@@ -1,27 +1,169 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<members-model>
-	<member>
-		<id>1</id>
+<project-model>
+	<core-data>
+		<id>42</id>
+		<name>Kletterausfahrt Linderhof</name>
+		<description>Klettern am Frauenwasserl
+			Ort: Oberammergau
+			Unterkunft: Waldarbeiterhütte
+		</description>
+		<from>1530828000000</from>
+		<until>1531000800000</until>
+	</core-data>
+	<project-item>
+		<id>35</id>
 		<action>NONE</action>
-		<zname>Knollinger</zname>
-		<vname>Anderl</vname>
-		<phone>089/9943-3451</phone>
-		<mobile>0176/61006855</mobile>
-		<email>anderl.knollinger@gmail.com</email>
-		<sex>M</sex>
-		<avatar />
-		<avatar-type />
-	</member>
-	<member>
-		<id>2</id>
-		<action>MODIFY</action>
-		<zname>Huber</zname>
-		<vname>Petra</vname>
-		<phone>456</phone>
-		<mobile>123</mobile>
-		<email>running.petra@gmail.com</email>
-		<sex>F</sex>
-		<avatar />
-		<avatar-type />
-	</member>
-</members-model>
+		<ref-id>42</ref-id>
+		<account>0</account>
+		<name>Kletterausfahrt Linderhof</name>
+		<description>Planungs-Konto</description>
+	</project-item>
+	<planning-items>
+		<planning-item>
+			<id>2</id>
+			<action>NONE</action>
+			<proj-id>42</proj-id>
+			<inv-item-id>7</inv-item-id>
+			<amount>240.0</amount>
+			<description>a</description>
+		</planning-item>
+		<planning-item>
+			<id>3</id>
+			<action>NONE</action>
+			<proj-id>42</proj-id>
+			<inv-item-id>8</inv-item-id>
+			<amount>240.0</amount>
+			<description>b</description>
+		</planning-item>
+		<planning-item>
+			<id>4</id>
+			<action>NONE</action>
+			<proj-id>42</proj-id>
+			<inv-item-id>9</inv-item-id>
+			<amount>240.0</amount>
+			<description>c</description>
+		</planning-item>
+		<planning-item>
+			<id>5</id>
+			<action>NONE</action>
+			<proj-id>42</proj-id>
+			<inv-item-id>10</inv-item-id>
+			<amount>240.0</amount>
+			<description>d</description>
+		</planning-item>
+		<planning-item>
+			<id>6</id>
+			<action>NONE</action>
+			<proj-id>42</proj-id>
+			<inv-item-id>4</inv-item-id>
+			<amount>380.0</amount>
+			<description>e</description>
+		</planning-item>
+	</planning-items>
+	<invoice-records>
+		<invoice-record>
+			<id>5</id>
+			<action>NONE</action>
+			<source>1</source>
+			<target>35</target>
+			<amount>1200.0</amount>
+			<description>bla</description>
+			<date>1531605600000</date>
+		</invoice-record>
+		<invoice-record>
+			<id>6</id>
+			<action>REMOVE</action>
+			<source>35</source>
+			<target>7</target>
+			<amount>100.0</amount>
+			<description>anzahlung</description>
+			<date>1531519200000</date>
+		</invoice-record>
+	</invoice-records>
+	<inout-items>
+		<inout-item>
+			<id>1</id>
+			<action>NONE</action>
+			<ref-id>0</ref-id>
+			<account>5730</account>
+			<name>Anderl Knollinger Stiftung</name>
+			<description>Für alle Projekt-Belange verwendbare Mittel
+			</description>
+		</inout-item>
+		<inout-item>
+			<id>2</id>
+			<action>NONE</action>
+			<ref-id>0</ref-id>
+			<account>5730</account>
+			<name>Aktion Mensch</name>
+			<description>Die Mittel der AM müssen nachweislich zu 80% in das
+				Projekt fließen, der Rest kann verfeiert werden</description>
+		</inout-item>
+		<inout-item>
+			<id>4</id>
+			<action>NONE</action>
+			<ref-id>0</ref-id>
+			<account>5803</account>
+			<name>Fahrt-Kosten</name>
+			<description>Benzin, Bahntickets, ...</description>
+		</inout-item>
+		<inout-item>
+			<id>5</id>
+			<action>NONE</action>
+			<ref-id>0</ref-id>
+			<account>5803</account>
+			<name>Unterkünfte</name>
+			<description>Zeltplätze, Hütten, ...</description>
+		</inout-item>
+		<inout-item>
+			<id>6</id>
+			<action>NONE</action>
+			<ref-id>0</ref-id>
+			<account>5803</account>
+			<name>Verpflegung</name>
+			<description>Brotzeiten, Eis-Dielen, ...</description>
+		</inout-item>
+		<inout-item>
+			<id>7</id>
+			<action>NONE</action>
+			<ref-id>0</ref-id>
+			<account>5800</account>
+			<name>Sanna</name>
+			<description>Abgaben nach §1 Abs.1-3 Schminkköfferchen-Gesetz
+			</description>
+		</inout-item>
+		<inout-item>
+			<id>8</id>
+			<action>NONE</action>
+			<ref-id>0</ref-id>
+			<account>5800</account>
+			<name>Ulli</name>
+			<description>Ullis Gehalt</description>
+		</inout-item>
+		<inout-item>
+			<id>9</id>
+			<action>NONE</action>
+			<ref-id>0</ref-id>
+			<account>5800</account>
+			<name>Verena</name>
+			<description>Verenas Gehalt</description>
+		</inout-item>
+		<inout-item>
+			<id>10</id>
+			<action>NONE</action>
+			<ref-id>0</ref-id>
+			<account>5800</account>
+			<name>Anna</name>
+			<description>Zahlungen auf das Weltreise-Konto</description>
+		</inout-item>
+		<inout-item>
+			<id>11</id>
+			<action>NONE</action>
+			<ref-id>0</ref-id>
+			<account>5730</account>
+			<name>Petra-Huber-Stiftung</name>
+			<description>Die Mittel der PHS sind für den Erwerb lokaler
+				Leckereien aus biologischem Anbau gedacht</description>
+		</inout-item>
+	</inout-items>
+</project-model>

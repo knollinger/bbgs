@@ -32,12 +32,18 @@ public class GetProjectModelHandler implements IXmlServiceHandler
         return true;
     }
 
+    /* (non-Javadoc)
+     * @see de.bbgs.service.IXmlServiceHandler#getResponsibleFor()
+     */
     @Override
     public Class<? extends IJAXBObject> getResponsibleFor()
     {
         return Request.class;
     }
 
+    /* (non-Javadoc)
+     * @see de.bbgs.service.IXmlServiceHandler#getUsedJaxbClasses()
+     */
     @Override
     public Collection<Class<? extends IJAXBObject>> getUsedJaxbClasses()
     {
@@ -58,12 +64,12 @@ public class GetProjectModelHandler implements IXmlServiceHandler
 
         try
         {
+            conn = ConnectionPool.getConnection();            
+            
             Request req = (Request)request;
+            ProjectModel model = AccountingDBUtils.getProjectModel(req.id, conn);
+            return model;
             
-            conn = ConnectionPool.getConnection();
-            rsp = ProjectsDBUtils.getProjectModel(req.id, conn);
-            
-            // TODO
         }
         catch (SQLException e)
         {
@@ -76,11 +82,12 @@ public class GetProjectModelHandler implements IXmlServiceHandler
         return rsp;
     }
 
-    @XmlRootElement(name = "get-project-model-request")
-    @XmlType(name = "GetProjectModelHandler")
+
+    @XmlRootElement(name = "get-project-model-req")
+    @XmlType(name = "GetProjectModelHandler.Request")
     public static class Request implements IJAXBObject
     {
         @XmlElement(name = "id")
-        public int id = 0;
+        public int id;
     }
 }

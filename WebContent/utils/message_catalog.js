@@ -202,42 +202,6 @@ var MessageCatalog = (function() {
 	TITLE_REMOVE_TASK : "Bist DU sicher?",
 	QUERY_REMOVE_TASK : "M&ouml;chtest Du die Aufgabe '{1}' wirklich l&ouml;schen?",
 
-	// --------------------------------------------------------------------
-	//
-	// all about accounting
-	//
-	QUERY_REMOVE_INVOICE_ITEM_TITLE : "Bist Du sicher?",
-	QUERY_REMOVE_INVOICE_ITEM : "Möchtest Du den Rechnungs-Posten '{1}' wirklich löschen?",
-
-	LOAD_INVOICE_ITEMS_ERROR_TITLE : "Fehler beim laden der Rechnungs-Posten",
-	LOAD_INVOICE_ITEMS_ERROR : "Beim laden der Rechnungs-Posten ist ein Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
-	LOAD_INVOICE_ITEMS_TECH_ERROR : "Beim laden der Rechnungs-Posten ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
-
-	SAVE_INVOICE_ITEM_ERROR_TITLE : "Fehler beim speichern des Rechnungs-Posten",
-	SAVE_INVOICE_ITEM_ERROR : "Beim speichern des Rechnungs-Posten ist ein Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
-	SAVE_INVOICE_ITEM_TECH_ERROR : "Beim speichern des Rechnungs-Posten ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
-
-	TITLE_NO_INVOICE_ITEMS : "Keine Buchungs-Posten gefunden",
-	NO_INVOICE_ITEMS : "Du hast noch keine Buchungs-Posten erfasst. Ohne diese kannst Du weder Einnahmen erfassen noch Projekte planen.<br><br>Nach best&auml;tigen dieser Meldung wirst Du in den entsprechenden Erfassungs-Dialog navigiert.",
-	QUERY_REMOVE_INVOICE_RECORD_TITLE : "Bist Du sicher?",
-	QUERY_REMOVE_INVOICE_RECORD : "Möchtest Du den Rechnungs-Satz über '&euro; {1}' wirklich löschen?",
-
-	SAVE_INVOICE_RECORD_ERROR_TITLE : "Fehler beim speichern der Rechnungs-S&auml;tze",
-	SAVE_INVOICE_RECORD_ERROR : "Beim speichern der Rechnungs-S&auml;tze ist ein Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
-	SAVE_INVOICE_RECORD_TECH_ERROR : "Beim speichern der Rechnungs-S&auml;tze ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
-
-	GET_PROJECTS_ERROR_TITLE : "Fehler beim speichern der Projekte",
-	GET_PROJECTS_ERROR : "Beim laden der Projekte ist ein Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
-	GET_PROJECTS_TECH_ERROR : "Beim laden der Projekte ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
-
-	TITLE_REMOVE_PLANNING_ITEM : "Bist Du sicher?",
-	QUERY_REMOVE_PLANNING_ITEM : "M&ouml;chtes Du den Planungs-Posten wirklich l&ouml;schen?",
-
-	TITLE_REMOVE_OUTGOING_RECORD : "Bist Du sicher?",
-	QUERY_REMOVE_OUTGOING_RECORD : "M&ouml;chtes Du den Ausgaben-Posten &uuml;ber &euro; {1} wirklich l&ouml;schen?",
-
-	TITLE_REMOVE_PAYMENT_RECORD : "Bist Du sicher?",
-	QUERY_REMOVE_PAYMENT_RECORD : "M&ouml;chtes Du den Finanzierungs-Posten wirklich l&ouml;schen?",
 
 	// --------------------------------------------------------------------
 	//
@@ -256,7 +220,52 @@ var MessageCatalog = (function() {
 	TITLE_REMOVE_FILESYS_OBJ : "Bist Du sicher?",
 	QUERY_REMOVE_FILESYS_FOLDER : "M&ouml;chtes Du den Ordner '{1}' <b>und alle seine Unterordner und Dateien</b> wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
 	QUERY_REMOVE_FILESYS_FILE : "M&ouml;chtes Du die Datei '{1}' wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
-	INFO_FSO_METADATA : "Angelegt am: {1}<br>Letzte &Auml;nderung: {1}"
+	INFO_FSO_METADATA : "Angelegt am: {1}<br>Letzte &Auml;nderung: {1}",
+	
+	// --------------------------------------------------------------------
+	//
+	// all about accounting
+	//
+	GET_INVOICE_ITEMS_TITLE : "Fehler beim lesen der Buchungsposten",
+	GET_INVOICE_ITEMS_ERROR : "Bei der Ermittling der Buchungsposten ist ein Fehler aufgetreten.<br>Antwort vom Server:<br> {1}",
+	GET_INVOICE_ITEMS_TECH_ERROR : "Bei der Ermittling der Buchungsposten ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
+	
+	SAVE_INVOICE_ITEMS_TITLE : "Fehler beim speichern der Buchungsposten",
+	SAVE_INVOICE_ITEMS_ERROR : "Beim speichern der Buchungsposten ist ein Fehler aufgetreten.<br>Antwort vom Server:<br> {1}",
+	SAVE_INVOICE_ITEMS_TECH_ERROR : "Beim speichern der Buchungsposten ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
+	
+	REMOVE_INVOICE_ITEM_TITLE : "Bist Du sicher?",
+        REMOVE_INVOICE_ITEM_MESSG : "M&ouml;chtest Du diesen Buchungs-Posten wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
+        
+	GET_INCOMMINGS_TITLE : "Fehler beim laden der Einnahmen",
+	GET_INCOMMINGS_ERROR : "Beim laden der Einnahmen ist ein Fehler aufgetreten.<br>Antwort vom Server:<br> {1}",
+	GET_INCOMMINGS_TECH_ERROR : "Beim laden der Einnahmen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
+	
+	SAVE_INCOMMINGS_TITLE : "Fehler beim speichern der Einnahmen",
+	SAVE_INCOMMINGS_ERROR : "Beim speichern der Einnahmen ist ein Fehler aufgetreten.<br>Antwort vom Server:<br> {1}",
+	SAVE_INCOMMINGS_TECH_ERROR : "Beim speichern der Einnahmen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
+	
+	REMOVE_INCOMMING_TITLE : "Bist Du sicher?",
+        REMOVE_INCOMMING_MESSG : "M&ouml;chtest Du diese Einnahme wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
+        
+	LOAD_PROJECTS_TITLE : "Fehler beim laden der Projekte",
+	LOAD_PROJECTS_ERROR : "Beim laden der Projekte ist ein Fehler aufgetreten.<br>Antwort vom Server:<br> {1}",
+	LOAD_PROJECTS_TECH_ERROR : "Beim laden der Projekte ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
+	        
+	LOAD_PROJ_MODEL_TITLE : "Fehler beim laden des Projektes",
+	LOAD_PROJ_MODEL_ERROR : "Beim laden des Projektes ist ein Fehler aufgetreten.<br>Antwort vom Server:<br> {1}",
+	LOAD_PROJ_MODEL_TECH_ERROR : "Beim laden des Projektes ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
+	
+	REMOVE_PLANNING_ITEM_TITLE : "Bist Du sicher?",
+        REMOVE_PLANNING_ITEM_MESSG : "M&ouml;chtest Du diesen Planungs-Posten wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
+        
+	REMOVE_PAYMENT_ITEM_TITLE : "Bist Du sicher?",
+        REMOVE_PAYMENT_ITEM_MESSG : "M&ouml;chtest Du diesen Finanzierungs-Posten wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
+        
+	REMOVE_OUTGOING_ITEM_TITLE : "Bist Du sicher?",
+        REMOVE_OUTGOING_ITEM_MESSG : "M&ouml;chtest Du diesen Ausgabe-Posten wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
+        
+
     }
 
     return {

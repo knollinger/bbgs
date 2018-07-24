@@ -84,6 +84,46 @@ Model.prototype.createCurrencyAttributeBinding = function(htmlTag, attr, xPath, 
 }
 
 /**
+ * Convinience-Methode, um ein ValueBinding mit dem Value eines Date-HtmlTags zu
+ * erzeugen
+ * 
+ * @param htmlTag
+ * @param xPath
+ * @param eventName
+ *                optional, wenn nicht angegeben wird ein defaultEventName
+ *                verwendet. Siehe getHtmlEventType *
+ */
+Model.prototype.createDateValueBinding = function(htmlTag, xPath, eventName) {
+
+    this.createDateAttributeBinding(htmlTag, "value", xPath, eventName);
+}
+
+/**
+ * Convinience-Methode, um ein ValueBinding mit dem Value eines Date-HtmlTags zu
+ * erzeugen
+ * 
+ * @param htmlTag
+ * @param xPath
+ * @param eventName
+ *                optional, wenn nicht angegeben wird ein defaultEventName
+ *                verwendet. Siehe getHtmlEventType *
+ */
+Model.prototype.createDateAttributeBinding = function(htmlTag, attr, xPath, eventName) {
+
+    var toXml = function(val) {
+
+	var date = DateTimeUtils.parseDate(val, "{dd}.{mm}.{yyyy}");
+	return date.getTime();
+    }
+    var fromXml = function(val) {
+	var date = new Date(parseInt(val));
+	return DateTimeUtils.formatDate(date, "{dd}.{mm}.{yyyy}");
+    }
+
+    this.createAttributeBinding(htmlTag, attr, xPath, eventName, toXml, fromXml);
+}
+
+/**
  * Erzeugt ein Bindung zwischen dem textContent eines XMLNodes im Model und dem
  * angegebenen Attribute eines HTML-Objektes. Beim erstellen des Bindings wird
  * der aktuelle textContent aus der xmlNode als attributeValue in das
@@ -515,7 +555,34 @@ Model.prototype.fireXmlEvent = function(node) {
  */
 Model.prototype.stringify = function() {
 
-    return XmlUtils.stringify(this.workingCopy);
+    return XmlUtils.stringify(this.xmlDocument);
+}
+
+/**
+ * erzeuge ein "Compressed-Document". Compressed bedeutet dabei, das alle nicht
+ * relevanten Elemente entfernt wurden. Diese Elemente werde durch
+ * XPath-Ausdrücke definiert. Das eigentliche Model wird nicht verändert, es
+ * wird eine Kopie zurück geliefert.
+ * 
+ * @param xPathesToRemove
+ *                ein Array, welches die zu entfernenden XPathes beinhaltet
+ */
+Model.prototype.getCompressedDocument = function(xPathesToRemove) {
+
+    var result = new Model(this.xmlDocument);
+
+    for(var i = 0; i < xPathesToRemove.length; i++) {
+	
+    }
+    return result.getDocument();
+}
+
+/**
+ * Transformiere in die String-Darstellung
+ */
+Model.prototype.stringify = function() {
+
+    return XmlUtils.stringify(this.xmlDocument);
 }
 
 /*---------------------------------------------------------------------------*/

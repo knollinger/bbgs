@@ -13,7 +13,7 @@ var Validator = function() {
 Validator.prototype.validate = function(parent) {
 
     var result = true;
-    parent = UIUtils.getElement(parent);
+    var parent = UIUtils.getElement(parent);
     if (parent) {
 
 	var allChilds = this.getAllInputFields(parent);

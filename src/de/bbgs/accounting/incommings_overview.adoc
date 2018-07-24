@@ -1,0 +1,6 @@
+{HEADER}
+= Kurs-Details für den Kurs $COURSE_NAME$
+$COURSE_DESC$
+{/HEADER}
+
+= Notizen/Kommentare

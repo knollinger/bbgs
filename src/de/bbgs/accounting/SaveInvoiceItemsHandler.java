@@ -5,8 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -18,15 +16,16 @@ import de.bbgs.xml.ErrorResponse;
 import de.bbgs.xml.IJAXBObject;
 
 /**
- * 
+ * Liefert die Liste aller InvoiceItems
  *
  */
-public class GetProjectsOverviewHandler implements IXmlServiceHandler
+public class SaveInvoiceItemsHandler implements IXmlServiceHandler
 {
 
     /* (non-Javadoc)
      * @see de.bbgs.service.IXmlServiceHandler#needsSession()
      */
+    @Override
     public boolean needsSession()
     {
         return true;
@@ -38,7 +37,7 @@ public class GetProjectsOverviewHandler implements IXmlServiceHandler
     @Override
     public Class<? extends IJAXBObject> getResponsibleFor()
     {
-        return Request.class;
+        return InvoiceItemsModel.class;
     }
 
     /* (non-Javadoc)
@@ -48,7 +47,7 @@ public class GetProjectsOverviewHandler implements IXmlServiceHandler
     public Collection<Class<? extends IJAXBObject>> getUsedJaxbClasses()
     {
         Collection<Class<? extends IJAXBObject>> result = new ArrayList<>();
-        result.add(Request.class);
+        result.add(InvoiceItemsModel.class);
         result.add(Response.class);
         return result;
     }
@@ -59,16 +58,18 @@ public class GetProjectsOverviewHandler implements IXmlServiceHandler
     @Override
     public IJAXBObject handleRequest(IJAXBObject request, SessionWrapper session)
     {
-        IJAXBObject rsp = null;
         Connection conn = null;
+        IJAXBObject rsp = null;
         try
         {
             conn = ConnectionPool.getConnection();
-            Response response = new Response();
-            response.projects.addAll(ProjectsDBUtils.getAllProjects(conn));
-            response.invoiceItems = AccountingDBUtils.getAllInvoiceItems(conn);
-
-            rsp = response;
+            conn.setAutoCommit(false);
+            
+            InvoiceItemsModel model = (InvoiceItemsModel)request;
+            AccountingDBUtils.saveAllInvoiceItems(model.items, conn);
+            
+            conn.commit();
+            rsp = new Response();
         }
         catch (SQLException e)
         {
@@ -81,22 +82,13 @@ public class GetProjectsOverviewHandler implements IXmlServiceHandler
         return rsp;
     }
 
-    @XmlRootElement(name = "get-projects-request")
-    @XmlType(name = "GetProjectsOverview.Request")
-    public static class Request implements IJAXBObject
-    {
-    }
-
-    @XmlRootElement(name = "get-projects-ok-response")
-    @XmlType(name = "GetProjectsOverview.Response")
+    /**
+     * Das Request-Objekt
+     *
+     */
+    @XmlRootElement(name = "save-invoive-items-model-ok-rsp")
+    @XmlType(name = "SaveInvoiceItemsHandler.Response")
     public static class Response implements IJAXBObject
     {
-        @XmlElement(name = "project")
-        @XmlElementWrapper(name = "projects")
-        public Collection<Project> projects = new ArrayList<>();
-        
-        @XmlElementWrapper(name="invoice-items")
-        @XmlElement(name="invoice-item")
-        public Collection<InvoiceItem> invoiceItems = new ArrayList<>();
     }
 }

@@ -14,8 +14,11 @@ var CourseFinder = function(multiSelect, onSubmit) {
 
 	self.loadModel(function() {
 
-	    self.fillTable();
 	    new TableDecorator("edit_courses_overview");
+	    self.model.addChangeListener("//get-all-courses-ok-response/courses", function() {
+		self.fillTable();
+	    });
+	    self.fillTable();
 	});
     });
 }
@@ -191,7 +194,6 @@ CourseOverview.prototype.createActions = function() {
 	var title = MessageCatalog.getMessage("COURSE_QUERY_REMOVE_TITLE");
 	var messg = MessageCatalog.getMessage("COURSE_QUERY_REMOVE", name);
 	new MessageBox(MessageBox.QUERY, title, messg, function() {
-
 	    self.removeCourse();
 	});
     });
@@ -231,7 +233,7 @@ CourseOverview.prototype.removeCourse = function() {
     caller.onSuccess = function(rsp) {
 	switch (rsp.documentElement.nodeName) {
 	case "remove-course-ok-response":
-	    self.model.removeElement(self.currCourse);
+	    self.model.removeElement(self.selection[0]);
 	    break;
 
 	case "error-response":

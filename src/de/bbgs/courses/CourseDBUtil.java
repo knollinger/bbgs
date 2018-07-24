@@ -398,7 +398,6 @@ public class CourseDBUtil
      */
     private static void createCourse(CourseModel model, Connection conn) throws SQLException
     {
-
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -420,7 +419,7 @@ public class CourseDBUtil
             DBUtils.closeQuitly(stmt);
         }
     }
-
+    
     /**
      * @param model
      * @param conn

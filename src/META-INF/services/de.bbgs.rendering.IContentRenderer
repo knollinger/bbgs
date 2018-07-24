@@ -1,0 +1,5 @@
+de.bbgs.rendering.HtmlTextRenderer
+de.bbgs.rendering.PlainTextRenderer
+de.bbgs.rendering.ImageRenderer
+de.bbgs.rendering.MultiPartRenderer
+

@@ -941,3 +941,4 @@ var LicenceDialog = function() {
     });
 }
 LicenceDialog.prototype = Object.create(WorkSpaceFrame.prototype);
+

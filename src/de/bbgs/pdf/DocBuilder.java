@@ -40,6 +40,7 @@ public class DocBuilder
      */
     public InputStream getDocument() throws IOException
     {
+        System.out.println(this.buffer.toString());
         return new ByteArrayInputStream(this.buffer.toString().getBytes("UTF-8"));
     }
 
@@ -109,6 +110,7 @@ public class DocBuilder
         public void replaceTag(String key, String replacement)
         {
             String value = (replacement == null) ? "" : replacement;
+            value = value.replaceAll("\n", " +\n");
             this.workingCopy = this.workingCopy.replace(key, value);
         }
 
