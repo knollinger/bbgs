@@ -1117,7 +1117,10 @@ ProjectsOverviewSubView.prototype.createPrintAction = function() {
     var self = this;
     var action = new WorkSpaceFrameAction("gui/images/folder-print.svg", "Drucken", function() {
 
-	alert("comming soon");
+	var id = self.currProj.getElementsByTagName("id")[0].textContent;
+	var title = self.currProj.getElementsByTagName("name")[0].textContent;
+	var url = "getDocument/projectDocument?id="+id;
+	new DocumentViewer(url, title);
     });
 
     this.addAction(action);

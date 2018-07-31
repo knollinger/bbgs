@@ -10,7 +10,7 @@ var MessageCatalog = (function() {
 	// all about the login page
 	//
 	QUERY_LOGOUT_TITLE : "Bis Du sicher ?",
-	QUERY_LOGOUT : "M&ouml;chtest DU Dich wirklich abmelden ?",
+	QUERY_LOGOUT : "M&ouml;chtest Du Dich wirklich abmelden?<br><br>Eventuell noch nicht gespeicherte &Auml;nderungen gehen dann verloren.",
 	LOGIN_ERROR_TITLE : "Fehler bei der Anmeldung",
 	LOGIN_TECH_ERROR : "Bei der Anmeldung ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
 

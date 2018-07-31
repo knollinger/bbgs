@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.mail.Address;
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -30,7 +31,7 @@ import de.bbgs.utils.DBUtils;
  */
 public class MailFetcher implements Runnable
 {
-//    private static String[] foldersToScan = {"INBOX", "[Gmail]/Gesendet", "[Gmail]/Spam"};
+    private static String[] foldersToScan = {"INBOX", "[Gmail]/Gesendet"};
     /* (non-Javadoc)
      * @see java.lang.Runnable#run()
      */
@@ -42,36 +43,16 @@ public class MailFetcher implements Runnable
         {
             conn = ConnectionPool.getConnection();
             conn.setAutoCommit(false);
-//            Store s = this.getStore();
-//
-//            for (String folderName : foldersToScan)
-//            {
-//                Folder f = s.getFolder(folderName);
-//                this.enumFolder(f, conn);
-//            }
-//
-//            s.close();
+            Store s = this.getStore();
+
+            for (String folderName : foldersToScan)
+            {
+                Folder f = s.getFolder(folderName);
+                this.enumFolder(f, conn);
+            }
+
+            s.close();
         }
-//        catch (JAXBException e)
-//        {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        catch (MessagingException e)
-//        {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-        catch (SQLException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-//        catch (IOException e)
-//        {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
         catch (Exception e)
         {
             // TODO Auto-generated catch block
@@ -108,18 +89,18 @@ public class MailFetcher implements Runnable
     private Store getStore() throws JAXBException, MessagingException
     {
         Setup setup = SetupReader.getSetup();
-        ConnectionDesc conn = setup.getEmailSetup().receive;
+        ConnectionDesc connDesc = setup.getEmailSetup().receive;
 
 
         Properties props = System.getProperties();
-        props.setProperty("mail.store.protocol", conn.protocol);
+        props.setProperty("mail.store.protocol", connDesc.protocol);
         Session session = Session.getDefaultInstance(props, null);
 
         String host = setup.getEmailSetup().receive.host;
         String user = setup.getEmailSetup().receive.user;
         String pass = setup.getEmailSetup().receive.passwd;
 
-        Store store = session.getStore(conn.protocol);
+        Store store = session.getStore(connDesc.protocol);
         store.connect(host, user, pass);
         return store;
     }
@@ -135,7 +116,7 @@ public class MailFetcher implements Runnable
         PreparedStatement stmt = null;
         try
         {
-            f.open(Folder.READ_ONLY);
+            f.open(Folder.READ_WRITE);
             Message[] messages = f.getMessages();
             for (int i = 0; i < messages.length; i++)
             {
@@ -188,6 +169,7 @@ public class MailFetcher implements Runnable
             {
                 conn.commit();
             }
+            message.setFlag(Flags.Flag.DELETED, true);
         }
         finally
         {

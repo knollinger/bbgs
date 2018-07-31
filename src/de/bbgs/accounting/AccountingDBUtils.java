@@ -85,7 +85,7 @@ public class AccountingDBUtils
      * @param conn
      * @throws SQLException 
      */
-    private static int createInvoiceItem(InvoiceItem item, Connection conn) throws SQLException
+    public static int createInvoiceItem(InvoiceItem item, Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;

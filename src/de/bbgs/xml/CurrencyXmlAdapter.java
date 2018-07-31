@@ -16,7 +16,6 @@ public class CurrencyXmlAdapter extends XmlAdapter<String, Double>
 
     static
     {
-        CurrencyXmlAdapter.currencyFmt =  NumberFormat.getNumberInstance(Locale.GERMANY);
         CurrencyXmlAdapter.currencyFmt = NumberFormat.getNumberInstance(Locale.GERMANY);
         CurrencyXmlAdapter.currencyFmt.setMinimumFractionDigits(2);
         CurrencyXmlAdapter.currencyFmt.setMaximumFractionDigits(2);

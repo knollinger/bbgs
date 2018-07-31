@@ -72,12 +72,30 @@
 		</invoice-record>
 		<invoice-record>
 			<id>6</id>
-			<action>REMOVE</action>
+			<action>NONE</action>
 			<source>35</source>
 			<target>7</target>
 			<amount>100.0</amount>
 			<description>anzahlung</description>
 			<date>1531519200000</date>
+		</invoice-record>
+		<invoice-record>
+			<id>7</id>
+			<action>REMOVE</action>
+			<source>35</source>
+			<target>7</target>
+			<amount>80.0</amount>
+			<description>Lippenstifte</description>
+			<date>1531605600000</date>
+		</invoice-record>
+		<invoice-record>
+			<id>8</id>
+			<action>NONE</action>
+			<source>35</source>
+			<target>8</target>
+			<amount>120.0</amount>
+			<description>Test</description>
+			<date>1531605600000</date>
 		</invoice-record>
 	</invoice-records>
 	<inout-items>

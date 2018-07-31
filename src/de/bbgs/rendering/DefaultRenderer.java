@@ -9,11 +9,11 @@ import org.jsoup.nodes.Document;
 
 
 /**
- * Der DefaultRenderer erzeugt nur eine DIV, in welcher er mault das 
- * er den gegebenen ContentType nicht rendern kann.
+ * Der DefaultRenderer tut einfach gar nichts. Er dient nur als Fallback, 
+ * wenn ein gelieferter ContentType nicht bedient werden kann.
  */
 public class DefaultRenderer implements IContentRenderer
-{    
+{
     /* (non-Javadoc)
      * @see de.bbgs.rendering.IContentRenderer#responsibleFor()
      */

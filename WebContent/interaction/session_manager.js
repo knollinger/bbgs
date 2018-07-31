@@ -37,7 +37,6 @@ var SessionManager = (function() {
 	onLoggedIn : function(rsp) {
 	    
 	    MainNavigation.showHomeScreen();
-	    NotificationManager.poll();
 	},
 	
 	/**

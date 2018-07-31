@@ -70,30 +70,4 @@ public class ContentRendererFactory
         }
         return new DefaultRenderer();
     }
-    
-    /**
-     * @param args
-     * @throws Exception
-     */
-    public static void main(String[] args) throws Exception
-    {
-        InputStream in = ContentRendererFactory.class.getResourceAsStream("test.txt");
-        ByteArrayOutputStream buf = new ByteArrayOutputStream();
-        IOUtils.transferUntilEOF(in, buf);
-        
-        String t = "multipart/MIXED; \n" + 
-            "    boundary=\"----=_Part_0_165241392.1531381428787\"";
-        ContentType ct = new ContentType(t);
-        
-        Document doc = new Document("");
-        Element html = doc.appendElement("html");
-        html.appendElement("head");
-        html.appendElement("body");
-        IContentRenderer r = ContentRendererFactory.getInstance().getRenderer(ct);
-        r.renderContent(doc, new HashMap<String, String>(), ct, new ByteArrayInputStream(buf.toByteArray()));
-        
-        FileWriter out = new FileWriter(new File("/home/anderl/test.html"));
-        out.append(doc.html());
-        out.close();
-    }
 }

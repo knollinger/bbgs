@@ -243,7 +243,7 @@ public class MailHelper
         props.put("mail.smtp.host", setup.send.host);
         props.put("mail.smtp.port", setup.send.port);
 
-        javax.mail.Session sess = javax.mail.Session.getDefaultInstance(props, new UIDPwdAuthenticator(setup));
+        javax.mail.Session sess = javax.mail.Session.getInstance(props, new UIDPwdAuthenticator(setup));
         return sess;
     }
 

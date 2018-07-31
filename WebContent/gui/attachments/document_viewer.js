@@ -1,17 +1,39 @@
 /**
+ * XHR folgt automatisch redirektionen, es lässt sich nicht ändern Sollte die
+ * Session grade verloren sein, so haben wir keine Chance den Status-Code 302 zu
+ * testen. Es ist schmutzig, aber wir prüfen nun einfach ob die ResponseURL auf
+ * die Startseite verweist. In dem Fall navigieren wir das Window manuell dahin
  * 
- */
-var DocumentViewer = function(url, title) {
+ * @param url
+ */var DocumentViewer = function(url, title) {
 
     BusyIndicator.show();
     
-    var glass = this.createGlassPane();
-    glass.appendChild(this.createTitlebar(title, glass, url));
-    glass.tabIndex = "0";
-    document.body.appendChild(glass);
-    glass.focus();
+    var self = this;
+    var xhr = new XMLHttpRequest();
+    xhr.open("HEAD", url, true);
+    xhr.onreadystatechange = function(evt) {
 
-    this.detectMimeType(url, glass);
+        if (xhr.readyState == XMLHttpRequest.prototype.DONE) {
+
+            BusyIndicator.hide();
+            if (xhr.status == 200) {
+                var rspUrl = xhr.responseURL;
+                if (rspUrl.endsWith("/index.html")) {
+                    self.handleSessionLost(rspUrl);
+                } else {
+                    self.createPlayer(url, title, xhr.getResponseHeader("Content-Type"));
+                }
+            }
+        }
+    }
+
+    xhr.onerror = function(evt) {
+        var title = MessageCatalog.getMessage("SVCCALLER_TITLE_ERROR");
+        var msg = MessageCatalog.getMessage("SVCCALLER_MSG_TECH_ERROR");
+        new MessageBox(MessageBox.WARNING, title, msg);
+    }
+    xhr.send("");
 }
 
 /**
@@ -62,64 +84,8 @@ DocumentViewer.prototype.createTitlebar = function(title, glass, url) {
         glass.parentElement.removeChild(glass);
     });
 
-    // make the download-button
-    titlebar.appendChild(this.makeDownloadButton(url)); 
-
     titlebar.appendChild(UIUtils.createClearFix());
     return titlebar;
-}
-
-/**
- * erzeuge den Download-Button
- */
-DocumentViewer.prototype.makeDownloadButton = function(url) {
-    
-    var img = document.createElement("img");
-    img.src = "gui/images/download.svg";
-    img.className = "docviewer-titlebar-btn";
-
-    var link = document.createElement("a");
-    link.href = url;
-    link.download = "";
-    link.appendChild(img);
-    return link;
-}
-
-/**
- * XHR folgt automatisch redirektionen, es lässt sich nicht ändern Sollte die
- * Session grade verloren sein, so haben wir keine Chance den Status-Code 302 zu
- * testen. Es ist schmutzig, aber wir prüfen nun einfach ob die ResponseURL auf
- * die Startseite verweist. In dem Fall navigieren wir das Window manuell dahin
- * 
- * @param url
- */
-DocumentViewer.prototype.detectMimeType = function(url, glass) {
-
-    var self = this;
-    var xhr = new XMLHttpRequest();
-    xhr.open("HEAD", url, true);
-    xhr.onreadystatechange = function(evt) {
-
-        if (xhr.readyState == XMLHttpRequest.prototype.DONE) {
-
-            BusyIndicator.hide();
-            if (xhr.status == 200) {
-                var rspUrl = xhr.responseURL;
-                if (rspUrl.endsWith("/index.html")) {
-                    self.handleSessionLost();
-                } else {
-                    self.createPlayer(url, xhr.getResponseHeader("Content-Type"), glass);
-                }
-            }
-        }
-    }
-
-    xhr.onerror = function(evt) {
-        var title = MessageCatalog.getMessage("SVCCALLER_TITLE_ERROR");
-        var msg = MessageCatalog.getMessage("SVCCALLER_MSG_TECH_ERROR");
-        MessageBox.showWarningMsg(title, msg);
-    }
-    xhr.send("");
 }
 
 /**
@@ -129,7 +95,7 @@ DocumentViewer.prototype.handleSessionLost = function(rspUrl) {
 
     var title = MessageCatalog.getMessage("SVCCALLER_TITLE_ERROR");
     var msg = MessageCatalog.getMessage("SVCCALLER_MSG_SESSION_LOST");
-    MessageBox.showInfoMsg(title, msg, function() {
+    new MessageBox(MessageBox.WARNING, title, msg, function() {
         window.location.href = rspUrl;
     });
 }
@@ -139,7 +105,13 @@ DocumentViewer.prototype.handleSessionLost = function(rspUrl) {
  * @param url
  * @param mimeType
  */
-DocumentViewer.prototype.createPlayer = function(url, mimeType, glass) {
+DocumentViewer.prototype.createPlayer = function(url, title, mimeType) {
+
+    var glass = this.createGlassPane();
+    glass.appendChild(this.createTitlebar(title, glass, url));
+    glass.tabIndex = "0";
+    document.body.appendChild(glass);
+    glass.focus();
 
     var player = null;
     var mainType = mimeType.split("/")[0];

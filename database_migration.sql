@@ -267,7 +267,7 @@ CREATE TABLE `invoice_items` (
   PRIMARY KEY (`id`));
   
 insert into invoice_items (ref_id, konto, name, description) 
-	select id, '0', name, 'Planungs-Konto' from courses where type="ONETIME";
+	select id, '0', name, 'Planungs-Konto' from courses;
 
 CREATE TABLE `invoice_records` (
   `id` INT(10) NOT NULL AUTO_INCREMENT,

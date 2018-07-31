@@ -148,7 +148,6 @@ LogonDialog.prototype.logon = function(userId, passwd, inputField) {
 	switch (rsp.documentElement.nodeName) {
 	case 'login-user-ok-response':
 	    MainNavigation.showHomeScreen();
-	    NotificationManager.start();
 	    break;
 
 	case 'error-response':

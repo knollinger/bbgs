@@ -11,6 +11,7 @@ de.bbgs.todolist.GetPinboardDocumentHandler
 de.bbgs.dsgvo.AcceptDSEhandler
 
 de.bbgs.accounting.PrintIncommingsHandler
+de.bbgs.accounting.GetProjectDocumentHandler
 
 de.bbgs.mail.GetMailContentHandler
 

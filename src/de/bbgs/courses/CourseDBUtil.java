@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.bbgs.accounting.AccountingDBUtils;
+import de.bbgs.accounting.InvoiceItem;
 import de.bbgs.attachments.AttachmentsDBUtil;
 import de.bbgs.attachments.EAttachmentDomain;
 import de.bbgs.contacts.Contact;
@@ -389,6 +391,14 @@ public class CourseDBUtil
 
         NotesDBUtil.handleNoteChanges(mdl.notes, mdl.id, ENoteDomain.COURSE, conn);
         AttachmentsDBUtil.handleAttachmentChanges(mdl.attachments, mdl.id, EAttachmentDomain.COURSE, conn);
+        
+        InvoiceItem invItem = new InvoiceItem();
+        invItem.account = 0;
+        invItem.action = EAction.CREATE;
+        invItem.refId = mdl.id;
+        invItem.name = mdl.name;
+        invItem.description = mdl.description;
+        AccountingDBUtils.createInvoiceItem(invItem, conn);
     }
 
     /**
