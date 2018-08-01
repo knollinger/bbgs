@@ -255,7 +255,12 @@ var MessageCatalog = (function() {
 	LOAD_PROJ_MODEL_TITLE : "Fehler beim laden des Projektes",
 	LOAD_PROJ_MODEL_ERROR : "Beim laden des Projektes ist ein Fehler aufgetreten.<br>Antwort vom Server:<br> {1}",
 	LOAD_PROJ_MODEL_TECH_ERROR : "Beim laden des Projektes ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
+
+	SAVE_PROJ_MODEL_TITLE : "Fehler beim speichern des Projektes",
+	SAVE_PROJ_MODEL_ERROR : "Beim speichern des Projektes ist ein Fehler aufgetreten.<br>Antwort vom Server:<br> {1}",
+	SAVE_PROJ_MODEL_TECH_ERROR : "Beim speichern des Projektes ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
 	
+
 	REMOVE_PLANNING_ITEM_TITLE : "Bist Du sicher?",
         REMOVE_PLANNING_ITEM_MESSG : "M&ouml;chtest Du diesen Planungs-Posten wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
         

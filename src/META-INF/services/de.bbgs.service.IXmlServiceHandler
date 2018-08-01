@@ -103,3 +103,5 @@ de.bbgs.accounting.SaveIncommingsHandler
 
 de.bbgs.accounting.GetAllProjectsHandler
 de.bbgs.accounting.GetProjectModelHandler
+de.bbgs.accounting.SaveProjectModelHandler
+

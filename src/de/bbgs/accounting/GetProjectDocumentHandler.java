@@ -323,37 +323,33 @@ public class GetProjectDocumentHandler implements IGetDocServiceHandler
      * @param conn
      * @throws SQLException 
      */
-    public void createOutgoingsPage(int projId, DocBuilder db, Connection conn) throws SQLException {
-                
+    public void createOutgoingsPage(int projId, DocBuilder db, Connection conn) throws SQLException
+    {
+
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try
         {
             stmt = conn.prepareStatement(
-                "select r.amount, r.description,i.konto, i.name, i.id from invoice_records r\n"  
-                          + "left join invoice_items i on r.target = i.id\n"  
-                          + " where source in\n"  
-                                + "(select id from invoice_items where ref_id=?) order by i.konto, i.name");
+                "select r.amount, r.description, r.source, r.target, i.konto, i.name, i.id from invoice_records r\n"
+                    + "left join invoice_items i on r.target = i.id\n" + " where source in\n"
+                    + "(select id from invoice_items where ref_id=?) order by i.konto, i.name");
             stmt.setInt(1, projId);
             rs = stmt.executeQuery();
 
             DocPart part = null;
             double total = 0.0f;
+            int lastItemId = 0;
             while (rs.next())
             {
-                part = db.duplicateSection("OUTGOING_ROW");
-                String name = String.format("%1$d - %2$s", Integer.valueOf(rs.getInt("i.konto")),
-                    rs.getString("i.name"));
-                part.replaceTag("$NAME$", name);
-
-                double amount = rs.getDouble("r.amount");
-                part.replaceTag("$PLANNED$", "");
-                part.replaceTag("$AMOUNT$", this.currencyFmt.format(amount));
-                total += amount;
-
-                part.replaceTag("$DESCRIPTION$", rs.getString("r.description"));
-                part.commit();
+                int currItemId = rs.getInt("i.id");
+                if (currItemId != lastItemId)
+                {
+                    this.createOutgoingCategoryRow(projId, rs, db, conn);
+                    lastItemId = currItemId;
+                }
+                total = this.createOutgoingDataRow(rs, total, db);
             }
             db.removeSection("OUTGOING_ROW");
 
@@ -369,6 +365,103 @@ public class GetProjectDocumentHandler implements IGetDocServiceHandler
             DBUtils.closeQuitly(rs);
             DBUtils.closeQuitly(stmt);
         }
+    }
+
+    private void createOutgoingCategoryRow(int projId, ResultSet rs, DocBuilder db, Connection conn) throws SQLException
+    {
+        DocPart part = db.duplicateSection("OUTGOING_ROW");
+        String name = String.format("%1$d - %2$s", Integer.valueOf(rs.getInt("i.konto")), rs.getString("i.name"));
+        part.replaceTag("$NAME$", name);
+
+        int invItemId = rs.getInt("r.target");
+        double planned = this.getPlannedForInvoiceItem(projId, invItemId, conn);        
+        part.replaceTag("$PLANNED$", this.currencyFmt.format(planned));        
+        
+        int projItemId = rs.getInt("r.source");
+        double payed = this.getPayedForInvoiceItem(projItemId, invItemId, conn);                
+        part.replaceTag("$AMOUNT$", this.currencyFmt.format(payed));
+
+        part.replaceTag("$DESCRIPTION$", "");
+        part.commit();
+    }
+
+    /**
+     * @param projId
+     * @param invItemId
+     * @param conn
+     * @return
+     * @throws SQLException
+     */
+    private double getPlannedForInvoiceItem(int projId, int invItemId, Connection conn) throws SQLException
+    {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try
+        {
+            double total = 0.0f;
+            stmt = conn.prepareStatement("select sum(amount) as planned from planning_items where proj_id=? and invoice_item_id=?");
+            stmt.setInt(1,  projId);
+            stmt.setInt(2,  invItemId);
+            rs = stmt.executeQuery();
+            if(rs.next()) {
+                total = rs.getDouble("planned");
+            }
+            return total;
+        }
+        finally
+        {
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+        }
+    }
+
+    /**
+     * @param projItemId
+     * @param invItemId
+     * @param conn
+     * @return
+     * @throws SQLException
+     */
+    private double getPayedForInvoiceItem(int projItemId, int invItemId, Connection conn) throws SQLException
+    {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try
+        {
+            double total = 0.0f;
+            stmt = conn.prepareStatement("select sum(amount) as payed from invoice_records where source=? and target=?");
+            stmt.setInt(1,  projItemId);
+            stmt.setInt(2,  invItemId);
+            rs = stmt.executeQuery();
+            if(rs.next()) {
+                total = rs.getDouble("payed");
+            }
+            return total;
+        }
+        finally
+        {
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+        }
+    }
+
+    /**
+     * @throws SQLException 
+     * 
+     */
+    private double createOutgoingDataRow(ResultSet rs, double total, DocBuilder db) throws SQLException
+    {
+        DocPart part = db.duplicateSection("OUTGOING_ROW");
+        part.replaceTag("$NAME$", "");
+
+        double amount = rs.getDouble("r.amount");
+        part.replaceTag("$PLANNED$", "");
+        part.replaceTag("$AMOUNT$", this.currencyFmt.format(amount));
+        total += amount;
+
+        part.replaceTag("$DESCRIPTION$", rs.getString("r.description"));
+        part.commit();
+        return total;
     }
 
 }

@@ -16,10 +16,10 @@ import de.bbgs.xml.ErrorResponse;
 import de.bbgs.xml.IJAXBObject;
 
 /**
- * Liefert die Liste aller InvoiceItems
+ * @author anderl
  *
  */
-public class SaveIncommingsHandler implements IXmlServiceHandler
+public class SaveProjectModelHandler implements IXmlServiceHandler
 {
 
     /* (non-Javadoc)
@@ -37,7 +37,7 @@ public class SaveIncommingsHandler implements IXmlServiceHandler
     @Override
     public Class<? extends IJAXBObject> getResponsibleFor()
     {
-        return InvoiceRecordsModel.class;
+        return ProjectModel.class;
     }
 
     /* (non-Javadoc)
@@ -47,7 +47,7 @@ public class SaveIncommingsHandler implements IXmlServiceHandler
     public Collection<Class<? extends IJAXBObject>> getUsedJaxbClasses()
     {
         Collection<Class<? extends IJAXBObject>> result = new ArrayList<>();
-        result.add(InvoiceItemsModel.class);
+        result.add(ProjectModel.class);
         result.add(Response.class);
         return result;
     }
@@ -58,18 +58,20 @@ public class SaveIncommingsHandler implements IXmlServiceHandler
     @Override
     public IJAXBObject handleRequest(IJAXBObject request, SessionWrapper session)
     {
-        Connection conn = null;
         IJAXBObject rsp = null;
+        Connection conn = null;
+
         try
         {
             conn = ConnectionPool.getConnection();
             conn.setAutoCommit(false);
-            
-            InvoiceRecordsModel model = (InvoiceRecordsModel)request;
-            AccountingDBUtils.saveAllInvoiceRecords(model.records, conn);
+
+            ProjectModel model = (ProjectModel) request;
+            AccountingDBUtils.saveProjectModel(model, conn);
             
             conn.commit();
-            rsp = new Response();
+            return new Response();
+
         }
         catch (SQLException e)
         {
@@ -82,12 +84,9 @@ public class SaveIncommingsHandler implements IXmlServiceHandler
         return rsp;
     }
 
-    /**
-     * Das Request-Objekt
-     *
-     */
-    @XmlRootElement(name = "save-incommings-ok-rsp")
-    @XmlType(name = "SaveIncommingsHandler.Response")
+
+    @XmlRootElement(name = "save-project-model-ok-rsp")
+    @XmlType(name = "SaveProjectModelHandler.Response")
     public static class Response implements IJAXBObject
     {
     }

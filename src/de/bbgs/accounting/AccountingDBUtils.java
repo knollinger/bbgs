@@ -15,6 +15,10 @@ import de.bbgs.utils.DBUtils;
  * Die Datenbank-Werkzeuge für die Buchhaltung
  *
  */
+/**
+ * @author anderl
+ *
+ */
 public class AccountingDBUtils
 {
     /**
@@ -270,7 +274,7 @@ public class AccountingDBUtils
      * @param conn
      * @throws SQLException 
      */
-    public static void saveAllIncommings(Collection<InvoiceRecord> records, Connection conn) throws SQLException
+    public static void saveAllInvoiceRecords(Collection<InvoiceRecord> records, Connection conn) throws SQLException
     {
         for (InvoiceRecord record : records)
         {
@@ -621,4 +625,154 @@ public class AccountingDBUtils
             DBUtils.closeQuitly(stmt);
         }
     }
+
+    /**
+     * @param model
+     * @param conn
+     * @throws SQLException 
+     */
+    public static void saveProjectModel(ProjectModel model, Connection conn) throws SQLException
+    {
+        AccountingDBUtils.saveProjectCoreData(model.coreData, conn);
+        AccountingDBUtils.saveAllPlanningItems(model.coreData.id, model.planningItems, conn);
+
+        Collection<InvoiceItem> invItems = new ArrayList<InvoiceItem>();
+        invItems.add(model.projectItem);
+        invItems.addAll(model.invoiceItems);
+        AccountingDBUtils.saveAllInvoiceItems(invItems, conn);
+        AccountingDBUtils.saveAllInvoiceRecords(model.invoiceRecords, conn);
+    }
+
+    /**
+     * @param coreData
+     * @param conn
+     * @throws SQLException 
+     */
+    private static void saveProjectCoreData(ProjectDescription coreData, Connection conn) throws SQLException
+    {
+        if (coreData.action.equals(EAction.MODIFY))
+        {
+            PreparedStatement stmt = null;
+            try
+            {
+                stmt = conn.prepareStatement("update courses set name=?, description=? where id=?");
+                stmt.setString(1, coreData.name);
+                stmt.setString(2, coreData.description);
+                stmt.setInt(3, coreData.id);
+                stmt.executeUpdate();
+            }
+            finally
+            {
+                DBUtils.closeQuitly(stmt);
+            }
+        }
+    }
+
+    /**
+     * @param projId 
+     * @param planningItems
+     * @param conn
+     * @throws SQLException 
+     */
+    private static void saveAllPlanningItems(int projId, Collection<PlanningItem> planningItems, Connection conn) throws SQLException
+    {
+        for (PlanningItem planningItem : planningItems)
+        {
+            switch (planningItem.action)
+            {
+                case CREATE :
+                    AccountingDBUtils.createPlanningItem(projId, planningItem, conn);
+                    break;
+
+                case MODIFY :
+                    AccountingDBUtils.updatePlanningItem(planningItem, conn);
+                    break;
+
+                case REMOVE :
+                    AccountingDBUtils.removePlanningItem(planningItem.id, conn);
+                    break;
+
+                default :
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @param projId
+     * @param planningItem
+     * @param conn
+     * @throws SQLException 
+     */
+    private static void createPlanningItem(int projId, PlanningItem planningItem, Connection conn) throws SQLException
+    {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            stmt = conn.prepareStatement("insert into planning_items set proj_id=?, invoice_item_id=?, amount=?, description=?");
+            stmt.setInt(1,  projId);
+            stmt.setInt(2,  planningItem.invItemId);
+            stmt.setDouble(3, planningItem.amount);
+            stmt.setString(4, planningItem.description);
+            stmt.executeUpdate();
+            rs = stmt.getGeneratedKeys();
+            rs.next();
+            planningItem.id = rs.getInt(1);
+        }
+        finally
+        {
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+        }
+    }
+
+    /**
+     * @param planningItem
+     * @param conn
+     * @throws SQLException
+     */
+    private static void updatePlanningItem(PlanningItem planningItem, Connection conn) throws SQLException
+    {
+        PreparedStatement stmt = null;
+
+        try
+        {
+            stmt = conn.prepareStatement("update planning_items set invoice_item_id=?, amount=?, description=? where id=?");
+            stmt.setInt(1,  planningItem.invItemId);
+            stmt.setDouble(2,  planningItem.amount);
+            stmt.setString(3,  planningItem.description);
+            stmt.setInt(4,  planningItem.id);
+            stmt.executeUpdate();
+        }
+        finally
+        {
+            DBUtils.closeQuitly(stmt);
+        }
+    }
+
+    /**
+     * @param id
+     * @param conn
+     * @throws SQLException
+     */
+    private static void removePlanningItem(int id, Connection conn) throws SQLException
+    {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            stmt = conn.prepareStatement("delete from planning_items where id=?");
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
+        finally
+        {
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+        }
+    }
+
 }

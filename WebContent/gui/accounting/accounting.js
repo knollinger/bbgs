@@ -1119,7 +1119,7 @@ ProjectsOverviewSubView.prototype.createPrintAction = function() {
 
 	var id = self.currProj.getElementsByTagName("id")[0].textContent;
 	var title = self.currProj.getElementsByTagName("name")[0].textContent;
-	var url = "getDocument/projectDocument?id="+id;
+	var url = "getDocument/projectDocument?id=" + id;
 	new DocumentViewer(url, title);
     });
 
@@ -1311,7 +1311,26 @@ ProjectEditor.prototype.createOutgoingsEditor = function() {
  */
 ProjectEditor.prototype.onSave = function() {
 
-    console.log(this.model.stringify());
+    var caller = new ServiceCaller();
+    caller.onSuccess = function(rsp) {
+	switch (rsp.documentElement.nodeName) {
+	case "save-incommings-ok-rsp":
+	    break;
+
+	case "error-response":
+	    var title = MessageCatalog.getMessage("SAVE_PROJ_MODEL_TITLE");
+	    var messg = MessageCatalog.getMessage("SAVE_PROJ_MODEL_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
+	    new MessageBox(MessageBox.ERROR, title, messg);
+	    break;
+
+	}
+    }
+    caller.onError = function(req, status) {
+	var title = MessageCatalog.getMessage("SAVE_PROJ_MODEL_TITLE");
+	var messg = MessageCatalog.getMessage("SAVE_PROJ_MODEL_TECH_ERROR", status);
+	new MessageBox(MessageBox.ERROR, title, messg);
+    }
+    caller.invokeService(this.model.getDocument());
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1338,6 +1357,14 @@ ProjectCoreDataEditor = function(parentFrame, targetContainer, model) {
 	until = DateTimeUtils.formatDate(until, "{dd}.{mm}.{yyyy}");
 
 	UIUtils.getElement("edit_project_from_until").textContent = from + "-" + until;
+
+	self.model.addChangeListener("//project-model/core-data", function() {
+
+	    var action = self.model.getValue("//project-model/core-data/action");
+	    if (action != "CREATE" && action != "MODIFY") {
+		self.model.setValue("//project-model/core-data/action", "MODIFY");
+	    }
+	});
     });
 }
 ProjectCoreDataEditor.prototype = Object.create(WorkSpaceTabPane.prototype);
@@ -1773,6 +1800,7 @@ ProjectPaymentEditor.prototype.createAddAction = function() {
 
 	var doc = XmlUtils.parse(ProjectPaymentEditor.EMPTY_RECORD);
 	XmlUtils.setNode(doc, "target", self.getProjItemId());
+	XmlUtils.setNode(doc, "date", new Date().getTime());
 	var xpath = self.model.addElement("//project-model/invoice-records", doc.documentElement);
 	var row = self.renderOneRecord(xpath);
 
@@ -1786,7 +1814,7 @@ ProjectPaymentEditor.prototype.createAddAction = function() {
     action.hide();
     return action;
 }
-ProjectPaymentEditor.EMPTY_RECORD = "<invoice-record><id/><action>CREATE</action><source/><target/><amount>0</amount><description/></invoice-record>";
+ProjectPaymentEditor.EMPTY_RECORD = "<invoice-record><id/><action>CREATE</action><source/><target/><amount>0</amount><description/><date/></invoice-record>";
 
 /**
  * 
@@ -2036,6 +2064,7 @@ ProjectOutgoingEditor.prototype.createAddAction = function() {
 	var doc = XmlUtils.parse(ProjectOutgoingEditor.EMPTY_RECORD);
 	XmlUtils.setNode(doc, "target", self.model.getValue(self.currCat + "/inv-item-id"));
 	XmlUtils.setNode(doc, "source", self.getProjItemId());
+	XmlUtils.setNode(doc, "date", new Date().getTime());
 
 	self.currSel = self.model.addElement("//project-model/invoice-records", doc.documentElement);
 	var record = self.model.evaluateXPath(self.currSel)[0];
@@ -2053,7 +2082,7 @@ ProjectOutgoingEditor.prototype.createAddAction = function() {
     action.hide();
     return action;
 }
-ProjectOutgoingEditor.EMPTY_RECORD = "<invoice-record><id/><action>CREATE</action><source/><target/><amount>0</amount><description/></invoice-record>";
+ProjectOutgoingEditor.EMPTY_RECORD = "<invoice-record><id/><action>CREATE</action><source/><target/><amount>0</amount><description/><date/></invoice-record>";
 
 /**
  * 
@@ -2267,17 +2296,26 @@ ProjectOutgoingEditor.prototype.createInvoiceRecordsXPath = function(invItemId) 
  */
 ProjectOutgoingEditor.prototype.createInvRecordRow = function(record) {
 
+    var xpath = XmlUtils.getXPathTo(record);
     var self = this;
     var onclick = function(row, record) {
 
 	self.currRow = row;
-	self.currSel = XmlUtils.getXPathTo(record);
+	self.currSel = xpath;
 	self.actionAdd.hide();
 	self.actionRemove.show();
     }
 
     var row = this.model.createTableRow(record, this.getRecordColDesc(), onclick);
     UIUtils.addClass(row, "expandable");
+
+    var self = this;
+    self.model.addChangeListener(xpath, function() {
+	var action = self.model.getValue(xpath + "/action");
+	if(action == "NONE") {
+	    self.model.setValue(xpath + "/action", "MODIFY");
+	}
+    });
     return row;
 
 }

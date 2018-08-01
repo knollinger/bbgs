@@ -69,7 +69,7 @@ In den Ausgangs-Konten sind die Unter-Kontonummern enthalten, welche auf den  Ve
 
 Eine Aufstellung aller Unterkonten und deren Bedeutung finden Sie im Anhang A.
 
-[width="100%", cols="<2,>1,>1,<2", options="header,footer"]
+[width="100%", cols="<2,>1,>1,<3", options="header,footer"]
 |=======================
 | Ausgangs-Konto | Geplant | Ausgegeben | Beschreibung
 {OUTGOING_ROW}

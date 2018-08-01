@@ -2,6 +2,7 @@
 <project-model>
 	<core-data>
 		<id>42</id>
+		<action>NONE</action>
 		<name>Kletterausfahrt Linderhof</name>
 		<description>Klettern am Frauenwasserl
 			Ort: Oberammergau
@@ -25,7 +26,7 @@
 			<proj-id>42</proj-id>
 			<inv-item-id>7</inv-item-id>
 			<amount>240.0</amount>
-			<description>a</description>
+			<description>Sannas Gehalt</description>
 		</planning-item>
 		<planning-item>
 			<id>3</id>
@@ -33,15 +34,7 @@
 			<proj-id>42</proj-id>
 			<inv-item-id>8</inv-item-id>
 			<amount>240.0</amount>
-			<description>b</description>
-		</planning-item>
-		<planning-item>
-			<id>4</id>
-			<action>NONE</action>
-			<proj-id>42</proj-id>
-			<inv-item-id>9</inv-item-id>
-			<amount>240.0</amount>
-			<description>c</description>
+			<description>Ullis Gehalt</description>
 		</planning-item>
 		<planning-item>
 			<id>5</id>
@@ -49,7 +42,7 @@
 			<proj-id>42</proj-id>
 			<inv-item-id>10</inv-item-id>
 			<amount>240.0</amount>
-			<description>d</description>
+			<description>Annas Gehalt</description>
 		</planning-item>
 		<planning-item>
 			<id>6</id>
@@ -57,7 +50,15 @@
 			<proj-id>42</proj-id>
 			<inv-item-id>4</inv-item-id>
 			<amount>380.0</amount>
-			<description>e</description>
+			<description>Sprit für den IG-Bus</description>
+		</planning-item>
+		<planning-item>
+			<id>8</id>
+			<action>NONE</action>
+			<proj-id>42</proj-id>
+			<inv-item-id>9</inv-item-id>
+			<amount>240.0</amount>
+			<description>Verenas Gehalt</description>
 		</planning-item>
 	</planning-items>
 	<invoice-records>
@@ -67,7 +68,7 @@
 			<source>1</source>
 			<target>35</target>
 			<amount>1200.0</amount>
-			<description>bla</description>
+			<description>Vui Spaß!</description>
 			<date>1531605600000</date>
 		</invoice-record>
 		<invoice-record>
@@ -76,12 +77,13 @@
 			<source>35</source>
 			<target>7</target>
 			<amount>100.0</amount>
-			<description>anzahlung</description>
+			<description>Anzahlung auf die Abzahlung für den Zuschlag des
+				Nachschlags</description>
 			<date>1531519200000</date>
 		</invoice-record>
 		<invoice-record>
 			<id>7</id>
-			<action>REMOVE</action>
+			<action>NONE</action>
 			<source>35</source>
 			<target>7</target>
 			<amount>80.0</amount>
