@@ -247,7 +247,7 @@ public class AccountingDBUtils
         ResultSet rs = null;
         try
         {
-            stmt = conn.prepareStatement("select * from invoice_records order by date");
+            stmt = conn.prepareStatement("select * from invoice_records where source=0 order by date");
             rs = stmt.executeQuery();
             while (rs.next())
             {
@@ -489,17 +489,18 @@ public class AccountingDBUtils
             Collection<PlanningItem> response = new ArrayList<>();
 
             stmt = conn.prepareStatement("select * from planning_items where proj_id=?");
+            stmt = conn.prepareStatement("select p.*,i.konto,i.name from planning_items p left join invoice_items i on p.invoice_item_id = i.id where p.proj_id=? order by i.konto, i.name;");
             stmt.setInt(1, projectId);
             rs = stmt.executeQuery();
             while (rs.next())
             {
                 PlanningItem p = new PlanningItem();
                 p.action = EAction.NONE;
-                p.id = rs.getInt("id");
-                p.projId = rs.getInt("proj_id");
-                p.invItemId = rs.getInt("invoice_item_id");
-                p.amount = rs.getDouble("amount");
-                p.description = rs.getString("description");
+                p.id = rs.getInt("p.id");
+                p.projId = rs.getInt("p.proj_id");
+                p.invItemId = rs.getInt("p.invoice_item_id");
+                p.amount = rs.getDouble("p.amount");
+                p.description = rs.getString("p.description");
                 response.add(p);
             }
             return response;
