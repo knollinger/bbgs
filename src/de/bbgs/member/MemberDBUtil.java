@@ -162,7 +162,7 @@ public class MemberDBUtil
                     stmt.setInt(2, memberId);
                     stmt.setBlob(3, new ByteArrayInputStream(data));
                     stmt.setString(4, mimeType);
-                    stmt.setString(6, domain.name());
+                    stmt.setString(5, domain.name());
                     stmt.executeUpdate();
                 }
             }

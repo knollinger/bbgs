@@ -69,7 +69,6 @@ public class SaveMemberModelHandler implements IXmlServiceHandler
         Connection conn = null;
         try
         {
-
             MemberModel model = (MemberModel) request;
             int id = model.coreData.id;
 

@@ -678,6 +678,7 @@ IncommingsSubView.prototype.createAddAction = function() {
     var action = new WorkSpaceFrameAction("gui/images/money-add.svg", "Einzahlung anlegen", function() {
 
 	var entry = XmlUtils.parse(IncommingsSubView.EMPTY_RECORD);
+	XmlUtils.setNode(entry, "date", new Date().getTime());
 	var xpath = self.model.addElement("//invoice-records-model/records", entry.documentElement);
 	var node = self.model.evaluateXPath(xpath)[0];
 	var row = self.addRow(node);
@@ -830,7 +831,11 @@ IncommingsSubView.prototype.getColumnDescriptor = function() {
 	});
 
 	this.COL_DESC.push(function(td, node) {
-	    return self.createKontoDropdown(node);
+	    td.style.verticalAlign = "middle";
+	    if (node.getElementsByTagName("action")[0].textContent == "CREATE") {
+		return self.createKontoDropdown(node);
+	    }
+	    return self.createKontoSpan(node);
 	});
 
 	this.COL_DESC.push(function(td, node) {
@@ -846,6 +851,24 @@ IncommingsSubView.prototype.getColumnDescriptor = function() {
 	});
     }
     return this.COL_DESC;
+}
+
+/**
+ * Erzeuge das Dropdown für die Konto-Auswahl
+ */
+IncommingsSubView.prototype.createKontoSpan = function(node) {
+
+    var xpath = XmlUtils.getXPathTo(node);
+    var targetId = this.model.getValue(xpath + "/target");
+
+    xpath = "//invoice-records-model/items/item[id='" + targetId + "']";
+    var account = this.model.getValue(xpath + "/account");
+    var name = this.model.getValue(xpath + "/name");
+
+    var span = document.createElement("span");
+    span.textContent = account + " - " + name;
+
+    return span;
 }
 
 /**
@@ -1916,7 +1939,7 @@ ProjectPaymentEditor.prototype.renderOneRecord = function(xpath) {
     this.model.addChangeListener(xpath, function() {
 
 	var action = self.model.getValue(xpath + "/action");
-	if (action != "CREATE" && action != "MODIFY") {
+	if (action == "NONE") {
 	    self.model.setValue(xpath + "/action", "MODIFY");
 	}
     });
@@ -2312,7 +2335,7 @@ ProjectOutgoingEditor.prototype.createInvRecordRow = function(record) {
     var self = this;
     self.model.addChangeListener(xpath, function() {
 	var action = self.model.getValue(xpath + "/action");
-	if(action == "NONE") {
+	if (action == "NONE") {
 	    self.model.setValue(xpath + "/action", "MODIFY");
 	}
     });

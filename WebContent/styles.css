@@ -1074,7 +1074,7 @@ iframe {
 	flex: 2;
 }
 
-.grid-row:before, .grid-row:after {
+[class*='grid-row-']:before, [class*='grid-row-']:after { 
 	content: ' ';
 	display: table;
 	clear: both;

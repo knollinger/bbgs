@@ -32,11 +32,31 @@ import de.bbgs.utils.DBUtils;
 public class MailFetcher implements Runnable
 {
     private static String[] foldersToScan = {"INBOX", "[Gmail]/Gesendet"};
+    
     /* (non-Javadoc)
      * @see java.lang.Runnable#run()
      */
     @Override
     public void run()
+    {
+        while (!Thread.currentThread().isInterrupted())
+        {
+            this.fetchMails();            
+            try
+            {
+                Thread.sleep(60000);
+            }
+            catch (InterruptedException e)
+            {
+                Thread.currentThread().interrupt();
+            }            
+        }
+    }
+
+    /**
+     * 
+     */
+    private void fetchMails()
     {
         Connection conn = null;
         try
