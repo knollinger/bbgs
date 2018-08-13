@@ -61,9 +61,10 @@ public class GetPartnerModelHandler implements IXmlServiceHandler
         Connection conn = null;
         try
         {
-            Request req = (Request)request;
             conn = ConnectionPool.getConnection();
             
+            Request req = (Request) request;
+            rsp = PartnerDBUtil.getPartnerModel(req.id, conn);
         }
         catch (SQLException e)
         {
@@ -80,10 +81,10 @@ public class GetPartnerModelHandler implements IXmlServiceHandler
      * 
      */
     @XmlRootElement(name = "get-partner-model-request")
-    @XmlType(name="GetPartnerModelHandler.Request")
+    @XmlType(name = "GetPartnerModelHandler.Request")
     public static class Request implements IJAXBObject
     {
-        @XmlElement(name="id")
+        @XmlElement(name = "id")
         public int id = 0;
     }
 }

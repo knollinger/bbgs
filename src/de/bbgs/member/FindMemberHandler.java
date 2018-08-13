@@ -102,9 +102,6 @@ public class FindMemberHandler implements IXmlServiceHandler
             m.memberType = member.memberType;
             m.zname = member.zname;
             m.vname = member.vname;
-            m.zipCode = member.zipCode;
-            m.city = member.city;
-            m.street = member.street;
             result.add(m);
         }
         return result;

@@ -1,20 +1,29 @@
-<div class="workspace-frame-content" data-has-backbutton="yes" data-has-main-menu="no" data-frame-title="Mitglieder ausw&auml;hlen"></div>
+<div class="workspace-frame-content" data-has-backbutton="yes"
+	data-has-main-menu="no" data-frame-title="Mitglieder ausw&auml;hlen"></div>
 
-<input class="grid-row-0 grid-col-2 search-input" id="member_finder_search" placeholder="Einfach Suchbegriffe eingeben..." autocomplete="off">
-<label class="grid-row-0 grid-col-2" id="member_finder_search" for="member_finder_show_all">
-    <input type="checkbox" id="member_finder_show_all">
-    Alle anzeigen
-</label>
-<table class="grid-row-1 grid-col-2 hidden" id="member_finder_resultset">
-    <thead>
-        <tr>
-            <th></th>
-            <th class="sortable sort_asc">Name</th>
-            <th class="sortable">Vorname</th>
-            <th class="sortable">Art</th>
-            <th id="member_finder_resultset_found_at">Fund-Ort</th>            
-        </tr>
-    </thead>
-    <tbody id="member_finder_resultset_body">
-    </tbody>
-</table>
+<div class="grid-row-0">
+	<input class="grid-col-2 search-input" id="member_finder_search"
+		placeholder="Einfach Suchbegriffe eingeben..." autocomplete="off">
+</div>
+<div class="grid-row-0">
+
+	<label class="grid-col-2" id="member_finder_search"
+		for="member_finder_show_all"> <input type="checkbox"
+		id="member_finder_show_all"> Alle anzeigen
+	</label>
+</div>
+<div class="grid-row-1 scrollable">
+	<table class=" grid-col-2 hidden" id="member_finder_resultset">
+		<thead>
+			<tr>
+				<th></th>
+				<th class="sortable sort_asc">Name</th>
+				<th class="sortable">Vorname</th>
+				<th class="sortable">Art</th>
+				<th id="member_finder_resultset_found_at">Fund-Ort</th>
+			</tr>
+		</thead>
+		<tbody id="member_finder_resultset_body">
+		</tbody>
+	</table>
+</div>

@@ -1,21 +1,10 @@
 package de.bbgs.rendering;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ServiceLoader;
 
 import javax.mail.internet.ContentType;
-
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
-import de.bbgs.utils.IOUtils;
 
 /**
  *
@@ -67,7 +56,7 @@ public class ContentRendererFactory
             {
                 return r;
             }
-        }
+        }       
         return new DefaultRenderer();
     }
 }

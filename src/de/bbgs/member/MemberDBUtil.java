@@ -364,9 +364,6 @@ public class MemberDBUtil
                 m.memberType = EMemberType.valueOf(rs.getString("type"));
                 m.vname = rs.getString("vname");
                 m.zname = rs.getString("zname");
-                m.zipCode = rs.getInt("zip_code");
-                m.city = rs.getString("city");
-                m.street = rs.getString("street");
                 m.locations.add(foundLoc);
                 result.add(m);
             }

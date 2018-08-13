@@ -14,6 +14,7 @@ import javax.activation.DataSource;
 import javax.mail.BodyPart;
 import javax.mail.Header;
 import javax.mail.MessagingException;
+import javax.mail.internet.ContentDisposition;
 import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeMultipart;
 
@@ -38,20 +39,22 @@ public class MultiPartRenderer implements IContentRenderer
     public String getResponsibleFor()
     {
         return "multipart/*";
-    }    
+    }
 
     /* (non-Javadoc)
      * @see de.bbgs.rendering.IContentRenderer#renderContent(org.w3c.dom.Document, javax.mail.internet.ContentType, byte[])
-     */    
+     */
     @Override
-    public void renderContent(Document doc, Map<String, String> headers, ContentType type, InputStream content) throws Exception
+    public void renderContent(Document doc, Map<String, String> headers, ContentType type, InputStream content)
+        throws Exception
     {
         MimeMultipart mmp = new MimeMultipart(new ByteArrayDataSource(content, type));
-        for(int i = 0; i < mmp.getCount(); ++i) {
+        for (int i = 0; i < mmp.getCount(); ++i)
+        {
             this.handlePart(doc, mmp.getBodyPart(i));
         }
     }
-   
+
     /**
      * @param doc
      * @param bodyPart
@@ -62,18 +65,37 @@ public class MultiPartRenderer implements IContentRenderer
         Map<String, String> headers = this.extractHeaders(bodyPart);
         ContentType type = new ContentType(bodyPart.getContentType());
         InputStream content = bodyPart.getInputStream();
-        
+
         IContentRenderer renderer = ContentRendererFactory.getInstance().getRenderer(type);
+//        if(renderer == null && this.isAttachment(bodyPart)) {
+//            renderer = new AttachmentsRenderer();
+//        }
         renderer.renderContent(doc, headers, type, content);
     }
+
+    /**
+     * @param bodyPart
+     * @return
+     * @throws MessagingException 
+     */
+//    private boolean isAttachment(BodyPart bodyPart) throws MessagingException
+//    {
+//        String[] dispHeaders = bodyPart.getHeader("Content-Disposition");
+//        if(dispHeaders != null && dispHeaders.length != 0) {
+//            ContentDisposition disp = new ContentDisposition(dispHeaders[0]);
+//            return disp.getDisposition().equalsIgnoreCase("attachment");
+//        }
+//        return false;
+//    }
     
     /**
      * @param bodyPart
      * @return
      * @throws MessagingException 
      */
-    private Map<String, String> extractHeaders(BodyPart bodyPart) throws MessagingException {
-        
+    private Map<String, String> extractHeaders(BodyPart bodyPart) throws MessagingException
+    {
+
         Map<String, String> result = new TreeMap<>(new Comparator<String>()
         {
             @Override
@@ -82,16 +104,17 @@ public class MultiPartRenderer implements IContentRenderer
                 return arg0.compareToIgnoreCase(arg1);
             }
         });
-        
+
         @SuppressWarnings("unchecked")
         Enumeration<Header> allHeaders = bodyPart.getAllHeaders();
-        while(allHeaders.hasMoreElements()) {
+        while (allHeaders.hasMoreElements())
+        {
 
             Header hdr = allHeaders.nextElement();
             result.put(hdr.getName(), hdr.getValue());
         }
         System.out.println(result);
-        
+
         return result;
     }
 
@@ -115,7 +138,7 @@ public class MultiPartRenderer implements IContentRenderer
             this.buffer = buffer;
             this.contentType = contentType.toString();
         }
-        
+
         /* (non-Javadoc)
          * @see javax.activation.DataSource#getContentType()
          */

@@ -27,15 +27,6 @@ public class FoundMember
     @XmlJavaTypeAdapter(value = EMemberType.XMLAdapter.class)
     public EMemberType memberType = EMemberType.UNKNOWN;
 
-    @XmlElement(name = "zip-code")
-    public int zipCode = 0;
-
-    @XmlElement(name = "city")
-    public String city = "";
-
-    @XmlElement(name = "street")
-    public String street = "";
-
     @XmlElement(name = "location")
     @XmlElementWrapper(name = "locations")
     public Collection<EFoundLocation> locations = new ArrayList<>();
