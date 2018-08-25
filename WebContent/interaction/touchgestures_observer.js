@@ -167,11 +167,16 @@ TouchGesturesObserver.prototype.handleHorizontalMove = function(deltaX) {
  */
 TouchGesturesObserver.prototype.handleVerticalMove = function(deltaY) {
 
+    var self = this;
     if (deltaY < 0) {
 
 	// von unten nach oben
-	return this.target.swipeUp;
+	return function() {
+	    self.target.swipeUp();
+	}
     }
     // anderenfalls oben nach unten
-    return this.target.swipeDown;
+    return function() {
+	self.target.swipeDown();
+    }
 }
