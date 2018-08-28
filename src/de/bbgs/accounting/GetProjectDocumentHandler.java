@@ -170,8 +170,8 @@ public class GetProjectDocumentHandler implements IGetDocServiceHandler
         try
         {
             stmt = conn.prepareStatement("select m.zname, m.vname, m.type from courses c \n"
-                + "    left join course_member cm on cm.course_id=c.id\n"
-                + "    left join members m on m.id = cm.member_id\n" + "    where c.id=?\n"
+                + "    join course_member cm on cm.course_id=c.id\n"
+                + "    join members m on m.id = cm.member_id\n" + "    where c.id=?\n"
                 + "    order by m.type, m.zname, m.vname");
             stmt.setInt(1, projId);
             rs = stmt.executeQuery();

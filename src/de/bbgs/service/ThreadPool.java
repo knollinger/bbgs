@@ -63,15 +63,7 @@ public class ThreadPool
     {
         if (this.exec != null)
         {
-            try
-            {
-                this.exec.shutdown();
-                this.exec.awaitTermination(60, TimeUnit.SECONDS);
-            }
-            catch (InterruptedException e)
-            {
-                Thread.currentThread().interrupt();
-            }
+            this.exec.shutdownNow();
         }
     }
 

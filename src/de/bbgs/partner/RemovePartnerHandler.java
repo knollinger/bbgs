@@ -17,8 +17,6 @@ import de.bbgs.notes.ENoteDomain;
 import de.bbgs.notes.NotesDBUtil;
 import de.bbgs.service.IXmlServiceHandler;
 import de.bbgs.session.SessionWrapper;
-import de.bbgs.todolist.ETaskDomain;
-import de.bbgs.todolist.TodoListDBUtil;
 import de.bbgs.utils.ConnectionPool;
 import de.bbgs.utils.DBUtils;
 import de.bbgs.xml.ErrorResponse;
@@ -76,7 +74,6 @@ public class RemovePartnerHandler implements IXmlServiceHandler
             AttachmentsDBUtil.deleteAttachments(req.id, EAttachmentDomain.PARTNER, conn);
             NotesDBUtil.deleteNotesFor(req.id, ENoteDomain.PARTNER, conn);
             ContactsDBUtil.deleteContactsFor(req.id, EContactDomain.PARTNER, conn);
-            TodoListDBUtil.deleteTasksFor(req.id, ETaskDomain.PARTNERTERMIN, conn);
             PartnerDBUtil.deletePartner(req.id, conn);
             
             conn.commit();

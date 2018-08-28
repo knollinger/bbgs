@@ -309,15 +309,15 @@ MemberCoreDataEditor.prototype.mandatoryFieldsByType = {
     "" : [ "edit_member_type" ],
     "TEACHER" : [ "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
     "SCOUT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
-    "EXSCOUT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"],
-    "PRAKTIKANT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"],
-    "EHRENAMT" : [ "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"],
-    "FEST" : [ "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"],
-    "SHORT" : [ "edit_member_type", "edit_member_since", "edit_member_until", , "edit_member_zname", "edit_member_vname"],
-    "STUDENT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"],
-    "REFUGEE" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"],
-    "REG_COURSE" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"],
-    "REG_EVENT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"]
+    "EXSCOUT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
+    "PRAKTIKANT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
+    "EHRENAMT" : [ "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
+    "FEST" : [ "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
+    "SHORT" : [ "edit_member_type", "edit_member_since", "edit_member_until", , "edit_member_zname", "edit_member_vname" ],
+    "STUDENT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname" ],
+    "REFUGEE" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname" ],
+    "REG_COURSE" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname" ],
+    "REG_EVENT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname" ]
 }
 
 /**
@@ -439,22 +439,22 @@ var MemberDSGVODataEditor = function(parentFrame, targetCnr, model) {
     this.load("gui/member/member_editor_dsgvo.html", function() {
 
 	self.model.createValueBinding("edit_member_photoagreement", "//member-model/core-data/photoagreement");
-	
+
 	var state = self.model.getValue("//member-model/core-data/dse-state");
 	var result = " Die Datenschutz-Erklärung wurde ";
-	switch(state) {
+	switch (state) {
 	case "NONE":
 	    result += "noch nicht zugestellt";
 	    break;
-	    
+
 	case "PENDING":
 	    result += "am " + self.model.getValue("//member-model/core-data/dse-date") + " zugestellt, die Antwort steht noch aus";
 	    break;
-	    
+
 	case "ACCEPTED":
 	    result += "am " + self.model.getValue("//member-model/core-data/dse-date") + " akzeptiert";
 	    break;
-	    
+
 	case "REJECTED":
 	    result += "am " + self.model.getValue("//member-model/core-data/dse-date") + " abgelehnt";
 	    break;
@@ -633,31 +633,48 @@ MemberCourseOverview.prototype.createRemoveAction = function() {
  */
 MemberCourseOverview.prototype.fillTable = function() {
 
-    var self = this;
-
     new TableDecorator("edit_member_courses");
+    var table = document.getElementById("edit_member_courses");
+    var body = table.getElementsByTagName("tbody")[0] || table;
+    UIUtils.clearChilds(body);
 
-    // gelöschte Kurszuordnungen werden nicht angezeigt
-    var filter = function(course) {
-	return course.getElementsByTagName("action")[0].textContent != "REMOVE";
-    }
+    this.actionRemove.hide();
 
     // was passiert beim Tabellen-Klick?
     var onclick = function(tr, course) {
-
-	var radio = "edit_member_courses_radio_" + course.getElementsByTagName("id")[0].textContent;
-	radio = document.getElementById(radio);
-	radio.click();
+	var self = this;
 
 	self.currRow = tr;
 	self.currSelection = XmlUtils.getXPathTo(course);
 	self.actionRemove.show();
     }
 
-    var allCourses = "/member-model/courses/course";
     var fields = this.getColumnDescriptor();
-    this.model.createTableBinding("edit_member_courses", fields, allCourses, onclick, filter);
-    self.actionRemove.hide();
+    var allCourses = this.model.evaluateXPath("//member-model/courses/course[action !='REMOVE']");
+    for (var i = 0; i < allCourses.length; i++) {
+	body.appendChild(this.renderOneCourse(allCourses[i], fields, onclick));
+    }
+
+    // this.model.createTableBinding("edit_member_courses", fields, allCourses,
+    // onclick, filter);
+}
+
+/**
+ * 
+ */
+MemberCourseOverview.prototype.renderOneCourse = function(course, fields, onclick) {
+
+    var row = this.model.createTableRow(course, fields, onclick);
+
+    var xpath = XmlUtils.getXPathTo(course);
+    this.model.addChangeListener(xpath, function() {
+
+	var action = course.getElementsByTagName("action")[0];
+	if (action.textContent == "NONE") {
+	    action.textContent = "MODIFY";
+	}
+    });
+    return row;
 }
 
 /**
@@ -674,15 +691,64 @@ MemberCourseOverview.prototype.getColumnDescriptor = function() {
     var self = this;
     var fields = [];
     fields.push(function(td, course) {
+	td.setAttribute("valign", "middle");
 	var radio = document.createElement("input");
 	radio.type = "radio";
 	radio.name = "edit_member_course_overview";
-	radio.id = "edit_member_courses_radio_" + course.getElementsByTagName("id")[0].textContent;
 	radio.value = course.getElementsByTagName("id")[0].textContent;
 	return radio;
     });
 
-    fields.push("name");
-    fields.push("description");
+    fields.push(function(td, course) {
+	td.setAttribute("valign", "middle");
+	return course.getElementsByTagName("name")[0].textContent;
+    });
+
+    fields.push(function(td, course) {
+
+	var select = document.createElement("select");
+	select.className = "inplace-select";
+
+	var opt = document.createElement("option");
+	opt.disabled = opt.selected = true;
+	opt.value = "";
+	opt.textContent = "Foto-Einverständnis";
+	select.appendChild(opt);
+
+	var values = [ "NONE", "INTERN", "PRINT_ONLY", "FULL" ];
+	for (var i = 0; i < values.length; i++) {
+
+	    opt = document.createElement("option");
+	    opt.value = values[i];
+	    opt.textContent = PhotoAgreementTranslator.translate(values[i]);
+	    select.appendChild(opt);
+	}
+	var xpath = XmlUtils.getXPathTo(course);
+	self.model.createValueBinding(select, xpath + "/photo_agreement");
+
+	return select;
+
+    });
     return fields;
 }
+
+/*---------------------------------------------------------------------------*/
+/**
+ * Der Translator für den FotoAgreement-Enum
+ */
+var PhotoAgreementTranslator = (function() {
+
+    var explanationsByEnumName = {
+	NONE : "Kein Foto-Einverständnis",
+	INTERN : "Nur für interne Verwendung",
+	PRINT_ONLY : "Nur für Print-Medien",
+	FULL : "komplettes Einverständnis"
+    };
+    return {
+
+	translate : function(value) {
+	    return explanationsByEnumName[value] || explanationsByEnumName["NONE"];
+	}
+    }
+
+})();

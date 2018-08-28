@@ -13,7 +13,6 @@ import de.bbgs.attachments.AttachmentsDBUtil;
 import de.bbgs.attachments.EAttachmentDomain;
 import de.bbgs.contacts.ContactsDBUtil;
 import de.bbgs.contacts.EContactDomain;
-import de.bbgs.courses.CourseDBUtil;
 import de.bbgs.logging.AuditLog;
 import de.bbgs.notes.ENoteDomain;
 import de.bbgs.notes.NotesDBUtil;
@@ -92,7 +91,7 @@ public class SaveMemberModelHandler implements IXmlServiceHandler
             ContactsDBUtil.handleContactChanges(model.contacts, id, EContactDomain.MEMBER, conn);
             AttachmentsDBUtil.handleAttachmentChanges(model.attachments, id, EAttachmentDomain.MEMBER, conn);
             NotesDBUtil.handleNoteChanges(model.notes, id, ENoteDomain.MEMBER, conn);
-            CourseDBUtil.handleMemberCourseChanges(model.courses, id, conn);
+            MemberDBUtil.handleMemberCourseChanges(model.courses, id, conn);
 
             conn.commit();
             return new Response();

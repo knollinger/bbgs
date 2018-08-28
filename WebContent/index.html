@@ -2,17 +2,32 @@
 <head>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, user-scalable=no" />
 <title>Bayerns beste Gipfelstürmer - Verwaltung</title>
 <link rel="stylesheet" href="styles.css"></link>
+
+<script>
+    var initDocument = function() {
+
+	// IE und Edge können kein XPATH mehr, es ist ein Trauerspiel. 
+	//
+	// Die WGXPath-Library fügt die Notwendigen Funktionen in den Document-Prototype 
+	// hinzu, falls diese nicht verfürbar sind.
+	wgxpath.install();
+	
+	// Je nach Sitzungszustand wird entweder der Login-Screen oder die MainView angezeigt
+	SessionManager.checkSessionState();
+    }
+</script>
 </head>
 
-<body onload="javascript:SessionManager.checkSessionState();">
-    <div id="workspace"></div>
-    <div id="dialogs" class="dialog-glasspane"></div>
-    <div id="busy-indicator" class="busy-indicator">
-        <img src="gui//images/spin.gif" />
-    </div>
+<body onload="javascript:initDocument();">
+	<div id="workspace"></div>
+	<div id="dialogs" class="dialog-glasspane"></div>
+	<div id="busy-indicator" class="busy-indicator">
+		<img src="gui//images/spin.gif" />
+	</div>
 </body>
 
 <!-- 
@@ -32,7 +47,8 @@
 <script type="text/javascript" src="interaction/validator.js"></script>
 <script type="text/javascript" src="interaction/session_manager.js"></script>
 <script type="text/javascript" src="gui/utils/uiutils.js"></script>
-<script type="text/javascript" src="interaction/touchgestures_observer.js"></script>
+<script type="text/javascript"
+	src="interaction/touchgestures_observer.js"></script>
 
 <script type="text/javascript" src="gui/widgets/busy_indicator.js"></script>
 <script type="text/javascript" src="gui/widgets/workspace.js"></script>
@@ -49,13 +65,16 @@
 <script type="text/javascript" src="gui/widgets/navigation.js"></script>
 <script type="text/javascript" src="gui/widgets/main_navigation.js"></script>
 <script type="text/javascript" src="gui/widgets/logon_dialog.js"></script>
-<script type="text/javascript" src="gui/widgets/change_password_dialog.js"></script>
+<script type="text/javascript"
+	src="gui/widgets/change_password_dialog.js"></script>
 
 <script type="text/javascript" src="gui/accounting/accounting.js"></script>
 
-<script type="text/javascript" src="gui/attachments/attachments_editor.js"></script>
+<script type="text/javascript"
+	src="gui/attachments/attachments_editor.js"></script>
 <script type="text/javascript" src="gui/attachments/document_viewer.js"></script>
-<script type="text/javascript" src="gui/attachments/mimetype_visualizer.js"></script>
+<script type="text/javascript"
+	src="gui/attachments/mimetype_visualizer.js"></script>
 
 <script type="text/javascript" src="gui/contacts/contact_editor.js"></script>
 
@@ -71,8 +90,10 @@
 <script type="text/javascript" src="gui/courses/course_calendar.js"></script>
 <script type="text/javascript" src="gui/courses/course_finder.js"></script>
 <script type="text/javascript" src="gui/courses/course_editor.js"></script>
-<script type="text/javascript" src="gui/courses/course_termin_planner.js"></script>
-<script type="text/javascript" src="gui/courses/course_location_editor.js"></script>
+<script type="text/javascript"
+	src="gui/courses/course_termin_planner.js"></script>
+<script type="text/javascript"
+	src="gui/courses/course_location_editor.js"></script>
 
 <script type="text/javascript" src="gui/mail/mail_navigation.js"></script>
 <script type="text/javascript" src="gui/mail/mail_group_editor.js"></script>
@@ -81,9 +102,8 @@
 <script type="text/javascript" src="gui/mail/adressbook.js"></script>
 <script type="text/javascript" src="gui/mail/mailbox.js"></script>
 
-<script type="text/javascript" src="gui/todolist/todo_list.js"></script>
-
 <script type="text/javascript" src="xternal/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="xternal/wgxpath/wgxpath.install.js"></script>
 
 <script type="text/javascript" src="gui/dsgvo/dse_overview.js"></script>
 

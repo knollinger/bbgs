@@ -34,7 +34,7 @@ public class AttachmentsDBUtil
         try
         {
             stmt = conn.prepareStatement(
-                "select id, file_name, mimetype, timestamp from attachments where ref_id=? and domain=?");
+                "select id, file_name, mimetype from attachments where ref_id=? and domain=?");
             stmt.setInt(1, refId);
             stmt.setString(2, domain.name());
             rs = stmt.executeQuery();

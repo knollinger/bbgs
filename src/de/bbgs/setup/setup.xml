@@ -3,7 +3,7 @@
 	<database>
 		<host>localhost</host>
 		<port>3306</port>
-		<dbname>TEST</dbname>
+		<dbname>BBGS</dbname>
 		<user>root</user>
 		<pwd>Sun12shine</pwd>
 	</database>

@@ -19,6 +19,8 @@ import de.bbgs.contacts.EContactDomain;
 import de.bbgs.courses.CourseDBUtil;
 import de.bbgs.dsgvo.EDSEState;
 import de.bbgs.mail.MailDBUtils;
+import de.bbgs.member.MemberModel.Course;
+import de.bbgs.service.EAction;
 import de.bbgs.utils.DBUtils;
 
 /**
@@ -29,13 +31,10 @@ public class MemberDBUtil
     private static final String GETMEMBER_STMT = "select * from members where id=?";
     private static final String SCAN_MEMBERS = "select * from members where match (zname, vname, vname2, title, city, street, phone, phone2, mobile, mobile2, email, email2, type_as_text) against (? in boolean mode)";
     private static final String SCAN_NOTES = "select * from members where id in (select ref_id from notes where domain='MEMBER' and match (note) against (? in boolean mode))";
-    private static final String SCAN_COURSES = "select * from members where id in \n" + 
-        "(\n" + 
-        "    select distinct member_id from course_member where course_id in \n" + 
-        "    (\n" + 
-        "        select id from courses where match(name, description) against (? in boolean mode)\n" + 
-        "    )\n" + 
-        ")";
+    private static final String SCAN_COURSES = "select * from members where id in \n" + "(\n"
+        + "    select distinct member_id from course_member where course_id in \n" + "    (\n"
+        + "        select id from courses where match(name, description) against (? in boolean mode)\n" + "    )\n"
+        + ")";
     private static final String SCAN_CONTACTS = "\n" + "select * from members where id in (\n"
         + "    select ref_id from contacts where domain='MEMBER' and match(zname, vname, vname2, title, phone, phone2, mobile, mobile2, email, email2) against (? in boolean mode)\n"
         + ")";
@@ -410,7 +409,7 @@ public class MemberDBUtil
             ContactsDBUtil.deleteContactsFor(id, EContactDomain.MEMBER, conn);
             CourseDBUtil.deleteMemberFromAllCourses(id, conn);
             MailDBUtils.deleteMemberFromAllMailGroups(id, conn);
-            
+
             stmt = conn.prepareStatement("delete from members where id=?");
             stmt.setInt(1, id);
             stmt.executeUpdate();
@@ -418,6 +417,152 @@ public class MemberDBUtil
         finally
         {
             DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+        }
+    }
+
+    /**
+     * @param id
+     * @param conn
+     * @return
+     * @throws SQLException 
+     */
+    public static Collection<Course> getCourses(int id, Connection conn) throws SQLException
+    {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            Collection<Course> result = new ArrayList<>();
+
+            stmt = conn.prepareStatement("select c.id, c.name, cm.photo_agreement, m.photoagreement from courses c \n"
+                + "    left join course_member cm on c.id = cm.course_id \n"
+                + "    left join members m on m.id = cm.member_id where cm.member_id=? \n" + "    order by c.name;");
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            while (rs.next())
+            {
+                MemberModel.Course c = new MemberModel.Course();
+                c.courseId = rs.getInt("c.id");
+                c.action = EAction.NONE;
+                c.name = rs.getString("c.name");
+
+                String agreement = rs.getString("cm.photo_agreement");
+                if (agreement == null || agreement.equals(""))
+                {
+                    agreement = rs.getString("m.photoagreement");
+                }
+                c.photoAgreement = EPhotoAgreement.valueOf(agreement);
+                result.add(c);
+            }
+            return result;
+        }
+        finally
+        {
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+        }
+    }
+
+    /**
+     * @param courses
+     * @param memberId
+     * @param conn
+     * @throws SQLException 
+     */
+    public static void handleMemberCourseChanges(Collection<Course> courses, int memberId, Connection conn)
+        throws SQLException
+    {
+        for (Course course : courses)
+        {
+            switch (course.action)
+            {
+                case CREATE :
+                    MemberDBUtil.createCourseMember(course, memberId, conn);
+
+                    break;
+
+                case MODIFY :
+                    MemberDBUtil.updateCourseMember(course, memberId, conn);
+                    break;
+
+                case REMOVE :
+                    MemberDBUtil.removeMemberFromCourse(course, memberId, conn);
+                    break;
+
+                default :
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @param course
+     * @param conn
+     * @throws SQLException 
+     */
+    private static void createCourseMember(Course course, int memberId, Connection conn) throws SQLException
+    {
+        PreparedStatement stmt = null;
+
+        try
+        {
+            stmt = conn.prepareStatement("insert into course_member set photo_agreement=?, course_id=?, member_id=?");
+            stmt.setString(1, course.photoAgreement.name());
+            stmt.setInt(2, course.courseId);
+            stmt.setInt(3, memberId);
+            stmt.executeUpdate();
+        }
+        finally
+        {
+            DBUtils.closeQuitly(stmt);
+        }
+    }
+
+    /**
+     * @param course
+     * @param conn
+     * @throws SQLException 
+     */
+    private static void updateCourseMember(Course course, int memberId, Connection conn) throws SQLException
+    {
+        PreparedStatement stmt = null;
+
+        try
+        {
+            stmt = conn.prepareStatement(
+                "update course_member set photo_agreement=? where course_id=? and member_id=?");
+            stmt.setString(1, course.photoAgreement.name());
+            stmt.setInt(2, course.courseId);
+            stmt.setInt(3, memberId);
+            stmt.executeUpdate();
+        }
+        finally
+        {
+            DBUtils.closeQuitly(stmt);
+        }
+    }
+
+    /**
+     * @param course
+     * @param conn
+     * @throws SQLException 
+     */
+    private static void removeMemberFromCourse(Course course, int memberId, Connection conn) throws SQLException
+    {
+
+        PreparedStatement stmt = null;
+
+        try
+        {
+            stmt = conn.prepareStatement("delete from course_member where course_id=? and member_id=?");
+            stmt.setInt(1, course.courseId);
+            stmt.setInt(2, memberId);
+            stmt.executeUpdate();
+        }
+        finally
+        {
             DBUtils.closeQuitly(stmt);
         }
     }

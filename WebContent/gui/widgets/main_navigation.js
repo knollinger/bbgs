@@ -26,10 +26,6 @@ var MainNavigation = function() {
     btn = this.addNavigationButton("gui/images/mail.svg", "Mail/SMS", function() {
         new MailNavigation();
     });
-
-    btn = this.addNavigationButton("gui/images/notes.svg", "TODO-Liste", function() {
-	new TodoTasksOverview();
-    });
      
     btn = this.addNavigationButton("gui/images/certificate.svg", "Datenschutz-Erklärung verwalten", function() {
 	new DSEOverview();

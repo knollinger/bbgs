@@ -1,4 +1,7 @@
-USE TEST;
+USE BBGS;
+
+drop table todolist;
+
 ALTER TABLE contacts ADD COLUMN `relation` VARCHAR(20) NULL DEFAULT 'OTHER';
 insert into contacts(ref_id, domain, zname, vname, vname2, title, phone, mobile, email, relation) select ref_id, "MEMBER", zname, vname, vname2, title, phone, mobile, email, relation from family;
 drop table family;
@@ -212,6 +215,7 @@ drop table membership_rates;
 CREATE TABLE course_member (
   `member_id` INT(10) NOT NULL,
   `course_id` INT(10) NOT NULL,
+  `photo_agreement` VARCHAR(10) NULL DEFAULT NULL
   FOREIGN KEY (`member_id`) REFERENCES members(id),
   FOREIGN KEY (`course_id`) REFERENCES courses(id)
 );
@@ -256,6 +260,9 @@ CREATE TABLE mailbox_recipients (
 
 ALTER TABLE `attachments` 
 DROP COLUMN `attached_by`;
+
+ALTER TABLE `attachments` 
+DROP COLUMN `timestamp`;
 
 
 CREATE TABLE `invoice_items` (

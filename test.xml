@@ -1,365 +1,202 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<calendar-model>
-	<keeper-entries>
-		<keeper-entry>
-			<id>58</id>
+<member-model>
+	<core-data>
+		<action>MODIFY</action>
+		<id>191</id>
+		<zname>Abdeltam</zname>
+		<vname>Meryem</vname>
+		<vname2 />
+		<title />
+		<birth_date>29.04.2008</birth_date>
+		<sex>W</sex>
+		<zip_code>81671</zip_code>
+		<city>München</city>
+		<street>Gotteszellerstraße 28</street>
+		<phone>08995959734</phone>
+		<phone2 />
+		<mobile>015770358049</mobile>
+		<mobile2 />
+		<email>aymenabdeltam@gmail.com</email>
+		<email2 />
+		<member_since>01.10.2017</member_since>
+		<member_until>31.07.2018</member_until>
+		<school>6</school>
+		<type>STUDENT</type>
+		<image />
+		<image-mimetype />
+		<mailsig />
+		<mailsig-mimetype />
+		<photoagreement>NONE</photoagreement>
+		<dse-state>NONE</dse-state>
+		<dse-date />
+	</core-data>
+	<contacts>
+		<contact>
+			<id>213</id>
 			<action>NONE</action>
-			<date>30.07.2018</date>
-			<begin>16:30</begin>
-			<end>18:30</end>
-			<keeper>2</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>57</id>
+			<zname>Ruba</zname>
+			<vname>Julius</vname>
+			<vname2 />
+			<title />
+			<phone />
+			<mobile />
+			<email />
+			<phone2 />
+			<mobile2 />
+			<email2 />
+			<relation>FATHER</relation>
+		</contact>
+	</contacts>
+	<notes />
+	<attachments>
+		<attachment>
+			<id>172</id>
+			<name>Abdeltam, Meryem_Anmeldung.pdf</name>
+			<mime-type>application/pdf</mime-type>
+			<content />
+			<attached-at />
+			<domain>MEMBER</domain>
 			<action>NONE</action>
-			<date>30.07.2018</date>
-			<begin>18:30</begin>
-			<end>22:00</end>
-			<keeper>1</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>59</id>
+		</attachment>
+	</attachments>
+	<courses>
+		<course>
+			<id>42</id>
 			<action>NONE</action>
-			<date>31.07.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>4</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>60</id>
+			<name>Kletterausfahrt Linderhof</name>
+			<photo_agreement>INTERN</photo_agreement>
+		</course>
+	</courses>
+	<partners>
+		<partner>
+			<id>1</id>
+			<type>COOP</type>
+			<name>Friedel-Eder-Schule</name>
+			<description>Schule für Seelenpflege-Bedürftige Kinder und
+				Jungendliche</description>
+			<partner-since>01.01.2001</partner-since>
+			<partner-until />
+			<zip-code>81929</zip-code>
+			<city>München</city>
+			<street>Max-Proebstl-Str. 11</street>
+			<homepage>http://www.friedel-eder-schule.de</homepage>
 			<action>NONE</action>
-			<date>01.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>11</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>61</id>
+		</partner>
+		<partner>
+			<id>6</id>
+			<type>COOP</type>
+			<name>Grafinger Schule</name>
+			<description>Grundschule mit vielen Kindern mit Migartionshintergrund
+				und aus sozial benachteiligten Familien</description>
+			<partner-since>01.10.2015</partner-since>
+			<partner-until />
+			<zip-code>81671</zip-code>
+			<city>München</city>
+			<street>Grafinger Str. 71</street>
+			<homepage>http://www.grafini.musin.de</homepage>
 			<action>NONE</action>
-			<date>02.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>10</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>62</id>
+		</partner>
+		<partner>
+			<id>3</id>
+			<type>COOP</type>
+			<name>Grund- und Mittelschule an der Hochstraße</name>
+			<description>Tagesheim Ansprechpartner Michi Schulz und Nicole
+				Tortora
+				Rektorin Helga Schraud (Helga Müller Ko)</description>
+			<partner-since>15.09.2014</partner-since>
+			<partner-until />
+			<zip-code>81669</zip-code>
+			<city>München</city>
+			<street>Hochstraße 31</street>
+			<homepage>http://schuleanderhochstrasse.weebly.com</homepage>
 			<action>NONE</action>
-			<date>03.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>9</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>63</id>
+		</partner>
+		<partner>
+			<id>9</id>
+			<type>COOP</type>
+			<name>Matilde-Eller-Schule</name>
+			<description>Förderzentrum-Förderschwerpunkt geistige Entwicklung</description>
+			<partner-since>01.11.2017</partner-since>
+			<partner-until />
+			<zip-code>80469</zip-code>
+			<city>München</city>
+			<street>Klenzestraße 27</street>
+			<homepage />
 			<action>NONE</action>
-			<date>05.08.2018</date>
-			<begin>15:00</begin>
-			<end>19:00</end>
-			<keeper>7</keeper>
-		</keeper-entry>
-		<keeper-entry>
+		</partner>
+		<partner>
+			<id>7</id>
+			<type>COOP</type>
+			<name>Monte Sonnenschein</name>
+			<description>Wir verstehen uns als eine Schule der Vielfalt möglichst
+				für alle Kinder. Für unsere Einrichtung bedeutet dies, dass wir
+				nicht behinderte Schülerinnen und Schüler nach Möglichkeit zusammen
+				mit förderungsbedürftigen Kindern unter einem Dach und in einer
+				Klasse unterrichten.</description>
+			<partner-since>01.10.2015</partner-since>
+			<partner-until />
+			<zip-code>81377</zip-code>
+			<city>München</city>
+			<street>Heiglhofstraße 63</street>
+			<homepage>http://www.aktionsonnenschein.com/de/kontakt.html</homepage>
+			<action>NONE</action>
+		</partner>
+		<partner>
+			<id>2</id>
+			<type>COOP</type>
+			<name>Montessori Aktion Sonnenschein</name>
+			<description>Kontakt läuft über Ruth Lorbacher (selbst Trainerin) </description>
+			<partner-since>15.09.2016</partner-since>
+			<partner-until />
+			<zip-code>81377</zip-code>
+			<city>München</city>
+			<street>Heiglhofstraße 63  </street>
+			<homepage>http://www.aktionsonnenschein.com/de/kontakt.html</homepage>
+			<action>NONE</action>
+		</partner>
+		<partner>
 			<id>8</id>
+			<type>COOP</type>
+			<name>Montessorischule Emile Neubiberg</name>
+			<description>Kletterkurs</description>
+			<partner-since>15.06.2015</partner-since>
+			<partner-until>01.06.2019</partner-until>
+			<zip-code>85579</zip-code>
+			<city>Neubiberg</city>
+			<street>Arastraße 2</street>
+			<homepage />
 			<action>NONE</action>
-			<date>06.08.2018</date>
-			<begin>18:30</begin>
-			<end>22:00</end>
-			<keeper>1</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>54</id>
+		</partner>
+		<partner>
+			<id>5</id>
+			<type>COOP</type>
+			<name>Parzival Schule</name>
+			<description>In der Parzivâl-Schule, unserer privaten Förderschule
+				zur Lernförderung, erziehen wir Kinder in kleinen Klassen zu
+				selbstbewusst und verantwortlich handelnden jungen Menschen. Unsere
+				Heilpädagogische Tagesstätte Michael-Haus nimmt Kinder auf, die
+				einer intensiven heilpädagogischen und therapeutischen Förderung
+				bedürfen. Grundlage unserer Arbeit ist die Waldorfpädagogik.</description>
+			<partner-since>01.10.2015</partner-since>
+			<partner-until />
+			<zip-code>80797</zip-code>
+			<city>München</city>
+			<street>Ackermannstraße 81-83</street>
+			<homepage>http://www.parzival-schule-muenchen.de/index.html</homepage>
 			<action>NONE</action>
-			<date>07.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>4</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>55</id>
+		</partner>
+		<partner>
+			<id>4</id>
+			<type>COOP</type>
+			<name>WIM KJR München</name>
+			<description>Gemeinschaftsunterkunft in Freiham</description>
+			<partner-since>01.10.2016</partner-since>
+			<partner-until />
+			<zip-code>81249</zip-code>
+			<city>München</city>
+			<street>Centa-Hafenbrädl-Straße</street>
+			<homepage />
 			<action>NONE</action>
-			<date>08.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>11</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>53</id>
-			<action>NONE</action>
-			<date>09.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>10</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>18</id>
-			<action>NONE</action>
-			<date>10.08.2018</date>
-			<begin>20:00</begin>
-			<end>22:00</end>
-			<keeper>1</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>52</id>
-			<action>NONE</action>
-			<date>12.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>9</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>20</id>
-			<action>NONE</action>
-			<date>13.08.2018</date>
-			<begin>16:30</begin>
-			<end>18:30</end>
-			<keeper>2</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>19</id>
-			<action>NONE</action>
-			<date>13.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>1</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>64</id>
-			<action>NONE</action>
-			<date>14.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>10</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>65</id>
-			<action>NONE</action>
-			<date>15.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>11</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>66</id>
-			<action>NONE</action>
-			<date>16.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>9</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>67</id>
-			<action>NONE</action>
-			<date>17.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>11</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>22</id>
-			<action>NONE</action>
-			<date>19.08.2018</date>
-			<begin>15:00</begin>
-			<end>19:00</end>
-			<keeper>7</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>46</id>
-			<action>NONE</action>
-			<date>20.08.2018</date>
-			<begin>16:30</begin>
-			<end>18:30</end>
-			<keeper>2</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>56</id>
-			<action>NONE</action>
-			<date>20.08.2018</date>
-			<begin>18:30</begin>
-			<end>22:00</end>
-			<keeper>11</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>40</id>
-			<action>NONE</action>
-			<date>21.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>10</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>30</id>
-			<action>NONE</action>
-			<date>22.08.2018</date>
-			<begin>16:30</begin>
-			<end>18:30</end>
-			<keeper>7</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>51</id>
-			<action>NONE</action>
-			<date>23.08.2018</date>
-			<begin>12:00</begin>
-			<end>16:30</end>
-			<keeper>4</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>41</id>
-			<action>NONE</action>
-			<date>23.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>11</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>44</id>
-			<action>NONE</action>
-			<date>24.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>11</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>49</id>
-			<action>NONE</action>
-			<date>26.08.2018</date>
-			<begin>15:00</begin>
-			<end>19:00</end>
-			<keeper>7</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>69</id>
-			<action>NONE</action>
-			<date>27.08.2018</date>
-			<begin>16:30</begin>
-			<end>18:30</end>
-			<keeper>2</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>68</id>
-			<action>NONE</action>
-			<date>27.08.2018</date>
-			<begin>18:30</begin>
-			<end>22:00</end>
-			<keeper>1</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>70</id>
-			<action>NONE</action>
-			<date>28.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>10</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>71</id>
-			<action>NONE</action>
-			<date>29.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>11</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>72</id>
-			<action>NONE</action>
-			<date>30.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>4</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>73</id>
-			<action>NONE</action>
-			<date>31.08.2018</date>
-			<begin>16:30</begin>
-			<end>22:00</end>
-			<keeper>11</keeper>
-		</keeper-entry>
-		<keeper-entry>
-			<id>75</id>
-			<action>NONE</action>
-			<date>02.09.2018</date>
-			<begin>15:00</begin>
-			<end>19:00</end>
-			<keeper>7</keeper>
-		</keeper-entry>
-	</keeper-entries>
-	<purifier-entries>
-		<purifier-entry>
-			<id>54</id>
-			<action>NONE</action>
-			<date>01.08.2018</date>
-			<purifier>11</purifier>
-		</purifier-entry>
-		<purifier-entry>
-			<id>53</id>
-			<action>NONE</action>
-			<date>05.08.2018</date>
-			<purifier>9</purifier>
-		</purifier-entry>
-		<purifier-entry>
-			<id>49</id>
-			<action>NONE</action>
-			<date>08.08.2018</date>
-			<purifier>11</purifier>
-		</purifier-entry>
-		<purifier-entry>
-			<id>15</id>
-			<action>NONE</action>
-			<date>12.08.2018</date>
-			<purifier>2</purifier>
-		</purifier-entry>
-		<purifier-entry>
-			<id>16</id>
-			<action>NONE</action>
-			<date>12.08.2018</date>
-			<purifier>1</purifier>
-		</purifier-entry>
-		<purifier-entry>
-			<id>59</id>
-			<action>NONE</action>
-			<date>15.08.2018</date>
-			<purifier>11</purifier>
-		</purifier-entry>
-		<purifier-entry>
-			<id>50</id>
-			<action>NONE</action>
-			<date>19.08.2018</date>
-			<purifier>4</purifier>
-		</purifier-entry>
-		<purifier-entry>
-			<id>60</id>
-			<action>NONE</action>
-			<date>22.08.2018</date>
-			<purifier>11</purifier>
-		</purifier-entry>
-		<purifier-entry>
-			<id>39</id>
-			<action>NONE</action>
-			<date>26.08.2018</date>
-			<purifier>1</purifier>
-		</purifier-entry>
-		<purifier-entry>
-			<id>40</id>
-			<action>NONE</action>
-			<date>26.08.2018</date>
-			<purifier>2</purifier>
-		</purifier-entry>
-		<purifier-entry>
-			<id>61</id>
-			<action>NONE</action>
-			<date>29.08.2018</date>
-			<purifier>11</purifier>
-		</purifier-entry>
-		<purifier-entry>
-			<id>57</id>
-			<action>NONE</action>
-			<date>02.09.2018</date>
-			<purifier>2</purifier>
-		</purifier-entry>
-		<purifier-entry>
-			<id>58</id>
-			<action>NONE</action>
-			<date>02.09.2018</date>
-			<purifier>1</purifier>
-		</purifier-entry>
-	</purifier-entries>
-</calendar-model>
+		</partner>
+	</partners>
+</member-model>

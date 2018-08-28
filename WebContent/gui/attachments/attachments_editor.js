@@ -81,8 +81,7 @@ AttachmentsOverview.prototype.createAddAction = function() {
 	XmlUtils.setNode(node, "name", name);
 	XmlUtils.setNode(node, "mime-type", type);
 	XmlUtils.setNode(node, "content", data);
-	XmlUtils.setNode(node, "attached-at", "---");
-
+	
 	self.model.addElement(self.xPath, node.documentElement);
 	self.fillTable();
     });

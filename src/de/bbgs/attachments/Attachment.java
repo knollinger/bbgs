@@ -18,9 +18,6 @@ public class Attachment
 	@XmlElement(name = "content")
 	public byte[] content = {};
 
-	@XmlElement(name = "attached-at")
-	public String attachDate = "";
-    
 	@XmlElement(name="domain")
 	public EAttachmentDomain domain;
 

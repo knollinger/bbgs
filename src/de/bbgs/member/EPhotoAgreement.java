@@ -13,6 +13,11 @@ public enum EPhotoAgreement
     INTERN,
     
     /**
+     * Nur für Print-Medien
+     */
+    PRINT_ONLY,
+    
+    /**
      * Komplettes Foto-Einverständnis
      */
     FULL

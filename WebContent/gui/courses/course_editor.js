@@ -519,27 +519,42 @@ CourseMembersOverview.prototype.createRemoveAction = function() {
 CourseMembersOverview.prototype.fillTable = function() {
 
     var self = this;
+    this.actionRemove.hide();
 
-    // gelöschte Teilnehmer werden nicht angezeigt
-    var filter = function(member) {
-	return member.getElementsByTagName("action")[0].textContent != "REMOVE";
-    }
-
+    var body = UIUtils.getElement("edit_coursetermin_members").getElementsByTagName("tbody")[0];
+    UIUtils.clearChilds(body);
+    
     // was passiert beim Tabellen-Klick?
     var onclick = function(tr, member) {
-
-	tr.querySelector("input[type=radio]").click();
 
 	self.currRow = tr;
 	self.currMember = XmlUtils.getXPathTo(member);
 	self.actionRemove.show();
     }
-
-    var allMembers = "/course-model/members/member";
     var fields = this.getColumnDescriptor();
-    this.model.createTableBinding("edit_coursetermin_members", fields, allMembers, onclick, filter);
 
-    self.actionRemove.hide();
+    var allMembers = this.model.evaluateXPath("//course-model/members/member[action != 'REMOVE']");
+    for(var i = 0; i < allMembers.length; i++) {
+	
+	body.appendChild(this.renderOneMember(allMembers[i], fields, onclick));
+    }
+}
+
+/**
+ * 
+ */
+CourseMembersOverview.prototype.renderOneMember = function(member, fields, onclick) {
+
+    var self = this;
+    xpath = XmlUtils.getXPathTo(member);
+    this.model.addChangeListener(xpath, function() {
+	
+	var action = self.model.getValue(xpath + "/action");
+	if(action == "NONE") {
+	    self.model.setValue(xpath + "/action", "MODIFY");
+	}
+    });
+    return this.model.createTableRow(member, fields, onclick);
 }
 
 /**
@@ -557,16 +572,51 @@ CourseMembersOverview.prototype.getColumnDescriptor = function() {
     var self = this;
     var fields = [];
     fields.push(function(td, member) {
+	td.setAttribute("valign", "middle");
 	var radio = document.createElement("input");
 	radio.type = "radio";
 	radio.name = "edit_coursemember_radio";
 	return radio;
     });
 
-    fields.push("zname");
-    fields.push("vname");
-    fields.push(function(td, course) {
-	return MemberTypeTranslator[course.getElementsByTagName("type")[0].textContent];
+    fields.push(function(td, member) {
+	td.setAttribute("valign", "middle");
+	return member.getElementsByTagName("zname")[0].textContent
+    });
+    
+    fields.push(function(td, member) {
+	td.setAttribute("valign", "middle");
+	return member.getElementsByTagName("vname")[0].textContent
+    });
+    
+    fields.push(function(td, member) {
+	td.setAttribute("valign", "middle");
+	return MemberTypeTranslator[member.getElementsByTagName("type")[0].textContent];
+    });
+    fields.push(function(td, member) {
+
+	td.setAttribute("valign", "middle");
+	var select = document.createElement("select");
+	select.className = "inplace-select";
+
+	var opt = document.createElement("option");
+	opt.disabled = opt.selected = true;
+	opt.value = "";
+	opt.textContent = "Foto-Einverständnis";
+	select.appendChild(opt);
+
+	var values = [ "NONE", "INTERN", "PRINT_ONLY", "FULL" ];
+	for (var i = 0; i < values.length; i++) {
+
+	    opt = document.createElement("option");
+	    opt.value = values[i];
+	    opt.textContent = PhotoAgreementTranslator.translate(values[i]);
+	    select.appendChild(opt);
+	}
+	var xpath = XmlUtils.getXPathTo(member);
+	self.model.createValueBinding(select, xpath + "/photo_agreement");
+
+	return select;
     });
     return fields;
 }
