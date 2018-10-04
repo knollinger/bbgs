@@ -215,7 +215,7 @@ drop table membership_rates;
 CREATE TABLE course_member (
   `member_id` INT(10) NOT NULL,
   `course_id` INT(10) NOT NULL,
-  `photo_agreement` VARCHAR(10) NULL DEFAULT NULL
+  `photo_agreement` VARCHAR(10) NULL DEFAULT NULL,
   FOREIGN KEY (`member_id`) REFERENCES members(id),
   FOREIGN KEY (`course_id`) REFERENCES courses(id)
 );
@@ -234,29 +234,6 @@ CREATE TABLE `auditlog` (
 );
 
 drop table filesystem;
-
-CREATE TABLE `mailbox` (
-  `id` INT(10) AUTO_INCREMENT,
-  `msg-id` VARCHAR(128) NOT NULL,
-  `subject` VARCHAR(512) NOT NULL,
-  `from` VARCHAR(256) NOT NULL,
-  `sent-date` DATE NOT NULL,
-  `recv-date` DATE NOT NULL,
-  PRIMARY KEY (`id`));
-  
-CREATE TABLE mailbox_folders (
-    `ref_id`         INT(10) NOT NULL,
-    `folder_name`    VARCHAR(256),
-  	KEY ref_id (ref_id),
-  	CONSTRAINT `mailbox_folders_ibfk_1` FOREIGN KEY (`ref_id`) REFERENCES `mailbox` (`id`)
-);
-
-CREATE TABLE mailbox_recipients (
-    `ref_id`        INT(10) NOT NULL,
-    `to`   			VARCHAR(256) NOT NULL,
-  	KEY ref_id (ref_id),
-  	CONSTRAINT `mailbox_recipients_ibfk_1` FOREIGN KEY (`ref_id`) REFERENCES `mailbox` (`id`)
-);
 
 ALTER TABLE `attachments` 
 DROP COLUMN `attached_by`;

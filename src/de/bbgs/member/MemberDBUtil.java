@@ -363,6 +363,7 @@ public class MemberDBUtil
                 m.memberType = EMemberType.valueOf(rs.getString("type"));
                 m.vname = rs.getString("vname");
                 m.zname = rs.getString("zname");
+                m.photoAgreement = EPhotoAgreement.valueOf(rs.getString("photoagreement"));
                 m.locations.add(foundLoc);
                 result.add(m);
             }

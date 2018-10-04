@@ -1,5 +1,6 @@
 <div class="workspace-frame-content grid" id="edit_member_core_data" data-has-backbutton="yes" data-has-main-menu="yes" data-frame-title="Stammdaten bearbeiten"></div>
 <img class="image-preview image-picker" id="edit_member_image" style="margin-bottom: 10px;" title="Hier klicken, um das Bild zu &auml;ndern"></img>
+
 <div class="grid-row-0">
     <select class="grid-col-1 mandatory" title="Art der Mitgliedschaft" id="edit_member_type">
         <option value="" disabled selected>Art der Mitgliedschaft</option>
@@ -58,5 +59,19 @@
     <select id="edit_member_school" class="grid-col-1" title="Schule/Einrichtung">
         <option value="" disabled selected>Schule/Einrichtung</option>
     </select>
-    
 </div>
+
+<div class="grid-row-0">    
+    <select id="edit_member_photoagreement" class="grid-col-1 mandatory" title="Fotoeinverständnis">
+        <option value="" disabled selected>Fotoeinverständnis</option>
+        <option value="NONE">Kein Fotoeinverständnis</option>
+        <option value="INTERN">Fotos nur für internen Gebrauch</option>
+        <option value="PRINT_ONLY">Nur f&uuml;r Print-Medien</option>
+        <option value="FULL">komplettes Fotoeinverständnis</option>
+    </select>
+</div>
+
+<div class="grid-row-0">  
+    <div id="edit_member_dse_state" class="grid-col-2" title="Status Datenschutz-Erklärung"></div>
+</div>
+

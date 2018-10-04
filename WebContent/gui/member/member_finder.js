@@ -15,12 +15,11 @@ var MemberFinder = function(multiSelect, onSubmit) {
     var self = this;
     this.load("gui/member/member_finder.html", function() {
 
-	new TableDecorator("member_finder_resultset");
 	self.setupUI();
 
-	self.model.addChangeListener("//members", function() {
-	    self.reloadTable();
-	});
+	// self.model.addChangeListener("//members", function() {
+	// self.reloadTable();
+	// });
     });
 }
 MemberFinder.prototype = Object.create(WorkSpaceFrame.prototype);
@@ -58,7 +57,7 @@ MemberFinder.prototype.onSearchInput = function() {
     if (search.value) {
 	this.startTimer();
     } else {
-	UIUtils.addClass(resultset, "hidden");
+	UIUtils.clearChilds("member_finder_body");
     }
 }
 
@@ -69,16 +68,15 @@ MemberFinder.prototype.onShowAll = function() {
 
     var search = UIUtils.getElement("member_finder_search");
     var showAll = UIUtils.getElement("member_finder_show_all");
-    var resultset = UIUtils.getElement("member_finder_resultset");
 
     this.stopTimer();
     search.value = "";
     if (showAll.checked) {
-	this.invokeService();
+	this.invokeService(true);
     } else {
 	this.selection = [];
 	this.onSelectionChange();
-	UIUtils.addClass(resultset, "hidden");
+	UIUtils.clearChilds("member_finder_body");
     }
 }
 
@@ -100,14 +98,14 @@ MemberFinder.prototype.startTimer = function() {
 
     var self = this;
     this.timer = window.setTimeout(function() {
-	self.invokeService();
+	self.invokeService(false);
     }, 500);
 }
 
 /**
  * 
  */
-MemberFinder.prototype.invokeService = function() {
+MemberFinder.prototype.invokeService = function(showAll) {
 
     var self = this;
     var caller = new ServiceCaller();
@@ -117,6 +115,7 @@ MemberFinder.prototype.invokeService = function() {
 	case "member-finder-ok-rsp":
 	    self.model.removeChilds("//members");
 	    self.model.addElements("//members", XmlUtils.evaluateXPath(rsp, "//member-finder-ok-rsp/members/member"));
+	    self.reloadTable(showAll);
 	    break;
 
 	case "error-response":
@@ -134,7 +133,7 @@ MemberFinder.prototype.invokeService = function() {
     };
 
     var req = XmlUtils.createDocument("member-finder-req");
-    if (UIUtils.getElement("member_finder_show_all").checked) {
+    if (showAll) {
 	XmlUtils.setNode(req, "show-all", "true");
     } else {
 	XmlUtils.setNode(req, "query", UIUtils.getElement("member_finder_search").value);
@@ -145,7 +144,7 @@ MemberFinder.prototype.invokeService = function() {
 /**
  * 
  */
-MemberFinder.prototype.reloadTable = function() {
+MemberFinder.prototype.reloadTable = function(showAll) {
 
     var self = this;
 
@@ -154,21 +153,70 @@ MemberFinder.prototype.reloadTable = function() {
 	self.onResultSetSelection(tr, member);
     }
 
-    if (this.model.evaluateXPath("//members/member").length == 0) {
-	UIUtils.addClass("member_finder_resultset", "hidden");
-    } else {
+    UIUtils.clearChilds("member_finder_body");
+    if (showAll) {
+	this.fillByFoundLocation(null, fields, onclick);
 
-	self.model.createTableBinding("member_finder_resultset", fields, "//members/member", onclick);
-	UIUtils.removeClass("member_finder_resultset", "hidden");
-	
-	// Beim "showAll" verstecken wir die "found at"-Spalte
-	if(UIUtils.getElement("member_finder_show_all").checked) {
-	    UIUtils.addClass("member_finder_resultset_found_at", "hidden");
-	}
-	else {
-	    UIUtils.removeClass("member_finder_resultset_found_at", "hidden");	    
+    } else {
+	this.fillByFoundLocation("MEMBER", fields, onclick);
+	this.fillByFoundLocation("COMMDATA", fields, onclick);
+	this.fillByFoundLocation("CONTACTS", fields, onclick);
+	this.fillByFoundLocation("COURSES", fields, onclick);
+	this.fillByFoundLocation("NOTES", fields, onclick);
+    }
+}
+
+/**
+ * 
+ */
+MemberFinder.prototype.fillByFoundLocation = function(location, fields, onclick) {
+
+    var xpath = "//members/member";
+    if (location) {
+	xpath += "/locations[location='" + location + "']";
+    }
+    var allFound = this.model.evaluateXPath(xpath);
+
+    if (allFound.length) {
+
+	var tbody = this.makeTable(location);
+	for (var i = 0; i < allFound.length; i++) {
+
+	    var member = allFound[i]; // .parentElement;
+	    if (location) {
+		member = member.parentElement;
+	    }
+	    var row = this.model.createTableRow(member, fields, onclick);
+	    tbody.appendChild(row);
+
 	}
     }
+}
+
+/**
+ * 
+ */
+MemberFinder.prototype.makeTable = function(location) {
+
+    var thead = document.createElement("thead");
+    var row = document.createElement("tr");
+    thead.appendChild(row);
+    row.appendChild(document.createElement("th"));
+
+    var span = document.createElement("th");
+    span.textContent = this.getFoundLocationHeader(location);
+    row.appendChild(span);
+
+    var tbody = document.createElement("tbody");    
+    var table = document.createElement("table");
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    table.style.marginBottom = "10px";
+
+    new TableDecorator(table);
+    UIUtils.getElement("member_finder_body").appendChild(table);
+    
+    return tbody;
 }
 
 /**
@@ -183,67 +231,44 @@ MemberFinder.prototype.getColumnDescriptor = function() {
 	var ui = document.createElement("input");
 	ui.type = (self.multSel) ? "checkbox" : "radio";
 	ui.name = "member_finder_selected";
-	ui.id = "member_finder_radio_" + member.getElementsByTagName("id")[0].textContent;
 	return ui;
     });
 
-    fields.push("zname");
-    fields.push("vname");
-    fields.push(function(td, member) {
-	return MemberTypeTranslator[member.getElementsByTagName("type")[0].textContent];
+    fields.push(function(tr, member) {
+	return member.getElementsByTagName("zname")[0].textContent + ", " + member.getElementsByTagName("vname")[0].textContent;
     });
-
-    // Beim showAll verstecken wir die "Gefunden in"-Spalte
-    if (!UIUtils.getElement("member_finder_show_all").checked) {
-	fields.push(function(td, member) {
-	    return self.createFoundLocationTags(member.getElementsByTagName("location"));
-	});
-    }
     return fields;
 }
 
 /**
  * 
  */
-MemberFinder.prototype.createFoundLocationTags = function(locations) {
+MemberFinder.prototype.getFoundLocationHeader = function(location) {
 
-    var cnr = document.createElement("div");
-    cnr.className = "found-locations-cnr";
+    var result;
+    switch (location) {
+    case null:
+	result = "Alle Mitglieder";
+	break;
 
-    for (var i = 0; i < locations.length; i++) {
+    case "MEMBER":
+	result = "Gefunden in den Mitglieds-Daten von:";
+	break;
 
-	var tag = document.createElement("div");
-	tag.className = "found-location-tag";
-	var img = document.createElement("img");
-	var text = document.createTextNode("");
+    case "COURSES":
+	result = "Gefunden in den Kursen von:";
+	break;
 
-	switch (locations[i].textContent) {
-	case "MEMBER":
-	    img.src = "gui/images/person.svg";
-	    text.textContent = "Mitglieds-Daten";
-	    break;
+    case "NOTES":
+	result = "Gefunden in den Notizen von:";
+	break;
 
-	case "COURSES":
-	    img.src = "gui/images/course.svg";
-	    text.textContent = "Kursbeschreibungen";
-	    break;
+    case "CONTACTS":
+	result = "Gefunden in den Kontakten von:";
 
-	case "NOTES":
-	    img.src = "gui/images/notes.svg";
-	    text.textContent = "Notizen";
-	    break;
-
-	case "CONTACTS":
-	    img.src = "gui/images/person-group.svg";
-	    text.textContent = "Kontakte";
-	    break;
-	}
-	tag.appendChild(img)
-	tag.appendChild(text);
-	cnr.appendChild(tag);
+	break;
     }
-
-    return cnr;
+    return result;
 }
 
 /**
@@ -251,8 +276,7 @@ MemberFinder.prototype.createFoundLocationTags = function(locations) {
  */
 MemberFinder.prototype.onResultSetSelection = function(tr, member) {
 
-    var radio = "member_finder_radio_" + member.getElementsByTagName("id")[0].textContent;
-    radio = document.getElementById(radio);
+    var radio = tr.querySelector("input");
 
     if (this.multSel) {
 	if (radio.checked) {

@@ -27,6 +27,9 @@ public class FoundMember
     @XmlJavaTypeAdapter(value = EMemberType.XMLAdapter.class)
     public EMemberType memberType = EMemberType.UNKNOWN;
 
+    @XmlElement(name = "photo_agreement")
+    public EPhotoAgreement photoAgreement = EPhotoAgreement.NONE;
+
     @XmlElement(name = "location")
     @XmlElementWrapper(name = "locations")
     public Collection<EFoundLocation> locations = new ArrayList<>();

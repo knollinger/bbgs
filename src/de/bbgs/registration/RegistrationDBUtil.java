@@ -9,9 +9,7 @@ import java.util.Collection;
 
 import de.bbgs.courses.ECourseType;
 import de.bbgs.registration.GetRegistrationModelHandler.CourseDesc;
-import de.bbgs.registration.GetRegistrationModelHandler.LocationDesc;
 import de.bbgs.registration.GetRegistrationModelHandler.PartnerDesc;
-import de.bbgs.registration.GetRegistrationModelHandler.TerminDesc;
 import de.bbgs.utils.DBUtils;
 
 /**
@@ -21,11 +19,10 @@ import de.bbgs.utils.DBUtils;
 public class RegistrationDBUtil
 {
     // @formatter:off
-    private static final String GET_COMMING_SOON_COURSES = "select c.id, c.name, c.description, c.type, t.date, t.start, t.end, t.location_id\n"
-        + "    from courses c \n" 
-        + "    left join course_termins t on t.ref_id = c.id \n"
-        + "    where t.date > current_date \n" 
-        + "    order by c.id, t.date";
+    private static final String GET_COMMING_SOON_COURSES = "select c.id, c.name, c.description, c.type, min(t.date) as begin, max(t.date) as end from course_termins t \n" + 
+        "    left join courses c on c.id = t.ref_id \n" + 
+//        "    where current_date > t.date\n" +               // TODO: muss noch in lesserThen geändert werden!
+        "    group by t.ref_id";
     // @formatter on
     
     private static final String GET_PARTNERS = "select id, name from partner where type='COOP' order by name";
@@ -95,51 +92,10 @@ public class RegistrationDBUtil
                     c.description = rs.getString("c.description");
                     c.type = ECourseType.valueOf(rs.getString("c.type"));
                 }
-
-                TerminDesc t = new TerminDesc();
-                t.date = DBUtils.getDate(rs, "t.date");
-                t.from = DBUtils.getTime(rs, "t.start");
-                t.until = DBUtils.getTime(rs, "t.end");
-                t.locationId = rs.getInt("t.location_id");
-                c.termine.add(t);
             }
             if (c != null)
             {
                 result.add(c);
-            }
-        }
-        finally
-        {
-            DBUtils.closeQuitly(rs);
-            DBUtils.closeQuitly(stmt);
-        }
-        return result;
-    }
-
-    /**
-     * @param conn
-     * @return
-     * @throws SQLException 
-     */
-    public static Collection<LocationDesc> getLocations(Connection conn) throws SQLException
-    {
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        Collection<LocationDesc> result = new ArrayList<>();
-        try
-        {
-            stmt = conn.prepareStatement("select id, name, zip_code, city, street from course_locations order by name");
-            rs = stmt.executeQuery();
-            while(rs.next()) {
-                
-                LocationDesc desc = new LocationDesc();
-                desc.id = rs.getInt("id");
-                desc.name = rs.getString("name");
-                desc.zipcode = rs.getInt("zip_code");
-                desc.city = rs.getString("city");
-                desc.street = rs.getString("street");
-                result.add(desc);
             }
         }
         finally

@@ -102,6 +102,7 @@ public class FindMemberHandler implements IXmlServiceHandler
             m.memberType = member.memberType;
             m.zname = member.zname;
             m.vname = member.vname;
+            m.photoAgreement = m.photoAgreement;
             result.add(m);
         }
         return result;

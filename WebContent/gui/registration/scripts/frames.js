@@ -111,14 +111,15 @@ CourseChooserFrame.prototype.renderOneCourse = function(course) {
     var result = document.createElement("div");
     result.className = "course-overview-item";
 
-    var termine = this.createTerminCnr(course);
-    var radio = this.createRadioButton(course.getElementsByTagName("id")[0].textContent);
-    var expand = this.createExpandButton(termine);
+    var xpath = XmlUtils.getXPathTo(course);
+    var radio = this.createRadioButton();
+    var desc = this.createDescription(xpath);
+    var expand = this.createExpandButton(desc);
+    var title = this.createTitle(xpath, radio, expand);
 
     var content = document.createElement("div");
-    content.appendChild(this.createTitle(radio, course.getElementsByTagName("name")[0].textContent, expand));
-    content.appendChild(this.createDescription(course));
-    content.appendChild(termine);
+    content.appendChild(title);
+    content.appendChild(desc);
     result.appendChild(content);
 
     result.addEventListener("click", function(evt) {
@@ -134,75 +135,44 @@ CourseChooserFrame.prototype.renderOneCourse = function(course) {
 /**
  * 
  */
-CourseChooserFrame.prototype.createDescription = function(course) {
+CourseChooserFrame.prototype.createDescription = function(xpath) {
 
     var desc = document.createElement("div");
-    desc.className = "course-overview-termin-description";
-    desc.textContent = course.getElementsByTagName("description")[0].textContent;
+    desc.className = "course-overview-termin-description hidden";
+    desc.textContent = this.model.getValue(xpath + "/description");
     return desc;
 }
 
 /**
  * 
  */
-CourseChooserFrame.prototype.createTitle = function(radio, text, expand) {
+CourseChooserFrame.prototype.createTitle = function(xpath, radio, expand) {
 
     var result = document.createElement("div");
     result.className = "course-overview-termin-title";
 
     result.appendChild(radio);
     var span = document.createElement("span");
-    span.textContent = text;
+    span.textContent = this.model.getValue(xpath + "/name");
     result.appendChild(span);
     result.appendChild(expand);
 
     result.addEventListener("click", function() {
 	expand.click();
+	radio.click();
     });
 
     return result;
 }
-/**
- * 
- */
-CourseChooserFrame.prototype.createTerminCnr = function(course) {
-
-    var terminCnr = document.createElement("div");
-    terminCnr.className = "course-overview-termin-cnr hidden";
-
-    var allTermins = course.getElementsByTagName("termin");
-    for (var i = 0; i < allTermins.length; i++) {
-
-	var xpath = XmlUtils.getXPathTo(allTermins[i]);
-
-	row = this.createRow("course-overview-termin-row");
-
-	var col = document.createElement("div");
-	col.className = "grid-col-1";
-	col.textContent = this.model.getValue(xpath + "/date") + " " + this.model.getValue(xpath + "/from") + " - " + this.model.getValue(xpath + "/until");
-	row.appendChild(col);
-
-	var locId = this.model.getValue(xpath + "/location-id");
-	xpath = "//get-registration-model-ok-rsp/locations/location[id='" + locId + "']";
-	col = document.createElement("div");
-	col.className = "grid-col-1";
-	col.textContent = this.model.getValue(xpath + "/name") + " " + this.model.getValue(xpath + "/zip-code") + " " + this.model.getValue(xpath + "/city") + " " + this.model.getValue(xpath + "/street");
-	row.appendChild(col);
-
-	terminCnr.appendChild(row);
-    }
-    return terminCnr;
-}
 
 /**
  * 
  */
-CourseChooserFrame.prototype.createRadioButton = function(id) {
+CourseChooserFrame.prototype.createRadioButton = function() {
 
     var radio = document.createElement("input");
     radio.type = "radio";
     radio.name = "course_selection";
-    radio.id = "course_selection_" + id;
     return radio;
 }
 

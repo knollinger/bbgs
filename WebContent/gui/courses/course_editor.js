@@ -597,7 +597,7 @@ CourseMembersOverview.prototype.getColumnDescriptor = function() {
 
 	td.setAttribute("valign", "middle");
 	var select = document.createElement("select");
-	select.className = "inplace-select";
+	select.className = "inplace-select mandatory";
 
 	var opt = document.createElement("option");
 	opt.disabled = opt.selected = true;

@@ -17,7 +17,6 @@ var MemberEditor = function(id) {
 	self.setupModelListener();
 	self.setupTitlebarListener();
 	self.setupCoreDataEditor();
-	self.setupDSGVODataEditor();
 	self.setupCommDataEditor();
 	self.setupContactsOverview();
 	self.setupAttachmentsOverview();
@@ -212,19 +211,21 @@ var MemberCoreDataEditor = function(parentFrame, targetCnr, model) {
 	// fill coop-partners
 	self.fillCoopPartners();
 
-	self.model.createValueBinding("edit_member_type", "/member-model/core-data/type");
-	self.model.createValueBinding("edit_member_since", "/member-model/core-data/member_since");
-	self.model.createValueBinding("edit_member_until", "/member-model/core-data/member_until");
-	self.model.createValueBinding("edit_member_zname", "/member-model/core-data/zname")
-	self.model.createValueBinding("edit_member_vname", "/member-model/core-data/vname")
-	self.model.createValueBinding("edit_member_vname2", "/member-model/core-data/vname2")
-	self.model.createValueBinding("edit_member_title", "/member-model/core-data/title")
-	self.model.createValueBinding("edit_member_birthdate", "/member-model/core-data/birth_date")
-	self.model.createValueBinding("edit_member_sex", "/member-model/core-data/sex")
-	self.model.createValueBinding("edit_member_zipcode", "/member-model/core-data/zip_code");
-	self.model.createValueBinding("edit_member_city", "/member-model/core-data/city");
-	self.model.createValueBinding("edit_member_street", "/member-model/core-data/street");
-	self.model.createValueBinding("edit_member_school", "/member-model/core-data/school");
+	self.model.createValueBinding("edit_member_type", "//member-model/core-data/type");
+	self.model.createValueBinding("edit_member_since", "//member-model/core-data/member_since");
+	self.model.createValueBinding("edit_member_until", "//member-model/core-data/member_until");
+	self.model.createValueBinding("edit_member_zname", "//member-model/core-data/zname")
+	self.model.createValueBinding("edit_member_vname", "//member-model/core-data/vname")
+	self.model.createValueBinding("edit_member_vname2", "//member-model/core-data/vname2")
+	self.model.createValueBinding("edit_member_title", "//member-model/core-data/title")
+	self.model.createValueBinding("edit_member_birthdate", "//member-model/core-data/birth_date")
+	self.model.createValueBinding("edit_member_sex", "//member-model/core-data/sex")
+	self.model.createValueBinding("edit_member_zipcode", "//member-model/core-data/zip_code");
+	self.model.createValueBinding("edit_member_city", "//member-model/core-data/city");
+	self.model.createValueBinding("edit_member_street", "//member-model/core-data/street");
+	self.model.createValueBinding("edit_member_school", "//member-model/core-data/school");
+	self.model.createValueBinding("edit_member_photoagreement", "//member-model/core-data/photoagreement");
+	self.adjustDSEState();
 
 	// instantiate the image picker
 	var thumb = document.getElementById("edit_member_image");
@@ -425,44 +426,32 @@ MemberCoreDataEditor.prototype.onSexChange = function() {
     }
 }
 
-/*---------------------------------------------------------------------------*/
 /**
- * Der SubEditor für die Datenschutz-Angaben
+ * 
  */
+MemberCoreDataEditor.prototype.adjustDSEState = function() {
 
-var MemberDSGVODataEditor = function(parentFrame, targetCnr, model) {
+    var state = this.model.getValue("//member-model/core-data/dse-state");
+    var result = " Die Datenschutz-Erklärung wurde ";
+    switch (state) {
+    case "NONE":
+	result += "noch nicht zugestellt";
+	break;
 
-    WorkSpaceTabPane.call(this, parentFrame, targetCnr);
-    this.model = model;
+    case "PENDING":
+	result += "am " + this.model.getValue("//member-model/core-data/dse-date") + " zugestellt, die Antwort steht noch aus";
+	break;
 
-    var self = this;
-    this.load("gui/member/member_editor_dsgvo.html", function() {
+    case "ACCEPTED":
+	result += "am " + this.model.getValue("//member-model/core-data/dse-date") + " akzeptiert";
+	break;
 
-	self.model.createValueBinding("edit_member_photoagreement", "//member-model/core-data/photoagreement");
-
-	var state = self.model.getValue("//member-model/core-data/dse-state");
-	var result = " Die Datenschutz-Erklärung wurde ";
-	switch (state) {
-	case "NONE":
-	    result += "noch nicht zugestellt";
-	    break;
-
-	case "PENDING":
-	    result += "am " + self.model.getValue("//member-model/core-data/dse-date") + " zugestellt, die Antwort steht noch aus";
-	    break;
-
-	case "ACCEPTED":
-	    result += "am " + self.model.getValue("//member-model/core-data/dse-date") + " akzeptiert";
-	    break;
-
-	case "REJECTED":
-	    result += "am " + self.model.getValue("//member-model/core-data/dse-date") + " abgelehnt";
-	    break;
-	}
-	UIUtils.getElement("edit_member_dse_state").textContent = result;
-    });
+    case "REJECTED":
+	result += "am " + this.model.getValue("//member-model/core-data/dse-date") + " abgelehnt";
+	break;
+    }
+    UIUtils.getElement("edit_member_dse_state").textContent = result;
 }
-MemberDSGVODataEditor.prototype = Object.create(WorkSpaceTabPane.prototype);
 
 /*---------------------------------------------------------------------------*/
 /**
@@ -641,9 +630,8 @@ MemberCourseOverview.prototype.fillTable = function() {
     this.actionRemove.hide();
 
     // was passiert beim Tabellen-Klick?
+    var self = this;
     var onclick = function(tr, course) {
-	var self = this;
-
 	self.currRow = tr;
 	self.currSelection = XmlUtils.getXPathTo(course);
 	self.actionRemove.show();
@@ -654,9 +642,6 @@ MemberCourseOverview.prototype.fillTable = function() {
     for (var i = 0; i < allCourses.length; i++) {
 	body.appendChild(this.renderOneCourse(allCourses[i], fields, onclick));
     }
-
-    // this.model.createTableBinding("edit_member_courses", fields, allCourses,
-    // onclick, filter);
 }
 
 /**

@@ -175,6 +175,10 @@ td {
 	border: none;
 }
 
+td:last-child {
+	width: 100%;
+}
+
 h1 {
 	font-size: 1em;
 	margin-top: 10px;

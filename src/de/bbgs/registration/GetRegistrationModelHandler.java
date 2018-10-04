@@ -1,6 +1,7 @@
 package de.bbgs.registration;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,7 +73,6 @@ public class GetRegistrationModelHandler implements IXmlServiceHandler
             Response rsp = new Response();
             rsp.partners = RegistrationDBUtil.getPartners(conn);
             rsp.courses = RegistrationDBUtil.getCoursesCommingSoon(conn);
-            rsp.locations = RegistrationDBUtil.getLocations(conn);
             result = rsp;
         }
         catch (SQLException e)
@@ -109,26 +109,12 @@ public class GetRegistrationModelHandler implements IXmlServiceHandler
 
         @XmlElement(name = "type")
         public ECourseType type = ECourseType.NONE;
+        
+        @XmlElement(name="from")
+        public Date from;
 
-
-        @XmlElement(name = "termin")
-        @XmlElementWrapper(name = "termins")
-        public Collection<TerminDesc> termine = new ArrayList<>();
-    }
-
-    public static class TerminDesc
-    {
-        @XmlElement(name = "date")
-        public String date = "";
-
-        @XmlElement(name = "from")
-        public String from = "";
-
-        @XmlElement(name = "until")
-        public String until = "";
-
-        @XmlElement(name = "location-id")
-        public int locationId = -1;
+        @XmlElement(name="until")
+        public Date until;
     }
 
     public static class PartnerDesc
@@ -140,24 +126,6 @@ public class GetRegistrationModelHandler implements IXmlServiceHandler
         public String name = "";
     }
 
-    public static class LocationDesc
-    {
-        @XmlElement(name = "id")
-        public int id = -1;
-
-        @XmlElement(name = "name")
-        public String name = "";
-
-        @XmlElement(name = "zip-code")
-        public int zipcode = -1;
-
-        @XmlElement(name = "city")
-        public String city = "";
-
-        @XmlElement(name = "street")
-        public String street = "";
-    }
-    
     @XmlRootElement(name = "get-registration-model-ok-rsp")
     @XmlType(name = "GetRegistrationModelHandler.Response")
     public static class Response implements IJAXBObject
@@ -180,9 +148,5 @@ public class GetRegistrationModelHandler implements IXmlServiceHandler
         @XmlElement(name = "note")
         @XmlElementWrapper(name = "notes")
         public Collection<Note> notes = new ArrayList<>();
-
-        @XmlElement(name = "location")
-        @XmlElementWrapper(name = "locations")
-        public Collection<LocationDesc> locations = new ArrayList<>();
     }
 }
