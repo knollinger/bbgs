@@ -9,6 +9,11 @@ var MemberFinder = function(multiSelect, onSubmit) {
     this.onsubmit = onSubmit;
     this.selection = [];
     this.timer = undefined;
+    
+    var self = this;
+    this.keyMap[13] = function(table, evt) {
+	self.saveButton.click();
+    }
 
     this.model = new Model(XmlUtils.createDocument("members"));
 
@@ -16,10 +21,6 @@ var MemberFinder = function(multiSelect, onSubmit) {
     this.load("gui/member/member_finder.html", function() {
 
 	self.setupUI();
-
-	// self.model.addChangeListener("//members", function() {
-	// self.reloadTable();
-	// });
     });
 }
 MemberFinder.prototype = Object.create(WorkSpaceFrame.prototype);
@@ -41,6 +42,7 @@ MemberFinder.prototype.setupUI = function() {
     showAll.addEventListener("click", function() {
 	self.onShowAll();
     });
+    UIUtils.getElement("member_finder_search").focus();
 }
 
 /**
@@ -54,7 +56,7 @@ MemberFinder.prototype.onSearchInput = function() {
 
     this.stopTimer();
     showAll.checked = false;
-    if (search.value) {
+    if (search.value && search.value.length > 2) {
 	this.startTimer();
     } else {
 	UIUtils.clearChilds("member_finder_body");
@@ -215,7 +217,7 @@ MemberFinder.prototype.makeTable = function(location) {
 
     new TableDecorator(table);
     UIUtils.getElement("member_finder_body").appendChild(table);
-    
+
     return tbody;
 }
 
@@ -318,14 +320,17 @@ MemberFinder.prototype.onSelectionChange = function(selection) {
 var MemberOverview = function() {
 
     MemberFinder.call(this, false, null);
-    this.createActions();
+    this.createEditAction();
+    this.createAddAction();
+    this.createRemoveAction();
+    this.onSelectionChange();
 }
 MemberOverview.prototype = Object.create(MemberFinder.prototype);
 
 /**
  * 
  */
-MemberOverview.prototype.createActions = function() {
+MemberOverview.prototype.createEditAction = function() {
 
     var self = this;
     this.actionEdit = new WorkSpaceFrameAction("gui/images/person-edit.svg", "Ein Mitglied bearbeiten", function() {
@@ -333,19 +338,40 @@ MemberOverview.prototype.createActions = function() {
 	new MemberEditor(self.selection[0].getElementsByTagName("id")[0].textContent);
     });
     this.addAction(this.actionEdit);
+    this.keyMap[13] = function() {
+	self.actionEdit.invoke();
+    }
+}
+/**
+ * 
+ */
+MemberOverview.prototype.createAddAction = function() {
+
+    var self = this;
 
     this.actionAdd = new WorkSpaceFrameAction("gui/images/person-add.svg", "Ein Mitglied hinzu fügen", function() {
 	self.close();
 	new MemberEditor(0);
     });
     this.addAction(this.actionAdd);
+    this.keyMap[187] = function() { // +-Taste
+	self.actionAdd.invoke();
+    }
+}
 
+/**
+ * 
+ */
+MemberOverview.prototype.createRemoveAction = function() {
+
+    var self = this;
     this.actionRemove = new WorkSpaceFrameAction("gui/images/person-remove.svg", "Ein Mitglied löschen", function() {
 	self.removeMember();
     });
     this.addAction(this.actionRemove);
-
-    this.onSelectionChange();
+    this.keyMap[46] = function() { // Entf-Taste
+	self.actionRemove.invoke();
+    }
 }
 
 /**

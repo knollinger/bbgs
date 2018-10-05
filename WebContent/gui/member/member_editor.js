@@ -208,7 +208,7 @@ var MemberCoreDataEditor = function(parentFrame, targetCnr, model) {
     var self = this;
     this.load("gui/member/member_editor_core.html", function() {
 
-	// fill coop-partners
+	UIUtils.getElement("edit_member_type").focus();
 	self.fillCoopPartners();
 
 	self.model.createValueBinding("edit_member_type", "//member-model/core-data/type");
@@ -453,6 +453,17 @@ MemberCoreDataEditor.prototype.adjustDSEState = function() {
     UIUtils.getElement("edit_member_dse_state").textContent = result;
 }
 
+/**
+ * 
+ */
+MemberCoreDataEditor.prototype.activate = function() {
+
+    var elem = UIUtils.getElement("edit_member_type");
+    if (elem) {
+	elem.focus();
+    }
+}
+
 /*---------------------------------------------------------------------------*/
 /**
  * Der SubEditor für die Kommunikations-Daten
@@ -514,6 +525,14 @@ MemberCommDataEditor.prototype.onMemberTypeChange = function() {
     }
 }
 
+/**
+ * 
+ */
+MemberCommDataEditor.prototype.activate = function() {
+
+    UIUtils.getElement("edit_member_phone").focus();
+}
+
 /*---------------------------------------------------------------------------*/
 /**
  * Der SubEditor für die Kurs-Daten
@@ -553,6 +572,7 @@ MemberCourseOverview.prototype.setupModelListener = function() {
  */
 MemberCourseOverview.prototype.activate = function() {
 
+    this.targetCnr.focus();
     this.actionAdd.show();
     if (this.currSelection != null) {
 	this.actionRemove.show();
@@ -583,6 +603,10 @@ MemberCourseOverview.prototype.createAddAction = function() {
 
     this.addAction(action);
     action.hide();
+    
+    this.keyMap[187] = function() {
+	action.invoke();
+    }
     return action;
 }
 
@@ -614,6 +638,10 @@ MemberCourseOverview.prototype.createRemoveAction = function() {
 
     this.addAction(action);
     action.hide();
+
+    this.keyMap[46] = function() {
+	action.invoke();
+    }
     return action;
 }
 

@@ -1,10 +1,10 @@
 WorkSpace = (function() {
 
     // Keine ContextMenus!
-//     document.body.addEventListener("contextmenu", function(evt) {
-//	evt.preventDefault();
-//	evt.stopPropagation();
-//    }, false);
+    // document.body.addEventListener("contextmenu", function(evt) {
+    // evt.preventDefault();
+    // evt.stopPropagation();
+    // }, false);
 
     // prevent touchmove!
     document.body.addEventListener("touchmove", function(evt) {
@@ -50,6 +50,7 @@ var WorkSpaceFrame = function(logoUrl) {
     actionbar.appendChild(this.toolbox);
 
     this.content = document.createElement("div");
+    this.content.tabIndex = "-1";
     this.content.className = "workspace-frame-body";
     this.frame.appendChild(this.content);
 
@@ -57,19 +58,14 @@ var WorkSpaceFrame = function(logoUrl) {
     workSpace.appendChild(this.frame);
 
     var self = this;
-    this.frame.addEventListener("keydown", function(evt) {
+    this.keyMap = {};
+    this.keyMap[27] = function() {
+	self.handleEscape();
+    }
+    UIUtils.addKeyMap(this.content, this.keyMap);
 
-	switch (evt.keyCode) {
-	case 27:
-	    self.handleEscape();
-	    evt.stopPropagation();
-	    evt.preventDefault();
-	    break;
 
-	default:
-	    break;
-	}
-    });
+    this.content.focus();
 }
 
 /**
@@ -339,6 +335,16 @@ var WorkSpaceFrameAction = function(img, text, onClick) {
 /**
  * 
  */
+WorkSpaceFrameAction.prototype.invoke = function() {
+
+    if(this.isVisible()) {
+	this.onClick();
+    }
+}
+
+/**
+ * 
+ */
 WorkSpaceFrame.prototype.validate = function() {
 
     return new Validator().validate(this.content);
@@ -499,6 +505,9 @@ var WorkSpaceTabPane = function(parentFrame, targetContainer) {
 
     this.parentFrame = parentFrame;
     this.targetCnr = UIUtils.getElement(targetContainer);
+    this.targetCnr.tabIndex = "-1";
+    this.keyMap = {};
+    UIUtils.addKeyMap(this.targetCnr, this.keyMap);
     this.actions = [];
 }
 
@@ -506,7 +515,7 @@ var WorkSpaceTabPane = function(parentFrame, targetContainer) {
  * Der Methodenrumpf ist nur zur dokumentation vorhanden.
  */
 WorkSpaceTabPane.prototype.activate = function() {
-
+    
 }
 
 /**
@@ -918,7 +927,7 @@ MainMenu.prototype.logout = function() {
  */
 var AboutDialog = function() {
 
-  WorkSpaceFrame.call(this);
+    WorkSpaceFrame.call(this);
 
     var self = this;
     this.load("gui/widgets/about.html", function() {
@@ -941,4 +950,3 @@ var LicenceDialog = function() {
     });
 }
 LicenceDialog.prototype = Object.create(WorkSpaceFrame.prototype);
-

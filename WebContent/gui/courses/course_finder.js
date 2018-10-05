@@ -4,17 +4,22 @@
 var CourseFinder = function(multiSelect, onSubmit) {
 
     WorkSpaceFrame.call(this);
+    var self = this;
 
     this.multSel = multiSelect;
     this.onsubmit = onSubmit;
     this.selection = [];
 
-    var self = this;
+    this.keyMap[13] = function(tbody, evt) {
+	self.saveButton.click();
+    };
+
     this.load("gui/courses/course_overview.html", function() {
 
 	self.loadModel(function() {
 
 	    new TableDecorator("edit_courses_overview");
+	    UIUtils.addKeyMap("edit_courses_overview_body", self.keyMap);
 	    self.model.addChangeListener("//get-all-courses-ok-response/courses", function() {
 		self.fillTable();
 	    });
@@ -167,14 +172,18 @@ CourseFinder.prototype.onSelectionChange = function(selection) {
 var CourseOverview = function() {
 
     CourseFinder.call(this, false, null);
-    this.createActions();
+    this.createEditAction();
+    this.createAddAction();
+    this.createRemoveAction();
+    this.createPrintAction();
+    this.onSelectionChange();
 }
 CourseOverview.prototype = Object.create(CourseFinder.prototype);
 
 /**
  * 
  */
-CourseOverview.prototype.createActions = function() {
+CourseOverview.prototype.createEditAction = function() {
 
     var self = this;
     this.actionEdit = new WorkSpaceFrameAction("gui/images/course-edit.svg", "Einen Kurs bearbeiten", function() {
@@ -182,12 +191,36 @@ CourseOverview.prototype.createActions = function() {
 	new CourseEditor(self.model.getValue(self.selection[0] + "/id"));
     });
     this.addAction(this.actionEdit);
+    
+    this.keyMap[13] = function(tbody, evt) {
+	self.actionEdit.invoke();
+    }
+}
+
+/**
+ * 
+ */
+CourseOverview.prototype.createAddAction = function() {
+
+    var self = this;
 
     this.actionAdd = new WorkSpaceFrameAction("gui/images/course-add.svg", "Einen Kurs hinzu fügen", function() {
 	self.close();
 	new CourseEditor(0);
     });
     this.addAction(this.actionAdd);
+    
+    this.keyMap[187] = function(tbody, evt) {
+	self.actionAdd.invoke();
+    }
+}
+
+/**
+ * 
+ */
+CourseOverview.prototype.createRemoveAction = function() {
+
+    var self = this;
 
     this.actionRemove = new WorkSpaceFrameAction("gui/images/course-remove.svg", "Einen Kurs löschen", function() {
 	var name = self.model.getValue(self.selection[0] + "/name");
@@ -198,13 +231,26 @@ CourseOverview.prototype.createActions = function() {
 	});
     });
     this.addAction(this.actionRemove);
+    this.keyMap[46] = function(tbody, evt) {
+	self.actionRemove.invoke();
+    }
+}
+
+
+/**
+ * 
+ */
+CourseOverview.prototype.createPrintAction = function() {
+
+    var self = this;
 
     this.actionPrint = new WorkSpaceFrameAction("gui/images/print.svg", "Einen Kurs drucken", function() {
 	self.printCourse();
     });
     this.addAction(this.actionPrint);
-
-    this.onSelectionChange();
+    this.keyMap[80] = function(tbody, evt) { // 'P'-Taste
+	self.actionPrint.invoke();
+    }
 }
 
 /**

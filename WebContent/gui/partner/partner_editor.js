@@ -6,11 +6,16 @@ var PartnerOverview = function() {
     WorkSpaceFrame.call(this);
 
     var self = this;
+    
     this.load("gui/partner/partner_overview.html", function() {
+
+	new TableDecorator("partner_overview");
 
 	self.actionEdit = self.createEditAction();
 	self.actionAdd = self.createAddAction();
 	self.actionRemove = self.createRemoveAction();
+	
+	
 	self.loadModel(function() {
 
 	    self.model.addChangeListener("//get-partner-overview-ok-response/partners", function() {
@@ -33,6 +38,10 @@ PartnerOverview.prototype.createAddAction = function() {
 	new PartnerEditor(0);
     });
     this.addAction(action);
+    
+    this.keyMap[187] = function(tbody, evt) {
+	action.invoke();
+    }
     return action;
 }
 
@@ -47,6 +56,11 @@ PartnerOverview.prototype.createEditAction = function() {
 	new PartnerEditor(self.model.getValue(self.currPartner + "/id"));
     });
     this.addAction(action);
+    
+    this.keyMap[13] = function(tbody, evt) {
+	action.invoke();
+    }
+
     action.hide();
     return action;
 }
@@ -72,6 +86,11 @@ PartnerOverview.prototype.createRemoveAction = function() {
     });
     this.addAction(action);
     action.hide();
+    
+    this.keyMap[46] = function(tbody, evt) {
+	action.invoke();
+    }
+
     return action;
 }
 
@@ -145,15 +164,6 @@ PartnerOverview.prototype.loadModel = function(onSuccess) {
 PartnerOverview.prototype.fillTable = function() {
 
     var self = this;
-
-    new TableDecorator("partner_overview");
-
-    // gelöschte Kontakte werden nicht angezeigt
-    var filter = function(partner) {
-	return partner.getElementsByTagName("action")[0].textContent != "REMOVE";
-    }
-
-    // was passiert beim Tabellen-Klick?
     var onclick = function(tr, partner) {
 
 	self.currPartner = XmlUtils.getXPathTo(partner);
@@ -161,9 +171,9 @@ PartnerOverview.prototype.fillTable = function() {
 	self.actionRemove.show();
     }
 
-    var allPartners = "//get-partner-overview-ok-response/partners/partner";
+    var allPartners = "//get-partner-overview-ok-response/partners/partner[action != 'REMOVE']";
     var fields = this.getColumnDescriptor();
-    this.model.createTableBinding("partner_overview", fields, allPartners, onclick, filter);
+    this.model.createTableBinding("partner_overview", fields, allPartners, onclick);
 
     self.actionEdit.hide();
     self.actionRemove.hide();

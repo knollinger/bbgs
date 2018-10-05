@@ -255,6 +255,7 @@ Model.prototype.createTableRow = function(xmlNode, fields, onclick) {
 
     var row = document.createElement("tr");
     row.tabIndex = "-1";
+
     for (var i = 0; i < fields.length; i++) {
 
 	var cell = document.createElement("td");
@@ -277,6 +278,10 @@ Model.prototype.createTableRow = function(xmlNode, fields, onclick) {
 	    onclick(row, xmlNode);
 	});
     }
+
+    row.addEventListener("dblclick", function(evt) {
+	evt.stopPropagation();
+    });
     return row;
 }
 
@@ -571,8 +576,8 @@ Model.prototype.getCompressedDocument = function(xPathesToRemove) {
 
     var result = new Model(this.xmlDocument);
 
-    for(var i = 0; i < xPathesToRemove.length; i++) {
-	
+    for (var i = 0; i < xPathesToRemove.length; i++) {
+
     }
     return result.getDocument();
 }

@@ -62,6 +62,10 @@ CourseLocationOverview.prototype.createAddAction = function() {
 	new CourseLocationEditor(0);
     });
     this.addAction(action);
+    
+    this.keyMap[187] = function() {
+	action.invoke();
+    }
     return action;
 }
 
@@ -77,7 +81,12 @@ CourseLocationOverview.prototype.createEditAction = function() {
     });
     this.addAction(action);
     action.hide();
-    return action;
+
+    
+    this.keyMap[13] = function() {
+	action.invoke();
+    }
+return action;
 }
 
 /**
@@ -104,6 +113,12 @@ CourseLocationOverview.prototype.createRemoveAction = function() {
     });
     this.addAction(action);
     action.hide();
+    
+    
+    this.keyMap[46] = function() {
+	action.invoke();
+    }
+    
     return action;
 }
 

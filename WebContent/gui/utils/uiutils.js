@@ -402,6 +402,33 @@ var UIUtils = (function() {
 		child = child.parentElement;
 	    }
 	    return null;
+	},
+
+	/**
+	 * Füge KeyBindings zu einem Element hinzu
+	 * 
+	 * @param anchor
+	 *                die ID des gewünschten Elements oder das element
+	 *                selbst
+	 * @param bindings
+	 *                Ein Object, welches den KeyCode als propertyNames hat
+	 *                und den Callback als PropertyValues. Der Callback
+	 *                bekommt die Referenz auf das Element und das
+	 *                KeyUpEvent als Parameter übergeben
+	 */
+	addKeyMap : function(anchor, bindings) {
+
+	    var elem = UIUtils.getElement(anchor);
+	    elem.addEventListener("keyup", function(evt) {
+		if (!(evt.target.nodeName == "INPUT" && evt.target.type == "text") && evt.target.nodeName != "TEXTAREA") {
+		    var cb = bindings[evt.keyCode];
+		    if (cb) {
+			evt.stopPropagation();
+			cb(elem, evt);
+		    }
+		}
+	    });
 	}
+
     }
 })();

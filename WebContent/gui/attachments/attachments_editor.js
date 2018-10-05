@@ -8,7 +8,7 @@ var AttachmentsOverview = function(parentFrame, targetCnr, model, xPath) {
     this.xPath = xPath;
     this.currAttachment = null;
     this.currRow = null;
-
+    
     var self = this;
     this.load("gui/attachments/attachments_overview.html", function() {
 
@@ -32,6 +32,7 @@ AttachmentsOverview.prototype = Object.create(WorkSpaceTabPane.prototype);
  */
 AttachmentsOverview.prototype.activate = function() {
 
+    this.targetCnr.focus();
     this.actionAdd.show();
     if (this.currAttachment != null) {
 	this.actionEdit.show();
@@ -62,6 +63,10 @@ AttachmentsOverview.prototype.createEditAction = function() {
     });
     this.addAction(action);
     action.hide();
+    
+    this.keyMap[13] = function() {
+	action.invoke();
+    }
     return action;
 }
 
@@ -73,6 +78,7 @@ AttachmentsOverview.prototype.createAddAction = function() {
     var self = this;
     var action = new WorkSpaceFrameAction("gui/images/document-add.svg", "Anhang hinzufügen", null);
     this.addAction(action);
+    
     new FilePicker(action.btn, function(name, type, data) {
 
 	var node = XmlUtils.createDocument("attachment");
@@ -87,6 +93,12 @@ AttachmentsOverview.prototype.createAddAction = function() {
     });
 
     action.hide();
+    
+    
+    this.keyMap[187] = function() {
+	action.btn.click();
+    }
+
     return action;
 }
 
@@ -116,6 +128,12 @@ AttachmentsOverview.prototype.createRemoveAction = function() {
     });
     this.addAction(action);
     action.hide();
+    
+    
+    this.keyMap[46] = function() {
+	action.invoke();
+    }
+    
     return action;
 }
 

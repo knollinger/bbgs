@@ -6,6 +6,8 @@ var ContactOverview = function(parentFrame, targetCnr, model, xPath, xPathDefNod
     this.xPath = xPath;
     this.xPathDefNode = xPathDefNode;
     this.useRelation = useRelation;
+    this.keyMap = {};
+    UIUtils.addKeyMap(targetCnr, this.keyMap);
 
     var self = this;
     this.load("gui/contacts/contact_overview.html", function() {
@@ -22,6 +24,7 @@ ContactOverview.prototype = Object.create(WorkSpaceTabPane.prototype);
  */
 ContactOverview.prototype.activate = function() {
 
+    this.targetCnr.focus();
     this.actionAdd.show();
 }
 /**
@@ -41,11 +44,18 @@ ContactOverview.prototype.createAddAction = function() {
     var action = new WorkSpaceFrameAction("gui/images/person-add.svg", "Kontakt anlegen", function() {
 	var doc = XmlUtils.parse(ContactOverview.EMPTY_CONTACT);
 	self.currContact = self.model.addElement(self.xPath, doc.documentElement);
-	self.fillContent();
+	
+	var row = self.renderOneContact(self.model.evaluateXPath(self.currContact)[0]);
+	UIUtils.getElement("edit_contact_overview").appendChild(row);
+	row.querySelector(".mandatory").focus();
     });
 
     this.addAction(action);
     action.hide();
+    
+    this.keyMap[187] = function() {
+	action.invoke();
+    }
     return action;
 }
 
@@ -78,6 +88,11 @@ ContactOverview.prototype.createRemoveAction = function() {
 
     this.addAction(action);
     action.hide();
+    
+    this.keyMap[46] = function() {
+	action.invoke();
+    }
+
     return action;
 }
 
@@ -88,7 +103,7 @@ ContactOverview.prototype.fillContent = function() {
 
     UIUtils.clearChilds("edit_contact_overview");
 
-    var allContacts = this.model.evaluateXPath(this.xPath + "/contact");
+    var allContacts = this.model.evaluateXPath(this.xPath + "/contact[action != 'REMOVE']");
     for (var i = 0; i < allContacts.length; i++) {
 
 	var row = this.renderOneContact(allContacts[i]);

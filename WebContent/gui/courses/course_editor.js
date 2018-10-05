@@ -411,6 +411,7 @@ CourseTerminAndLocationOverview.prototype.createAddAction = function() {
 	});
     });
     this.addAction(action);
+    action.hide();
     return action;
 }
 
@@ -443,6 +444,14 @@ CourseTerminAndLocationOverview.prototype.createRemoveAction = function() {
     this.addAction(action);
     action.hide();
     return action;
+}
+
+/**
+ * 
+ */
+CourseTerminAndLocationOverview.prototype.activate = function() {
+
+    this.actionAdd.show();
 }
 
 /*---------------------------------------------------------------------------*/

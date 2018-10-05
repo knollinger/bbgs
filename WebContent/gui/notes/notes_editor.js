@@ -39,6 +39,7 @@ NotesOverview.prototype.activate = function() {
     } else {
 	this.actionRemove.hide();
     }
+    this.targetCnr.focus();
 }
 
 /**
@@ -52,10 +53,16 @@ NotesOverview.prototype.createAddAction = function() {
 	var note = new Model(XmlUtils.parse(NotesOverview.EMPTY_NOTE));
 	note.setValue("//note//id", UUID.create("notes_"));
 	self.currNote = self.model.addElement(self.xPath, note.getDocument().documentElement);
-	self.fillTable();
+	
+	var row = self.renderOneNote(self.model.evaluateXPath(self.currNote)[0]);
+	row.querySelector(".mandatory").focus();
     });
     this.addAction(action);
     action.hide();
+    
+    this.keyMap[187] = function() {
+	action.invoke();
+    }
     return action;
 }
 NotesOverview.EMPTY_NOTE = "<note><action>CREATE</action><id/><type></type><description/></note>";
@@ -84,6 +91,11 @@ NotesOverview.prototype.createRemoveAction = function() {
     });
     this.addAction(action);
     action.hide();
+    
+    this.keyMap[46] = function() {
+	action.invoke();
+    }
+
     return action;
 }
 
@@ -92,25 +104,31 @@ NotesOverview.prototype.createRemoveAction = function() {
  */
 NotesOverview.prototype.fillTable = function() {
 
+    var tbody = UIUtils.getElement("edit_notes_overview_body");
+    UIUtils.clearChilds(tbody);
+    
+    var allNotes = this.model.evaluateXPath(this.xPath + "/note[action != 'REMOVE']");
+    for(var i = 0; i < allNotes.length; i++) {
+	var row = this.renderOneNote(allNotes[i]);
+    }
+}
+
+/**
+ * 
+ */
+NotesOverview.prototype.renderOneNote = function(note) {
+
     var self = this;
-
-    // was passiert beim Tabellen-Klick?
     var onclick = function(tr, note) {
-
-	var radio = "edit_notes_radio_" + note.getElementsByTagName("id")[0].textContent;
-	radio = document.getElementById(radio);
-	radio.click();
 
 	self.currRow = tr;
 	self.currNote = XmlUtils.getXPathTo(note);
 	self.actionRemove.show();
     }
 
-    var fields = this.getColumnDescriptor();
-    var allNotes = this.xPath + "/note[action != 'REMOVE']";
-    this.model.createTableBinding("edit_notes_overview", fields, allNotes, onclick);
-    this.currRow = this.currNote = null;
-    self.actionRemove.hide();
+    var row = this.model.createTableRow(note, this.getColumnDescriptor(), onclick);
+    UIUtils.getElement("edit_notes_overview_body").appendChild(row);
+    return row;
 }
 
 /**
@@ -119,24 +137,27 @@ NotesOverview.prototype.fillTable = function() {
 NotesOverview.prototype.getColumnDescriptor = function() {
 
     var self = this;
-    var fields = [];
-    fields.push(function(td, note) {
-	var radio = document.createElement("input");
-	radio.type = "radio";
-	radio.name = "notes_overview";
-	radio.id = "edit_notes_radio_" + note.getElementsByTagName("id")[0].textContent;
-	radio.value = note.getElementsByTagName("id")[0].textContent;
-	return radio;
-    });
-
-    fields.push(function(td, note) {
-	return self.createTypeSelector(note);
-    });
-
-    fields.push(function(td, note) {
-	return self.createDescriptionEdit(note);
-    });
-    return fields;
+    
+    if(!NotesOverview.COL_DESC) {
+	
+	NotesOverview.COL_DESC = [];
+	NotesOverview.COL_DESC.push(function(td, note) {
+	    var radio = document.createElement("input");
+	    radio.type = "radio";
+	    radio.name = "notes_overview";
+	    radio.value = note.getElementsByTagName("id")[0].textContent;
+	    return radio;
+	});
+	
+	NotesOverview.COL_DESC.push(function(td, note) {
+	    return self.createTypeSelector(note);
+	});
+	
+	NotesOverview.COL_DESC.push(function(td, note) {
+	    return self.createDescriptionEdit(note);
+	});
+    }
+    return NotesOverview.COL_DESC;
 }
 
 /**

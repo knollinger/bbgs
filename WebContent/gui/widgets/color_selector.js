@@ -125,7 +125,7 @@ ColorSelector.prototype.setupValueProperty = function() {
 var ColorsOverview = function() {
 
     WorkSpaceFrame.call(this);
-
+    
     var self = this;
     this.load("gui/widgets/color_overview.html", function() {
 
@@ -187,10 +187,18 @@ ColorsOverview.prototype.createAddAction = function() {
 
 	var color = XmlUtils.parse(ColorsOverview.EMPTY_COLOR);
 	color.getElementsByTagName("id")[0].textContent = UUID.create("colors_");
-	self.model.addElement("//named-colors-model/colors", color.documentElement);
-	self.fillTable();
+	var xpath = self.model.addElement("//named-colors-model/colors", color.documentElement);
+	var color = self.model.evaluateXPath(xpath)[0];
+	
+	var tbody = UIUtils.getElement("edit_colors_overview_body");
+	var row = self.renderOneColor(tbody, color, self.getColumnDescriptor());
+	row.querySelector(".mandatory").focus();
+
     });
     this.addAction(action);
+    this.keyMap[187] = function() {
+	action.invoke();
+    }
     return action;
 }
 ColorsOverview.EMPTY_COLOR = "<color><id/><action>CREATE</action><value/><name/></color>";
@@ -214,6 +222,10 @@ ColorsOverview.prototype.createRemoveAction = function() {
     });
     this.addAction(action);
     action.hide();
+
+    this.keyMap[46] = function() {
+	action.invoke();
+    }
     return action;
 }
 
@@ -222,18 +234,6 @@ ColorsOverview.prototype.createRemoveAction = function() {
  */
 ColorsOverview.prototype.fillTable = function() {
 
-    // was passiert beim Tabellen-Klick?
-    var self = this;
-    var onclick = function(tr, color) {
-	var radio = "edit_color_radio_" + color.getElementsByTagName("id")[0].textContent;
-	radio = document.getElementById(radio);
-	radio.click();
-
-	self.currRow = tr;
-	self.currColor = XmlUtils.getXPathTo(color);
-	self.actionRemove.show();
-    }
-
     var tbody = UIUtils.getElement("edit_colors_overview_body");
     UIUtils.clearChilds(tbody);
 
@@ -241,7 +241,7 @@ ColorsOverview.prototype.fillTable = function() {
     var allColors = this.model.evaluateXPath("//named-colors-model/colors/color");
     for (var i = 0; i < allColors.length; i++) {
 	if (allColors[i].getElementsByTagName("action")[0].textContent != "REMOVE") {
-	    this.renderOneColor(tbody, allColors[i], fields, onclick);
+	    this.renderOneColor(tbody, allColors[i], fields);
 	}
     }
     this.actionRemove.hide();
@@ -250,7 +250,15 @@ ColorsOverview.prototype.fillTable = function() {
 /**
  * 
  */
-ColorsOverview.prototype.renderOneColor = function(tbody, color, fields, onclick) {
+ColorsOverview.prototype.renderOneColor = function(tbody, color, fields) {
+
+    var self = this;
+    var onclick = function(tr, color) {
+	tr.querySelector("input[type='radio']").click();
+	self.currRow = tr;
+	self.currColor = XmlUtils.getXPathTo(color);
+	self.actionRemove.show();
+    }
 
     var row = this.model.createTableRow(color, fields, onclick);
     tbody.appendChild(row);
@@ -262,6 +270,7 @@ ColorsOverview.prototype.renderOneColor = function(tbody, color, fields, onclick
 	    action.textContent = "MODIFY";
 	}
     });
+    return row;
 }
 
 /**
@@ -276,7 +285,6 @@ ColorsOverview.prototype.getColumnDescriptor = function() {
 
 	var radio = document.createElement("input");
 	radio.type = "radio";
-	radio.id = "edit_color_radio_" + color.getElementsByTagName("id")[0].textContent;
 	radio.name = "edit_color_radio";
 	return radio;
     });
