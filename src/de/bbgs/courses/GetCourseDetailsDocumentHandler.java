@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.bbgs.contacts.ERelation;
+import de.bbgs.member.EMemberType;
 import de.bbgs.member.ESex;
 import de.bbgs.pdf.DocBuilder;
 import de.bbgs.pdf.DocBuilder.DocPart;
@@ -18,21 +19,33 @@ import de.bbgs.session.SessionWrapper;
 import de.bbgs.utils.ConnectionPool;
 import de.bbgs.utils.DBUtils;
 
+/**
+ * @author anderl
+ *
+ */
 public class GetCourseDetailsDocumentHandler implements IGetDocServiceHandler
 {
-
+    /* (non-Javadoc)
+     * @see de.bbgs.service.IGetDocServiceHandler#getResponsibleFor()
+     */
     @Override
     public String getResponsibleFor()
     {
         return "course_details.pdf";
     }
 
+    /* (non-Javadoc)
+     * @see de.bbgs.service.IGetDocServiceHandler#needsSession()
+     */
     @Override
     public boolean needsSession()
     {
         return true;
     }
 
+    /* (non-Javadoc)
+     * @see de.bbgs.service.IGetDocServiceHandler#handleRequest(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, de.bbgs.session.SessionWrapper)
+     */
     @Override
     public void handleRequest(HttpServletRequest req, HttpServletResponse rsp, SessionWrapper session) throws Exception
     {
@@ -196,7 +209,7 @@ public class GetCourseDetailsDocumentHandler implements IGetDocServiceHandler
                     DocPart part = db.duplicateSection("M_TABLE");
                     part.replaceTag("$ZNAME$", rs.getString("m.zname"));
                     part.replaceTag("$VNAME$", rs.getString("m.vname"));
-                    part.replaceTag("$M_TYPE$", rs.getString("m.type_as_text"));
+                    part.replaceTag("$M_TYPE$", EMemberType.valueOf(rs.getString("m.type")).toHumanReadable());
                     part.replaceTag("$M_SEX$", ESex.valueOf(rs.getString("m.sex")).toHumanReadable());
                     part.replaceTag("$M_BIRTHDAY$", rs.getDate("m.birth_date"));
                     part.replaceTag("$M_ZIPCODE$", String.format("%1$04d", Integer.valueOf(rs.getInt("m.zip_code"))));

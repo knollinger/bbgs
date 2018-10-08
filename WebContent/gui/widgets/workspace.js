@@ -416,22 +416,26 @@ WorkSpaceTabbedFrame.prototype = Object.create(WorkSpaceFrame.prototype);
 
 /**
  * 
+ */
+WorkSpaceTabbedFrame.nextId = 0;
+
+/**
+ * 
  * @param imgUrl
  * @param text
  */
 WorkSpaceTabbedFrame.prototype.addTab = function(imgUrl, text) {
 
     var self = this;
-    var id = UUID.create("workspace_tab");
 
     var radio = document.createElement("input");
     radio.className = "accordeon-btn";
     radio.type = "radio";
     radio.name = this.groupName;
-    radio.id = id;
+    radio.id = "workspace_tabbed_frame_" + WorkSpaceTabbedFrame.nextId++;
     this.content.appendChild(radio);
     var label = document.createElement("label");
-    label.setAttribute("for", id);
+    label.setAttribute("for", radio.id);
 
     var img = document.createElement("img");
     img.src = imgUrl;
@@ -800,7 +804,7 @@ PopupMenu.prototype.makeMenuItem = function(text, onclick) {
 
     var item = document.createElement("div");
     item.className = "popup-menu-item";
-    item.textContent = text;
+    item.innerHTML = text;
 
     var self = this;
     item.addEventListener("click", function() {

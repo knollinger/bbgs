@@ -323,7 +323,6 @@ CourseTerminAndLocationPlanner.prototype.createMonthlyBasedTermine = function(fr
 CourseTerminAndLocationPlanner.prototype.createTermin = function(date, begin, end, location) {
 
     var termin = this.model.createElement("termin");
-    termin.appendChild(this.model.createElement("id", UUID.create("course_termin")));
     termin.appendChild(this.model.createElement("action", "CREATE"));
     termin.appendChild(this.model.createElement("date", DateTimeUtils.formatDate(date, "{dd}.{mm}.{yyyy}")));
     termin.appendChild(this.model.createElement("begin", begin));

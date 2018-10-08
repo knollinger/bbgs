@@ -1,17 +1,13 @@
 <div class="workspace-frame-content" data-has-backbutton="yes"
 	data-has-main-menu="no" data-frame-title="Mitglieder ausw&auml;hlen"></div>
 
-<div class="grid-row-0">
-	<input class="grid-col-2 search-input" id="member_finder_search"
-		placeholder="Einfach Suchbegriffe eingeben..." autocomplete="off">
-</div>
-<div class="grid-row-0">
-
-	<label class="grid-col-2" id="member_finder_search"
-		for="member_finder_show_all"> <input type="checkbox"
-		id="member_finder_show_all"> Alle anzeigen
-	</label>
-</div>
-<br>
-<div class="grid-row-1 scrollable" id="member_finder_body">
-</div>
+<table id="member_finder_result">
+	<thead>
+		<tr>
+			<th></th>
+			<th>Name</th>
+			<th>Vorname</th>
+		</tr>
+	</thead>
+	<tbody></tbody>
+</table>

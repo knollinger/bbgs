@@ -7,10 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.bbgs.attachments.AttachmentsDBUtil;
 import de.bbgs.attachments.EAttachmentDomain;
@@ -29,15 +26,6 @@ import de.bbgs.utils.DBUtils;
 public class MemberDBUtil
 {
     private static final String GETMEMBER_STMT = "select * from members where id=?";
-    private static final String SCAN_MEMBERS = "select * from members where match (zname, vname, vname2, title, city, street, phone, phone2, mobile, mobile2, email, email2, type_as_text) against (? in boolean mode)";
-    private static final String SCAN_NOTES = "select * from members where id in (select ref_id from notes where domain='MEMBER' and match (note) against (? in boolean mode))";
-    private static final String SCAN_COURSES = "select * from members where id in \n" + "(\n"
-        + "    select distinct member_id from course_member where course_id in \n" + "    (\n"
-        + "        select id from courses where match(name, description) against (? in boolean mode)\n" + "    )\n"
-        + ")";
-    private static final String SCAN_CONTACTS = "\n" + "select * from members where id in (\n"
-        + "    select ref_id from contacts where domain='MEMBER' and match(zname, vname, vname2, title, phone, phone2, mobile, mobile2, email, email2) against (? in boolean mode)\n"
-        + ")";
 
     /**
      * @param member
@@ -266,131 +254,7 @@ public class MemberDBUtil
         }
     }
 
-    /*-----------------------------------------------------------------------*/
-    /*                                                                       */
-    /* All about the fulltext search                                         */
-    /*                                                                       */
-    /**
-     * @param query
-     * @param conn
-     * @return
-     * @throws SQLException
-     */
-    public static Collection<FoundMember> performFulltextSearch(String query, Connection conn) throws SQLException
-    {
-        Map<Integer, FoundMember> all = new HashMap<>();
-
-        String normQuery = MemberDBUtil.normalizeQueryString(query);
-        all = MemberDBUtil.merge(all, MemberDBUtil.scanFullText(SCAN_MEMBERS, normQuery, EFoundLocation.MEMBER, conn));
-        all = MemberDBUtil.merge(all, MemberDBUtil.scanFullText(SCAN_COURSES, normQuery, EFoundLocation.COURSES, conn));
-        all = MemberDBUtil.merge(all, MemberDBUtil.scanFullText(SCAN_NOTES, normQuery, EFoundLocation.NOTES, conn));
-        all = MemberDBUtil.merge(all,
-            MemberDBUtil.scanFullText(SCAN_CONTACTS, normQuery, EFoundLocation.CONTACTS, conn));
-
-        List<FoundMember> result = new ArrayList<>();
-        result.addAll(all.values());
-        result.sort(new CompareMembersByZName());
-        return result;
-    }
-
-    /**
-    * 
-    * @param query
-    * @return
-    */
-    private static String normalizeQueryString(String query)
-    {
-        StringBuilder result = new StringBuilder();
-
-        String parts[] = query.split(" ");
-        for (String part : parts)
-        {
-            part = part.trim();
-
-            if (result.length() != 0)
-            {
-                result.append(" ");
-            }
-            result.append(part);
-            result.append("*");
-        }
-        return result.toString();
-    }
-
-    /**
-     * @param all
-     * @param found
-     */
-    private static Map<Integer, FoundMember> merge(Map<Integer, FoundMember> all, Collection<FoundMember> found)
-    {
-        for (FoundMember m : found)
-        {
-            FoundMember tmp = all.get(m.id);
-            if (tmp != null)
-            {
-                tmp.locations.addAll(m.locations);
-            }
-            else
-            {
-                all.put(m.id, m);
-            }
-        }
-        return all;
-    }
-
-    /**
-     * @param sql
-     * @param query
-     * @param conn
-     * @return
-     * @throws SQLException
-     */
-    private static Collection<FoundMember> scanFullText(String sql, String query, EFoundLocation foundLoc,
-        Connection conn) throws SQLException
-    {
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try
-        {
-            Collection<FoundMember> result = new ArrayList<>();
-            stmt = conn.prepareStatement(sql);
-            stmt.setString(1, query);
-            rs = stmt.executeQuery();
-            while (rs.next())
-            {
-                FoundMember m = new FoundMember();
-                m.id = rs.getInt("id");
-                m.memberType = EMemberType.valueOf(rs.getString("type"));
-                m.vname = rs.getString("vname");
-                m.zname = rs.getString("zname");
-                m.photoAgreement = EPhotoAgreement.valueOf(rs.getString("photoagreement"));
-                m.locations.add(foundLoc);
-                result.add(m);
-            }
-            return result;
-        }
-        finally
-        {
-            DBUtils.closeQuitly(rs);
-            DBUtils.closeQuitly(stmt);
-        }
-    }
-
-    /**
-     * @author anderl
-     *
-     */
-    private static class CompareMembersByZName implements Comparator<FoundMember>
-    {
-        @Override
-        public int compare(FoundMember m1, FoundMember m2)
-        {
-            String zname1 = (m1.zname != null) ? m1.zname : "";
-            String zname2 = (m2.zname != null) ? m2.zname : "";
-            return zname1.compareTo(zname2);
-        }
-    }
-
+   
     /**
      * 
      * @param id

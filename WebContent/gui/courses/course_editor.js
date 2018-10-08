@@ -623,7 +623,7 @@ CourseMembersOverview.prototype.getColumnDescriptor = function() {
 	    select.appendChild(opt);
 	}
 	var xpath = XmlUtils.getXPathTo(member);
-	self.model.createValueBinding(select, xpath + "/photo_agreement");
+	self.model.createValueBinding(select, xpath + "/photoagreement");
 
 	return select;
     });

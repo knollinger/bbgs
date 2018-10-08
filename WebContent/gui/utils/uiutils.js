@@ -420,7 +420,7 @@ var UIUtils = (function() {
 
 	    var elem = UIUtils.getElement(anchor);
 	    elem.addEventListener("keyup", function(evt) {
-		if (!(evt.target.nodeName == "INPUT" && evt.target.type == "text") && evt.target.nodeName != "TEXTAREA") {
+		if (evt.altKey) {
 		    var cb = bindings[evt.keyCode];
 		    if (cb) {
 			evt.stopPropagation();

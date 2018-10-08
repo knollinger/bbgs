@@ -9,7 +9,7 @@ var MemberFinder = function(multiSelect, onSubmit) {
     this.onsubmit = onSubmit;
     this.selection = [];
     this.timer = undefined;
-    
+
     var self = this;
     this.keyMap[13] = function(table, evt) {
 	self.saveButton.click();
@@ -19,8 +19,13 @@ var MemberFinder = function(multiSelect, onSubmit) {
 
     var self = this;
     this.load("gui/member/member_finder.html", function() {
+	self.loadModel(function() {
 
-	self.setupUI();
+	    self.model.addChangeListener("//get-all-members-ok-rsp/members", function() {
+		self.fillTable(multiSelect);
+	    });
+	    self.fillTable(multiSelect);
+	});
     });
 }
 MemberFinder.prototype = Object.create(WorkSpaceFrame.prototype);
@@ -28,96 +33,16 @@ MemberFinder.prototype = Object.create(WorkSpaceFrame.prototype);
 /**
  * 
  */
-MemberFinder.prototype.setupUI = function() {
-
-    var self = this;
-
-    var search = UIUtils.getElement("member_finder_search");
-    search.focus();
-    search.addEventListener("input", function() {
-	self.onSearchInput();
-    });
-
-    var showAll = UIUtils.getElement("member_finder_show_all");
-    showAll.addEventListener("click", function() {
-	self.onShowAll();
-    });
-    UIUtils.getElement("member_finder_search").focus();
-}
-
-/**
- * 
- */
-MemberFinder.prototype.onSearchInput = function() {
-
-    var search = UIUtils.getElement("member_finder_search");
-    var showAll = UIUtils.getElement("member_finder_show_all");
-    var resultset = UIUtils.getElement("member_finder_resultset");
-
-    this.stopTimer();
-    showAll.checked = false;
-    if (search.value && search.value.length > 2) {
-	this.startTimer();
-    } else {
-	UIUtils.clearChilds("member_finder_body");
-    }
-}
-
-/**
- * 
- */
-MemberFinder.prototype.onShowAll = function() {
-
-    var search = UIUtils.getElement("member_finder_search");
-    var showAll = UIUtils.getElement("member_finder_show_all");
-
-    this.stopTimer();
-    search.value = "";
-    if (showAll.checked) {
-	this.invokeService(true);
-    } else {
-	this.selection = [];
-	this.onSelectionChange();
-	UIUtils.clearChilds("member_finder_body");
-    }
-}
-
-/**
- * 
- */
-MemberFinder.prototype.stopTimer = function() {
-
-    if (this.timer) {
-	window.clearTimeout(this.timer);
-	this.timer = undefined;
-    }
-}
-
-/**
- * 
- */
-MemberFinder.prototype.startTimer = function() {
-
-    var self = this;
-    this.timer = window.setTimeout(function() {
-	self.invokeService(false);
-    }, 500);
-}
-
-/**
- * 
- */
-MemberFinder.prototype.invokeService = function(showAll) {
+MemberFinder.prototype.loadModel = function(onsuccess) {
 
     var self = this;
     var caller = new ServiceCaller();
     caller.onSuccess = function(rsp) {
 
 	switch (rsp.documentElement.nodeName) {
-	case "member-finder-ok-rsp":
-	    self.model.removeChilds("//members");
-	    self.model.addElements("//members", XmlUtils.evaluateXPath(rsp, "//member-finder-ok-rsp/members/member"));
-	    self.reloadTable(showAll);
+	case "get-all-members-ok-rsp":
+	    self.model = new Model(rsp);
+	    onsuccess();
 	    break;
 
 	case "error-response":
@@ -133,144 +58,29 @@ MemberFinder.prototype.invokeService = function(showAll) {
 	var messg = MessageCatalog.getMessage("MEMBER_LOAD_TECH_ERROR", status);
 	new MessageBox(MessageBox.WARNING, title, messg);
     };
-
-    var req = XmlUtils.createDocument("member-finder-req");
-    if (showAll) {
-	XmlUtils.setNode(req, "show-all", "true");
-    } else {
-	XmlUtils.setNode(req, "query", UIUtils.getElement("member_finder_search").value);
-    }
-    caller.invokeService(req);
+    caller.invokeService(XmlUtils.createDocument("get-all-members-req"));
 }
 
 /**
  * 
  */
-MemberFinder.prototype.reloadTable = function(showAll) {
+MemberFinder.prototype.fillTable = function(multiselect) {
 
-    var self = this;
-
-    var fields = this.getColumnDescriptor();
-    var onclick = function(tr, member) {
-	self.onResultSetSelection(tr, member);
-    }
-
-    UIUtils.clearChilds("member_finder_body");
-    if (showAll) {
-	this.fillByFoundLocation(null, fields, onclick);
-
-    } else {
-	this.fillByFoundLocation("MEMBER", fields, onclick);
-	this.fillByFoundLocation("COMMDATA", fields, onclick);
-	this.fillByFoundLocation("CONTACTS", fields, onclick);
-	this.fillByFoundLocation("COURSES", fields, onclick);
-	this.fillByFoundLocation("NOTES", fields, onclick);
-    }
-}
-
-/**
- * 
- */
-MemberFinder.prototype.fillByFoundLocation = function(location, fields, onclick) {
-
-    var xpath = "//members/member";
-    if (location) {
-	xpath += "/locations[location='" + location + "']";
-    }
-    var allFound = this.model.evaluateXPath(xpath);
-
-    if (allFound.length) {
-
-	var tbody = this.makeTable(location);
-	for (var i = 0; i < allFound.length; i++) {
-
-	    var member = allFound[i]; // .parentElement;
-	    if (location) {
-		member = member.parentElement;
-	    }
-	    var row = this.model.createTableRow(member, fields, onclick);
-	    tbody.appendChild(row);
-
-	}
-    }
-}
-
-/**
- * 
- */
-MemberFinder.prototype.makeTable = function(location) {
-
-    var thead = document.createElement("thead");
-    var row = document.createElement("tr");
-    thead.appendChild(row);
-    row.appendChild(document.createElement("th"));
-
-    var span = document.createElement("th");
-    span.textContent = this.getFoundLocationHeader(location);
-    row.appendChild(span);
-
-    var tbody = document.createElement("tbody");    
-    var table = document.createElement("table");
-    table.appendChild(thead);
-    table.appendChild(tbody);
-    table.style.marginBottom = "10px";
-
-    new TableDecorator(table);
-    UIUtils.getElement("member_finder_body").appendChild(table);
-
-    return tbody;
-}
-
-/**
- * 
- */
-MemberFinder.prototype.getColumnDescriptor = function() {
-
-    var self = this;
     var fields = [];
-    fields.push(function(td, member) {
+    fields.push(function(member) {
 
-	var ui = document.createElement("input");
-	ui.type = (self.multSel) ? "checkbox" : "radio";
-	ui.name = "member_finder_selected";
-	return ui;
+	var check = document.createElement("input");
+	check.type = multiselect ? "checkbox" : "radio";
+	check.name = "member_finder_sel";
+	return check;
     });
+    fields.push("zname");
+    fields.push("vname");
 
-    fields.push(function(tr, member) {
-	return member.getElementsByTagName("zname")[0].textContent + ", " + member.getElementsByTagName("vname")[0].textContent;
+    var self = this;
+    this.model.createTableBinding("member_finder_result", fields, "//get-all-members-ok-rsp/members/member[action != 'REMOVE']", function(tr, member) {
+	self.onResultSetSelection(tr, member);
     });
-    return fields;
-}
-
-/**
- * 
- */
-MemberFinder.prototype.getFoundLocationHeader = function(location) {
-
-    var result;
-    switch (location) {
-    case null:
-	result = "Alle Mitglieder";
-	break;
-
-    case "MEMBER":
-	result = "Gefunden in den Mitglieds-Daten von:";
-	break;
-
-    case "COURSES":
-	result = "Gefunden in den Kursen von:";
-	break;
-
-    case "NOTES":
-	result = "Gefunden in den Notizen von:";
-	break;
-
-    case "CONTACTS":
-	result = "Gefunden in den Kontakten von:";
-
-	break;
-    }
-    return result;
 }
 
 /**

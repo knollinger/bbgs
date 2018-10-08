@@ -51,7 +51,6 @@ NotesOverview.prototype.createAddAction = function() {
     var action = new WorkSpaceFrameAction("gui/images/note-add.svg", "Notiz hinzufügen", function() {
 
 	var note = new Model(XmlUtils.parse(NotesOverview.EMPTY_NOTE));
-	note.setValue("//note//id", UUID.create("notes_"));
 	self.currNote = self.model.addElement(self.xPath, note.getDocument().documentElement);
 	
 	var row = self.renderOneNote(self.model.evaluateXPath(self.currNote)[0]);

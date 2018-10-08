@@ -80,7 +80,7 @@ public class CourseModel implements IJAXBObject
         @XmlElement(name="type")
         public EMemberType type = EMemberType.UNKNOWN;
         
-        @XmlElement(name="photo_agreement")
+        @XmlElement(name="photoagreement")
         public EPhotoAgreement photoAgreement = EPhotoAgreement.NONE;
         
     }

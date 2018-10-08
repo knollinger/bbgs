@@ -7,7 +7,7 @@ var MainNavigation = function() {
     
     var self = this;
     var btn = this.addNavigationButton("gui/images/person.svg", "Mitglieder verwalten", function() {
-        new MemberOverview();
+        new MemberNavigation();
     });
 
     btn = this.addNavigationButton("gui/images/partner.svg", "Partner verwalten", function() {

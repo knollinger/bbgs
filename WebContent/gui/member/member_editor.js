@@ -1,3 +1,23 @@
+/*---------------------------------------------------------------------------*/
+/**
+ * 
+ */
+var MemberNavigation = function() {
+
+    Navigation.call(this);
+
+    this.addNavigationButton("gui/images/person-edit.svg", "Mitglieder bearbeiten", function() {
+	new MemberEditor(0);
+    });
+
+    this.addNavigationButton("gui/images/person-group.svg", "Alle Mitglieder anzeigen", function() {
+	new MemberOverview();
+    });
+    this.setTitle("Mitglieder-Verwaltung");
+}
+MemberNavigation.prototype = Object.create(Navigation.prototype);
+
+/*---------------------------------------------------------------------------*/
 /**
  * Der MemberEditor besteht aus mehreren SubEditoren. Die Hauptseite lädt das
  * Model und zeigt die Navigation zu den SubEditoren an. Jeder SubEditor
@@ -16,7 +36,7 @@ var MemberEditor = function(id) {
 
 	self.setupModelListener();
 	self.setupTitlebarListener();
-	self.setupCoreDataEditor();
+	self.setupCoreDataEditor(id == 0);
 	self.setupCommDataEditor();
 	self.setupContactsOverview();
 	self.setupAttachmentsOverview();
@@ -95,10 +115,10 @@ MemberEditor.prototype.setupTitlebarListener = function() {
 /**
  * 
  */
-MemberEditor.prototype.setupCoreDataEditor = function() {
+MemberEditor.prototype.setupCoreDataEditor = function(enableSearchMode) {
 
     this.coreDataTab = this.addTab("gui/images/person.svg", "Stamm-Daten");
-    var subFrame = new MemberCoreDataEditor(this, this.coreDataTab.contentPane, this.model);
+    var subFrame = new MemberCoreDataEditor(this, this.coreDataTab.contentPane, this.model, enableSearchMode);
     this.coreDataTab.associateTabPane(subFrame);
     this.coreDataTab.select();
 }
@@ -133,6 +153,9 @@ MemberEditor.prototype.setupContactsOverview = function() {
     this.contactsDataTab.associateTabPane(subFrame);
 }
 
+/**
+ * 
+ */
 MemberEditor.prototype.setupAttachmentsOverview = function() {
 
     this.attachmentsTab = this.addTab("gui/images/document.svg", "Anhänge bearbeiten");
@@ -140,6 +163,9 @@ MemberEditor.prototype.setupAttachmentsOverview = function() {
     this.attachmentsTab.associateTabPane(subFrame);
 }
 
+/**
+ * 
+ */
 MemberEditor.prototype.setupNotesOverview = function() {
 
     this.notesTab = this.addTab("gui/images/notes.svg", "Notizen bearbeiten");
@@ -147,6 +173,9 @@ MemberEditor.prototype.setupNotesOverview = function() {
     this.notesTab.associateTabPane(subFrame);
 }
 
+/**
+ * 
+ */
 MemberEditor.prototype.setupCoursesOverview = function() {
 
     this.coursesTab = this.addTab("gui/images/course.svg", "Kurse bearbeiten");
@@ -200,7 +229,7 @@ MemberEditor.prototype.onSave = function() {
  * Der SubEditor für die Stammdaten
  */
 
-var MemberCoreDataEditor = function(parentFrame, targetCnr, model) {
+var MemberCoreDataEditor = function(parentFrame, targetCnr, model, enableSearchMode) {
 
     WorkSpaceTabPane.call(this, parentFrame, targetCnr);
     this.model = model;
@@ -208,7 +237,7 @@ var MemberCoreDataEditor = function(parentFrame, targetCnr, model) {
     var self = this;
     this.load("gui/member/member_editor_core.html", function() {
 
-	UIUtils.getElement("edit_member_type").focus();
+	UIUtils.getElement("edit_member_zname").focus();
 	self.fillCoopPartners();
 
 	self.model.createValueBinding("edit_member_type", "//member-model/core-data/type");
@@ -263,10 +292,125 @@ var MemberCoreDataEditor = function(parentFrame, targetCnr, model) {
 	projYear.addEventListener("change", function() {
 	    self.onProjYearChange();
 	});
+
+	if (enableSearchMode) {
+	    self.setupSearchPreviewListener();
+	}
+    });
+}
+MemberCoreDataEditor.prototype = Object.create(WorkSpaceTabPane.prototype);
+
+/**
+ * 
+ */
+MemberCoreDataEditor.prototype.setupSearchPreviewListener = function() {
+
+    var self = this;
+
+    var zname = UIUtils.getElement("edit_member_zname");
+    UIUtils.addClass(zname, "search-input");
+    zname.addEventListener("input", function() {
+	self.startSearchPreviewTimer(zname);
+    });
+
+    var vname = UIUtils.getElement("edit_member_vname");
+    UIUtils.addClass(vname, "search-input");
+    vname.addEventListener("input", function() {
+	self.startSearchPreviewTimer(vname);
     });
 }
 
-MemberCoreDataEditor.prototype = Object.create(WorkSpaceTabPane.prototype);
+/**
+ * 
+ */
+MemberCoreDataEditor.prototype.startSearchPreviewTimer = function(anchor) {
+
+    if (anchor.value != "") {
+	var self = this;
+	this.stopSearchPreviewTimer();
+	this.timer = window.setTimeout(function() {
+	    self.loadSearchPreview(anchor);
+	}, 400);
+    }
+}
+
+/**
+ * 
+ */
+MemberCoreDataEditor.prototype.stopSearchPreviewTimer = function() {
+
+    if (this.timer) {
+	window.clearTimeout(this.timer);
+	this.timer = null;
+    }
+}
+
+/**
+ * 
+ */
+MemberCoreDataEditor.prototype.loadSearchPreview = function(anchor) {
+
+    var znameSearch = UIUtils.getElement("edit_member_zname").value;
+    var vnameSearch = UIUtils.getElement("edit_member_vname").value
+
+    var self = this;
+    var caller = new ServiceCaller();
+    caller.onSuccess = function(rsp) {
+	switch (rsp.documentElement.nodeName) {
+	case "search-member-ok-rsp":
+	    self.showSearchPreview(anchor, new Model(rsp), znameSearch, vnameSearch);
+	    break;
+
+	case "error-response":
+	    console.log(rsp.getElementsByTagName("msg")[0].textContent);
+	    break;
+	}
+    }
+    caller.onError = function(req, status) {
+	console.log(status);
+    }
+
+    var req = XmlUtils.createDocument("search-member-req");
+    XmlUtils.setNode(req, "zname", znameSearch);
+    XmlUtils.setNode(req, "vname", vnameSearch);
+    caller.invokeService(req.documentElement);
+
+}
+
+/**
+ * 
+ */
+MemberCoreDataEditor.prototype.showSearchPreview = function(anchor, model, znameSearch, vnameSearch) {
+
+    var allMembers = model.evaluateXPath("//search-member-ok-rsp/members/member");
+    if (allMembers.length) {
+
+	var preview = new PopupMenu(anchor);
+	for (var i = 0; i < allMembers.length; i++) {
+
+	    var xpath = XmlUtils.getXPathTo(allMembers[i]);
+	    this.makeSearchPreviewItem(preview, model, xpath, znameSearch, vnameSearch);
+	}
+    }
+}
+
+/**
+ * 
+ */
+MemberCoreDataEditor.prototype.makeSearchPreviewItem = function(preview, model, xpath, znameSearch, vnameSearch) {
+
+    var self = this;
+    var text = model.getValue(xpath + "/zname") + ", ";
+    text += model.getValue(xpath + "/vname") + ", ";
+    text += model.getValue(xpath + "/zip_code") + ", ";
+    text += model.getValue(xpath + "/city") + ", ";
+    text += model.getValue(xpath + "/street");
+    preview.makeMenuItem(text, function() {
+	self.parentFrame.close();
+	var id = model.getValue(xpath + "/id");
+	new MemberEditor(id);
+    });
+}
 
 /**
  * Befülle die select-box mit den Kooperations-Partnern
@@ -289,7 +433,7 @@ MemberCoreDataEditor.prototype.fillCoopPartners = function(model) {
  * Je nach Mitgliedsart werden verschiedene Felder ausgeblendet
  */
 MemberCoreDataEditor.prototype.hiddenFieldsByType = {
-    "" : [ "edit_member_projyear", "edit_member_since", "edit_member_until", "edit_member_school" ],
+    "" : [ "edit_member_projyear", "edit_member_since", "edit_member_until", "edit_member_school", "edit_member_dse_state" ],
     "TEACHER" : [ "edit_member_projyear", "edit_member_school" ],
     "SCOUT" : [ "edit_member_since", "edit_member_until", "edit_member_school" ],
     "EXSCOUT" : [ "edit_member_since", "edit_member_until", "edit_member_school" ],
@@ -307,7 +451,7 @@ MemberCoreDataEditor.prototype.hiddenFieldsByType = {
  * Je nach Mitglieds-Art sind verschiedene Felder verpflichtend
  */
 MemberCoreDataEditor.prototype.mandatoryFieldsByType = {
-    "" : [ "edit_member_type" ],
+    "" : [ "edit_member_zname", "edit_member_vname", "edit_member_type" ],
     "TEACHER" : [ "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
     "SCOUT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
     "EXSCOUT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
@@ -458,7 +602,7 @@ MemberCoreDataEditor.prototype.adjustDSEState = function() {
  */
 MemberCoreDataEditor.prototype.activate = function() {
 
-    var elem = UIUtils.getElement("edit_member_type");
+    var elem = UIUtils.getElement("edit_member_zname");
     if (elem) {
 	elem.focus();
     }
@@ -603,7 +747,7 @@ MemberCourseOverview.prototype.createAddAction = function() {
 
     this.addAction(action);
     action.hide();
-    
+
     this.keyMap[187] = function() {
 	action.invoke();
     }

@@ -143,20 +143,24 @@ MultiSelectDropdown.prototype.addEventListener = function(type, callback, captur
 /**
  * 
  */
+MultiSelectDropdown.nextId = 0;
+
+/**
+ * 
+ */
 MultiSelectDropdown.prototype.createOption = function(srcOption) {
 
-    var id = UUID.create("MultiSelectDrowpdown");
     var cb = document.createElement("input");
-    cb.id = id;
     cb.type = "checkbox";
     cb.checked = srcOption.selected;
     cb.value = srcOption.value;
+    cb.id = "muliselect_" + MultiSelectDropdown.nextId++;
 
     var label = document.createElement("label");
     label.className = "multsel-option";
     label.appendChild(cb);
     label.appendChild(document.createTextNode(srcOption.textContent));
-    label.setAttribute("for", id);
+    label.setAttribute("for", cb.id);
 
     var self = this;
     cb.addEventListener("click", function(evt) {
@@ -173,7 +177,6 @@ MultiSelectDropdown.prototype.createOption = function(srcOption) {
     });
 
     return label;
-
 
 }
 

@@ -23,7 +23,7 @@ import de.bbgs.xml.IJAXBObject;
  * @author anderl
  *
  */
-public class FindMemberHandler implements IXmlServiceHandler
+public class GetAllMemberHandler implements IXmlServiceHandler
 {
     /* (non-Javadoc)
      * @see de.bbgs.services.IXmlServiceHandler#needsSession()
@@ -55,6 +55,9 @@ public class FindMemberHandler implements IXmlServiceHandler
         return result;
     }
 
+    /* (non-Javadoc)
+     * @see de.bbgs.service.IXmlServiceHandler#handleRequest(de.bbgs.xml.IJAXBObject, de.bbgs.session.SessionWrapper)
+     */
     @Override
     public IJAXBObject handleRequest(IJAXBObject request, SessionWrapper session)
     {
@@ -63,18 +66,9 @@ public class FindMemberHandler implements IXmlServiceHandler
         try
         {
             conn = ConnectionPool.getConnection();
-            Request req = (Request) request;
+            AuditLog.logQuery(this, session, conn, "GET_ALL_MEMBERS");
             Response rsp = new Response();
-            if (req.allMembers)
-            {
-                AuditLog.logQuery(this, session, conn, "GET_ALL_MEMBERS");
-                rsp.members.addAll(this.transform(MemberDBUtil.getAllMembers(conn)));
-            }
-            else
-            {
-                AuditLog.logQuery(this, session, conn, "GET_MEMBERS_BY_QUERY", req.query);
-                rsp.members.addAll(MemberDBUtil.performFulltextSearch(req.query, conn));
-            }
+            rsp.members.addAll(MemberDBUtil.getAllMembers(conn));
             result = rsp;
         }
         catch (SQLException e)
@@ -88,43 +82,18 @@ public class FindMemberHandler implements IXmlServiceHandler
         return result;
     }
 
-    /**
-     * @param allMembers
-     * @return
-     */
-    private Collection<? extends FoundMember> transform(List<Member> allMembers)
-    {
-        Collection<FoundMember> result = new ArrayList<>(allMembers.size());
-        for (Member member : allMembers)
-        {
-            FoundMember m = new FoundMember();
-            m.id = member.id;
-            m.memberType = member.memberType;
-            m.zname = member.zname;
-            m.vname = member.vname;
-            m.photoAgreement = m.photoAgreement;
-            result.add(m);
-        }
-        return result;
-    }
-
-    @XmlRootElement(name = "member-finder-req")
-    @XmlType(name = "FindMemberHandler.Request")
+    @XmlRootElement(name = "get-all-members-req")
+    @XmlType(name = "GetAllMemberHandler.Request")
     public static class Request implements IJAXBObject
     {
-        @XmlElement(name = "show-all")
-        public boolean allMembers = false;
-
-        @XmlElement(name = "query")
-        public String query = "";
     }
 
-    @XmlRootElement(name = "member-finder-ok-rsp")
-    @XmlType(name = "FindMemberHandler.Response")
+    @XmlRootElement(name = "get-all-members-ok-rsp")
+    @XmlType(name = "GetAllMemberHandler.Response")
     public static class Response implements IJAXBObject
     {
         @XmlElementWrapper(name = "members")
         @XmlElement(name = "member")
-        public List<FoundMember> members = new ArrayList<>();
+        public List<Member> members = new ArrayList<>();
     }
 }

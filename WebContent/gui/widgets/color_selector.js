@@ -186,7 +186,6 @@ ColorsOverview.prototype.createAddAction = function() {
     var action = new WorkSpaceFrameAction("gui/images/color-add.svg", "Eine neue Farbe anlegen", function() {
 
 	var color = XmlUtils.parse(ColorsOverview.EMPTY_COLOR);
-	color.getElementsByTagName("id")[0].textContent = UUID.create("colors_");
 	var xpath = self.model.addElement("//named-colors-model/colors", color.documentElement);
 	var color = self.model.evaluateXPath(xpath)[0];
 	

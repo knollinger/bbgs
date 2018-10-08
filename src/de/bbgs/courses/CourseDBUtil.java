@@ -263,7 +263,8 @@ public class CourseDBUtil
         {
             stmt = conn.prepareStatement(
                 "select m.id, m.zname, m.vname, m.type, m.photoagreement, cm.photo_agreement from members m \n"
-                    + "    left join course_member cm on m.id = cm.member_id \n" + "    where cm.course_id=? \n"
+                    + "    left join course_member cm on m.id = cm.member_id \n" 
+                    + "    where cm.course_id=? \n"
                     + "    order by m.zname, m.vname;");
             stmt.setInt(1, courseId);
             rs = stmt.executeQuery();
