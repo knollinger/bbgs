@@ -35,23 +35,6 @@ var DatePickerEditor = function(anchor, title) {
 }
 DatePickerEditor.prototype = Object.create(WorkSpaceDialog.prototype);
 
-
-/**
- * 
- */
-// DatePickerEditor.prototype.swipeToLeft = function() {
-//
-// this.date.setMonth(this.date.getMonth() + 1);
-// this.update();
-// }
-/**
- * 
- */
-// DatePickerEditor.prototype.swipeToRight = function() {
-//
-// this.date.setMonth(this.date.getMonth() - 1);
-// this.update();
-// }
 /**
  * 
  */

@@ -26,8 +26,7 @@ $COURSE_DESC$
 {M_TABLE}
 [width="100%", cols="1,4"]
 |============================
-| Kursmitglied | $ZNAME$, $VNAME$
-| Art der Mitgliedschafft: | $M_TYPE$
+| $M_TYPE$ | $ZNAME$, $VNAME$
 | Geschlecht: | $M_SEX$
 | Geburts-Tag: | $M_BIRTHDAY$
 | Wohnort: | $M_ZIPCODE$ $M_CITY$ $M_STREET$
@@ -37,9 +36,7 @@ $COURSE_DESC$
 {C_ROW}
 1+| |
 | Kontakt: | $C_ZNAME$, $C_VNAME$ ($C_RELATION$)
-| Telefon: | $C_PHONE$
-| Mobil: | $C_MOBILE$
-| EMail: | $C_EMAIL$
+|  | $C_PHONE$ $C_MOBILE$ $C_EMAIL$
 {/C_ROW}
 |============================
 {/M_TABLE}

@@ -15,6 +15,7 @@ import de.bbgs.attachments.EAttachmentDomain;
 import de.bbgs.contacts.Contact;
 import de.bbgs.contacts.ContactsDBUtil;
 import de.bbgs.contacts.EContactDomain;
+import de.bbgs.courses.CourseModel.Member;
 import de.bbgs.member.EMemberType;
 import de.bbgs.member.EPhotoAgreement;
 import de.bbgs.named_colors.NamedColorsDBUtil;
@@ -263,8 +264,7 @@ public class CourseDBUtil
         {
             stmt = conn.prepareStatement(
                 "select m.id, m.zname, m.vname, m.type, m.photoagreement, cm.photo_agreement from members m \n"
-                    + "    left join course_member cm on m.id = cm.member_id \n" 
-                    + "    where cm.course_id=? \n"
+                    + "    left join course_member cm on m.id = cm.member_id \n" + "    where cm.course_id=? \n"
                     + "    order by m.zname, m.vname;");
             stmt.setInt(1, courseId);
             rs = stmt.executeQuery();
@@ -368,7 +368,7 @@ public class CourseDBUtil
      * @param conn
      * @throws SQLException
      */
-    private static void createCourse(CourseModel model, Connection conn) throws SQLException
+    private static int createCourse(CourseModel model, Connection conn) throws SQLException
     {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -384,6 +384,7 @@ public class CourseDBUtil
             rs = stmt.getGeneratedKeys();
             rs.next();
             model.id = rs.getInt(1);
+            return model.id;
         }
         finally
         {
@@ -593,7 +594,8 @@ public class CourseDBUtil
         PreparedStatement stmt = null;
         try
         {
-            stmt = conn.prepareStatement("update course_member set photo_agreement=? where course_id=? and member_id=?");
+            stmt = conn.prepareStatement(
+                "update course_member set photo_agreement=? where course_id=? and member_id=?");
             stmt.setString(1, m.photoAgreement.name());
             stmt.setInt(2, courseId);
             stmt.setInt(3, m.id);
@@ -918,4 +920,22 @@ public class CourseDBUtil
         }
     }
 
+    /**kopiere einen Kurs und weise der neuen kopie alle Teilnehmer des alten Kurses zu
+     * @param id
+     * @param conn
+     * @return
+     * @throws SQLException 
+     */
+    public static int copyCourse(int id, Connection conn) throws SQLException
+    {
+        CourseModel mdl = CourseDBUtil.loadCourseCoreData(id, conn);
+        mdl.member.addAll(CourseDBUtil.getAllMembersByCourseId(id, conn));
+
+        int newId = CourseDBUtil.createCourse(mdl, conn);
+        for (Member m : mdl.member)
+        {
+            CourseDBUtil.createCourseAssociation(newId, m.id, conn);
+        }
+        return newId;
+    }
 }

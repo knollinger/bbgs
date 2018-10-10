@@ -38,9 +38,9 @@ CourseCalendar.prototype.setupUI = function() {
 
     this.createEditAction();
     this.createRemoveAction();
-    this.createPrintAction();
     this.createShowWeeklyAction();
     this.createShowMonthlyAction();
+    this.createPrintAction();
 
     // GoBack
     document.getElementById("course_calendar_goback").addEventListener("click", function() {

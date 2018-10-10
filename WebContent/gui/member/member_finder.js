@@ -19,6 +19,7 @@ var MemberFinder = function(multiSelect, onSubmit) {
 
     var self = this;
     this.load("gui/member/member_finder.html", function() {
+	new TableDecorator("member_finder_result");
 	self.loadModel(function() {
 
 	    self.model.addChangeListener("//get-all-members-ok-rsp/members", function() {

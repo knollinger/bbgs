@@ -1,6 +1,7 @@
 var PhoneInputField = function(anchor) {
 
     var self = this;
+    UIUtils.getElement(anchor).type = "tel";
     new InputFieldDecorator(anchor, "phone-input", function() {
 	self.makeCall(UIUtils.getElement(anchor));
     });

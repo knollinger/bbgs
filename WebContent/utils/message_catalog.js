@@ -108,7 +108,7 @@ var MessageCatalog = (function() {
 	COURSE_ASSIGN_QUERY_REMOVE : "M&ouml;chtest Du wirklich die Zuordnung zum Kurs '{1}' l&ouml;schen ?",
 
 	COURSE_MEMBER_REMOVE : "M&ouml;chtest Du den Teilnehmer '{1}, {2}' wirklich aus dem Kurs '{3}' entfernen?",
-	COURSE_QUERY_REMOVE_TITLE : "Bist DU sicher ?",
+	COURSE_QUERY_REMOVE_TITLE : "Bist Du sicher ?",
 
 	// --------------------------------------------------------------------
 	//
@@ -131,6 +131,12 @@ var MessageCatalog = (function() {
 	COURSE_REMOVE_ERROR_TITLE : "Fehler beim l&ouml;schen des Kurses",
 	COURSE_REMOVE_ERROR : "Beim l&ouml;schen des Kurses ist ein technischer Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
 	COURSE_REMOVE_TECH_ERROR_TITLE : "Beim l&ouml;schen des Kurses ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
+
+	COURSE_QUERY_COPY_TITLE : "EInen Kurs kopieren",
+	COURSE_QUERY_COPY : "M&ouml;chtest Du den Kurs '{1}' kopieren? <br><br>Es werden alle Kursteilenehmer, Trainer und Scouts &uuml;bernommen",
+	COURSE_COPY_ERROR_TITLE : "Fehler kopieren des Kurses",
+	COURSE_COPY_ERROR : "Beim kopieren des Kurses ist ein technischer Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
+	COURSE_COPY_TECH_ERROR_TITLE : "Beim kopieren des Kurses ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
 
 	// --------------------------------------------------------------------
 	//

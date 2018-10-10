@@ -175,6 +175,7 @@ var CourseOverview = function() {
     this.createEditAction();
     this.createAddAction();
     this.createRemoveAction();
+    this.createCopyAction();
     this.createPrintAction();
     this.onSelectionChange();
 }
@@ -186,12 +187,12 @@ CourseOverview.prototype = Object.create(CourseFinder.prototype);
 CourseOverview.prototype.createEditAction = function() {
 
     var self = this;
-    this.actionEdit = new WorkSpaceFrameAction("gui/images/course-edit.svg", "Einen Kurs bearbeiten", function() {
+    this.actionEdit = new WorkSpaceFrameAction("gui/images/course-edit.svg", "Einen Kurs bearbeiten (Alt + Enter)", function() {
 	self.close();
 	new CourseEditor(self.model.getValue(self.selection[0] + "/id"));
     });
     this.addAction(this.actionEdit);
-    
+
     this.keyMap[13] = function(tbody, evt) {
 	self.actionEdit.invoke();
     }
@@ -204,12 +205,12 @@ CourseOverview.prototype.createAddAction = function() {
 
     var self = this;
 
-    this.actionAdd = new WorkSpaceFrameAction("gui/images/course-add.svg", "Einen Kurs hinzu fügen", function() {
+    this.actionAdd = new WorkSpaceFrameAction("gui/images/course-add.svg", "Einen Kurs hinzu fügen (Alt + +)", function() {
 	self.close();
 	new CourseEditor(0);
     });
     this.addAction(this.actionAdd);
-    
+
     this.keyMap[187] = function(tbody, evt) {
 	self.actionAdd.invoke();
     }
@@ -222,7 +223,7 @@ CourseOverview.prototype.createRemoveAction = function() {
 
     var self = this;
 
-    this.actionRemove = new WorkSpaceFrameAction("gui/images/course-remove.svg", "Einen Kurs löschen", function() {
+    this.actionRemove = new WorkSpaceFrameAction("gui/images/course-remove.svg", "Einen Kurs löschen (Alt+Entf)", function() {
 	var name = self.model.getValue(self.selection[0] + "/name");
 	var title = MessageCatalog.getMessage("COURSE_QUERY_REMOVE_TITLE");
 	var messg = MessageCatalog.getMessage("COURSE_QUERY_REMOVE", name);
@@ -236,6 +237,27 @@ CourseOverview.prototype.createRemoveAction = function() {
     }
 }
 
+/**
+ * 
+ */
+CourseOverview.prototype.createCopyAction = function() {
+
+    var self = this;
+
+    this.actionCopy = new WorkSpaceFrameAction("gui/images/course-copy.svg", "Einen Kurs kopieren (Alt +C)", function() {
+	var name = self.model.getValue(self.selection[0] + "/name");
+	var title = MessageCatalog.getMessage("COURSE_QUERY_COPY_TITLE");
+	var messg = MessageCatalog.getMessage("COURSE_QUERY_COPY", name);
+	new MessageBox(MessageBox.QUERY, title, messg, function() {
+	    self.copyCourse();
+	});
+    });
+    this.addAction(this.actionCopy);
+
+    this.keyMap[67] = function(tbody, evt) {
+	self.actionCopy.invoke();
+    }
+}
 
 /**
  * 
@@ -244,7 +266,7 @@ CourseOverview.prototype.createPrintAction = function() {
 
     var self = this;
 
-    this.actionPrint = new WorkSpaceFrameAction("gui/images/print.svg", "Einen Kurs drucken", function() {
+    this.actionPrint = new WorkSpaceFrameAction("gui/images/print.svg", "Einen Kurs drucken (Alt+P)", function() {
 	self.printCourse();
     });
     this.addAction(this.actionPrint);
@@ -261,10 +283,12 @@ CourseOverview.prototype.onSelectionChange = function(selection) {
     if (selection && selection.length) {
 	this.actionEdit.show();
 	this.actionRemove.show();
+	this.actionCopy.show();
 	this.actionPrint.show();
     } else {
 	this.actionEdit.hide();
 	this.actionRemove.hide();
+	this.actionCopy.hide();
 	this.actionPrint.hide();
     }
 }
@@ -297,6 +321,39 @@ CourseOverview.prototype.removeCourse = function() {
     }
 
     var req = XmlUtils.createDocument("remove-course-request");
+    XmlUtils.setNode(req, "id", this.model.getValue(this.selection[0] + "/id"));
+    caller.invokeService(req);
+}
+
+/**
+ * 
+ */
+CourseOverview.prototype.copyCourse = function() {
+
+    var self = this;
+    var caller = new ServiceCaller();
+    caller.onSuccess = function(rsp) {
+	switch (rsp.documentElement.nodeName) {
+	case "copy-course-ok-response":
+	    self.close();
+	    new CourseEditor(rsp.getElementsByTagName("id")[0].textContent);
+	    break;
+
+	case "error-response":
+	    var title = Messages.getMessage("COURSE_COPY_ERROR_TITLE");
+	    var messg = Messages.getMessage("COURSE_COPY_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
+	    new MessageBox(MessageBox.ERROR, title, messg);
+	    break;
+	}
+    }
+
+    caller.onError = function(req, status) {
+	var title = Messages.getMessage("COURSE_COPY_ERROR_TITLE");
+	var messg = Messages.getMessage("COURSE_COPY_TECH_ERROR", status);
+	new MessageBox(MessageBox.ERROR, title, messg);
+    }
+
+    var req = XmlUtils.createDocument("copy-course-request");
     XmlUtils.setNode(req, "id", this.model.getValue(this.selection[0] + "/id"));
     caller.invokeService(req);
 }

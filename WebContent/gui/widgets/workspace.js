@@ -116,8 +116,10 @@ WorkSpaceFrame.prototype.load = function(url, onload) {
 		if (annotations) {
 
 		    self.setTitle(annotations.dataset.frameTitle || "");
+		    self.enableMainMenu(annotations.dataset.hasMainMenu != "no");
 		    self.enableBackButton((annotations.dataset.hasBackbutton == "yes"));
 		    self.enableSaveButton((annotations.dataset.hasSavebutton == "yes"));
+		    self.enableHomeButton((annotations.dataset.hasHomebutton != "no"));
 		}
 
 		if (onload) {
@@ -138,6 +140,19 @@ WorkSpaceFrame.prototype.close = function() {
 	this.onClose();
     }
     this.frame.parentElement.removeChild(this.frame);
+}
+
+/**
+ * 
+ * @param value
+ */
+WorkSpaceFrame.prototype.enableMainMenu = function(value) {
+
+    if (value) {
+	UIUtils.removeClass(this.menu, "hidden");
+    } else {
+	UIUtils.addClass(this.menu, "hidden");
+    }
 }
 
 /**
@@ -197,13 +212,13 @@ WorkSpaceFrame.prototype.makeHeader = function() {
     this.header.className = "workspace-frame-header";
 
     // Menu
-    var menu = document.createElement("img");
-    menu.className = "workspace-frame-header-icon";
-    menu.src = "gui/images/navigation-menu.svg";
-    menu.addEventListener("click", function() {
+    this.menu = document.createElement("img");
+    this.menu.className = "workspace-frame-header-icon";
+    this.menu.src = "gui/images/navigation-menu.svg";
+    this.menu.addEventListener("click", function() {
 	new MainMenu(menu);
     })
-    this.header.appendChild(menu);
+    this.header.appendChild(this.menu);
 
     // Title
     this.title = document.createElement("span");
