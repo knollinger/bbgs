@@ -1,38 +1,33 @@
+/*---------------------------------------------------------------------------*/
 /**
- * Zeige alle Kurse an
+ *
  */
-var CourseFinder = function(multiSelect, onSubmit) {
 
-    WorkSpaceFrame.call(this);
+/**
+ * @param showActions
+ * @param onsubmit
+ */
+var CourseOverview = function(showActions, onsubmit) {
+
+    WorkSpaceTabbedFrame.call(this, "course_overview");
+    this.setTitle("Kurs-Übersicht");
+    this.showActions = showActions;
+    this.onSubmit = onsubmit;
+
+    this.result = [];
+    this.subPanes = {};
     var self = this;
+    this.loadModel(function() {
 
-    this.multSel = multiSelect;
-    this.onsubmit = onSubmit;
-    this.selection = [];
-
-    this.keyMap[13] = function(tbody, evt) {
-	self.saveButton.click();
-    };
-
-    this.load("gui/courses/course_overview.html", function() {
-
-	self.loadModel(function() {
-
-	    new TableDecorator("edit_courses_overview");
-	    UIUtils.addKeyMap("edit_courses_overview_body", self.keyMap);
-	    self.model.addChangeListener("//get-all-courses-ok-response/courses", function() {
-		self.fillTable();
-	    });
-	    self.fillTable();
-	});
+	self.fillContent();
     });
 }
-CourseFinder.prototype = Object.create(WorkSpaceFrame.prototype);
+CourseOverview.prototype = Object.create(WorkSpaceTabbedFrame.prototype);
 
 /**
  * Lade das KursModel
  */
-CourseFinder.prototype.loadModel = function(onSuccess) {
+CourseOverview.prototype.loadModel = function(onSuccess) {
 
     var self = this;
     var caller = new ServiceCaller();
@@ -62,248 +57,323 @@ CourseFinder.prototype.loadModel = function(onSuccess) {
 }
 
 /**
- * befülle die Tabelle
+ * 
  */
-CourseFinder.prototype.fillTable = function() {
+CourseOverview.prototype.fillContent = function() {
 
-    var self = this;
-
-    // gelöschte Kurse werden nicht angezeigt
-    var filter = function(course) {
-	return course.getElementsByTagName("action")[0].textContent != "REMOVE";
-    }
-
-    // was passiert beim Tabellen-Klick?
-    var onclick = function(tr, course) {
-	self.onSelect(tr, XmlUtils.getXPathTo(course));
-    }
-
-    var allCourses = "/get-all-courses-ok-response/courses/course";
-    var fields = this.getColumnDescriptor();
-    this.model.createTableBinding("edit_courses_overview", fields, allCourses, onclick, filter);
-}
-
-/**
- * Der Descriptor für die Befüllung der Tabelle. Folgende Spalten werden
- * angelegt:
- * <ul>
- * <li>radioBtn zur selection</li>
- * <li>typ </li>
- * <li>name </li>
- * <li>beschreibung</li>
- * </ul>
- */
-CourseFinder.prototype.getColumnDescriptor = function() {
-
-    var self = this;
-    var fields = [];
-    fields.push(function(td, course) {
-	var radio = document.createElement("input");
-	radio.type = (self.multSel) ? "checkbox" : "radio";
-	radio.name = "edit_course_radio";
-	radio.id = "edit_course_radio_" + course.getElementsByTagName("id")[0].textContent;
-	radio.value = course.getElementsByTagName("id")[0].textContent;
-	return radio;
-    });
-
-    fields.push("name");
-    fields.push(function(td, course) {
-	return CourseTypeTranslator[course.getElementsByTagName("type")[0].textContent];
-    });
-    fields.push(function(td, course) {
-	return course.getElementsByTagName("description")[0].textContent
-    });
-    return fields;
-}
-
-/**
- * @param tr
- *                die selektierte Zeile
- * @param der
- *                selectierte Course
- */
-CourseFinder.prototype.onSelect = function(tr, course) {
-
-    var radio = "edit_course_radio_" + this.model.getValue(course + "/id");
-    radio = document.getElementById(radio);
-
-    if (this.multSel) {
-	if (radio.checked) {
-	    this.selection.push(course);
-	} else {
-	    this.selection.remove(course);
-	}
-    } else {
-	this.selection = [].concat(course);
-    }
-    this.onSelectionChange(this.selection);
-}
-
-/**
- * callback für die DialogMethode save()
- */
-CourseFinder.prototype.onSave = function() {
-
-    if (this.onsubmit) {
-
-	var nodes = [];
-	for (var i = 0; i < this.selection.length; i++) {
-	    nodes.push(this.model.evaluateXPath(this.selection[i])[0]);
-	}
-	this.onsubmit(nodes);
+    var allCourses = this.model.evaluateXPath("//get-all-courses-ok-response/courses/course[action != 'REMOVE']");
+    for (var i = 0; i < allCourses.length; i++) {
+	this.renderOneCourse(allCourses[i]);
     }
 }
 
 /**
  * 
  */
-CourseFinder.prototype.onSelectionChange = function(selection) {
+CourseOverview.prototype.renderOneCourse = function(course) {
 
-    this.enableSaveButton(selection && selection.length);
+    var start = course.getElementsByTagName("start")[0].textContent;
+
+    var projYear = 0;
+    if (DateTimeUtils.isDate(start)) {
+	projYear = DateTimeUtils.getProjectYear(course.getElementsByTagName("start")[0].textContent);
+    }
+    var subPane = this.getSubPaneFor(projYear);
+    subPane.addEntry(course);
+}
+
+/**
+ * 
+ */
+CourseOverview.prototype.getSubPaneFor = function(projYear) {
+
+    if (!this.subPanes[projYear]) {
+
+	var title = projYear + ". Projektjahr";
+	var tab = this.addTab("gui/images/course.svg", title);
+	var subPane = new CourseOverviewSubPane(this, tab.contentPane, this.model, this.showActions);
+	tab.associateTabPane(subPane);
+	this.subPanes[projYear] = subPane;
+
+	if (DateTimeUtils.getProjectYear(new Date()) == projYear) {
+	    tab.select();
+	}
+
+    }
+    return this.subPanes[projYear];
+}
+
+/**
+ * 
+ */
+CourseOverview.prototype.selectionChanged = function(xpath) {
+
+    this.result = xpath;
+    if (this.onSubmit) {
+	this.enableSaveButton(true);
+    }
+}
+
+/**
+ * 
+ */
+CourseOverview.prototype.onSave = function() {
+
+    this.onSubmit(this.model.evaluateXPath(this.result));
 }
 
 /*---------------------------------------------------------------------------*/
 /**
- * CourseOverview
  * 
- * Eine spezialisierung des CourseFinders, welche noch die Actions AddCourse,
- * EditCourse, RemoveCourse und PrintCourse einbringt
  */
-var CourseOverview = function() {
+var CourseOverviewSubPane = function(parentFrame, targetContainer, model, showActions) {
 
-    CourseFinder.call(this, false, null);
-    this.createEditAction();
-    this.createAddAction();
-    this.createRemoveAction();
-    this.createCopyAction();
-    this.createPrintAction();
-    this.onSelectionChange();
+    WorkSpaceTabPane.call(this, parentFrame, targetContainer);
+    this.model = model;
+    this.showActions = showActions;
+
+    var content = document.createElement("div");
+    content.className = "scrollable";
+    targetContainer.appendChild(content);
+
+    this.table = this.createTable();
+    content.appendChild(this.table);
+
+    if (showActions) {
+	this.actionEdit = this.createEditAction();
+	this.actionAdd = this.createAddAction();
+	this.actionRemove = this.createRemoveAction();
+	this.actionCopy = this.createCopyAction();
+	this.actionPrint = this.createPrintAction();
+    }
 }
-CourseOverview.prototype = Object.create(CourseFinder.prototype);
+CourseOverviewSubPane.prototype = Object.create(WorkSpaceTabPane.prototype);
 
 /**
  * 
  */
-CourseOverview.prototype.createEditAction = function() {
+CourseOverviewSubPane.prototype.createTable = function() {
+
+    var table = document.createElement("table");
+
+    var thead = document.createElement("thead");
+    table.appendChild(thead);
+
+    var row = document.createElement("tr");
+    thead.appendChild(row);
+
+    var cell = document.createElement("th")
+    row.appendChild(cell);
+
+    cell = document.createElement("th")
+    cell.textContent = "Name";
+    cell.className = "sortable"
+    row.appendChild(cell);
+
+    cell = document.createElement("th")
+    cell.textContent = "Kurs-Art";
+    cell.className = "sortable"
+    row.appendChild(cell);
+
+    cell = document.createElement("th")
+    cell.textContent = "von";
+    row.appendChild(cell);
+
+    cell = document.createElement("th")
+    cell.textContent = "bis";
+    row.appendChild(cell);
+
+    table.appendChild(document.createElement("tbody"));
+
+    new TableDecorator(table);
+    return table;
+}
+
+/**
+ * 
+ */
+CourseOverviewSubPane.prototype.addEntry = function(course) {
 
     var self = this;
-    this.actionEdit = new WorkSpaceFrameAction("gui/images/course-edit.svg", "Einen Kurs bearbeiten (Alt + Enter)", function() {
-	self.close();
-	new CourseEditor(self.model.getValue(self.selection[0] + "/id"));
+    var fields = this.getColumnDescriptor();
+    var onclick = function(tr, node) {
+
+	if (self.showActions) {
+	    self.actionEdit.show();
+	    self.actionRemove.show();
+	    self.actionCopy.show();
+	    self.actionPrint.show();
+	}
+	self.currCourse = XmlUtils.getXPathTo(node);
+	self.currRow = tr;
+	self.parentFrame.selectionChanged(self.currCourse);
+    }
+    var row = this.model.createTableRow(course, fields, onclick);
+    this.table.getElementsByTagName("tbody")[0].appendChild(row);
+}
+
+/**
+ * 
+ */
+CourseOverviewSubPane.prototype.getColumnDescriptor = function() {
+
+    if (!CourseOverviewSubPane.COL_DESC) {
+
+	CourseOverviewSubPane.COL_DESC = [];
+	CourseOverviewSubPane.COL_DESC.push(function(td, course) {
+	    var radio = document.createElement("input");
+	    radio.type = "radio";
+	    radio.name = "course_overview_sel";
+	    return radio;
+	});
+
+	CourseOverviewSubPane.COL_DESC.push("name");
+	CourseOverviewSubPane.COL_DESC.push(function(td, course) {
+	    var type = course.getElementsByTagName("type")[0].textContent;
+	    return CourseTypeTranslator[type];
+	});
+	CourseOverviewSubPane.COL_DESC.push("start");
+	CourseOverviewSubPane.COL_DESC.push("end");
+    }
+    return CourseOverviewSubPane.COL_DESC;
+}
+
+/**
+ * 
+ */
+CourseOverviewSubPane.prototype.activate = function() {
+
+    if (this.showActions) {
+	this.actionAdd.show();
+    }
+}
+
+/**
+ * 
+ */
+CourseOverviewSubPane.prototype.createEditAction = function() {
+
+    var self = this;
+    var action = new WorkSpaceFrameAction("gui/images/course-edit.svg", "Einen Kurs bearbeiten (Alt + Enter)", function() {
+	self.parentFrame.close();
+	new CourseEditor(self.model.getValue(self.currCourse + "/id"));
     });
-    this.addAction(this.actionEdit);
+    this.addAction(action);
 
     this.keyMap[13] = function(tbody, evt) {
-	self.actionEdit.invoke();
+	action.invoke();
     }
+    action.hide();
+    return action;
 }
 
 /**
  * 
  */
-CourseOverview.prototype.createAddAction = function() {
+CourseOverviewSubPane.prototype.createAddAction = function() {
 
     var self = this;
 
-    this.actionAdd = new WorkSpaceFrameAction("gui/images/course-add.svg", "Einen Kurs hinzu fügen (Alt + +)", function() {
-	self.close();
+    var action = new WorkSpaceFrameAction("gui/images/course-add.svg", "Einen Kurs hinzu fügen (Alt + +)", function() {
+	self.parentFrame.close();
 	new CourseEditor(0);
     });
-    this.addAction(this.actionAdd);
+    this.addAction(action);
 
     this.keyMap[187] = function(tbody, evt) {
-	self.actionAdd.invoke();
+	action.invoke();
     }
+    action.hide();
+    return action;
 }
 
 /**
  * 
  */
-CourseOverview.prototype.createRemoveAction = function() {
+CourseOverviewSubPane.prototype.createRemoveAction = function() {
 
     var self = this;
 
-    this.actionRemove = new WorkSpaceFrameAction("gui/images/course-remove.svg", "Einen Kurs löschen (Alt+Entf)", function() {
-	var name = self.model.getValue(self.selection[0] + "/name");
+    var action = new WorkSpaceFrameAction("gui/images/course-remove.svg", "Einen Kurs löschen (Alt+Entf)", function() {
+	var name = self.model.getValue(self.currCourse + "/name");
 	var title = MessageCatalog.getMessage("COURSE_QUERY_REMOVE_TITLE");
 	var messg = MessageCatalog.getMessage("COURSE_QUERY_REMOVE", name);
 	new MessageBox(MessageBox.QUERY, title, messg, function() {
 	    self.removeCourse();
 	});
     });
-    this.addAction(this.actionRemove);
+    this.addAction(action);
     this.keyMap[46] = function(tbody, evt) {
-	self.actionRemove.invoke();
+	action.invoke();
     }
+    action.hide();
+    return action;
 }
 
 /**
  * 
  */
-CourseOverview.prototype.createCopyAction = function() {
+CourseOverviewSubPane.prototype.createCopyAction = function() {
 
     var self = this;
 
-    this.actionCopy = new WorkSpaceFrameAction("gui/images/course-copy.svg", "Einen Kurs kopieren (Alt +C)", function() {
-	var name = self.model.getValue(self.selection[0] + "/name");
+    var action = new WorkSpaceFrameAction("gui/images/course-copy.svg", "Einen Kurs kopieren (Alt +C)", function() {
+	var name = self.model.getValue(self.currCourse + "/name");
 	var title = MessageCatalog.getMessage("COURSE_QUERY_COPY_TITLE");
 	var messg = MessageCatalog.getMessage("COURSE_QUERY_COPY", name);
 	new MessageBox(MessageBox.QUERY, title, messg, function() {
 	    self.copyCourse();
 	});
     });
-    this.addAction(this.actionCopy);
+    this.addAction(action);
 
     this.keyMap[67] = function(tbody, evt) {
-	self.actionCopy.invoke();
+	action.invoke();
     }
+    action.hide();
+    return action;
 }
 
 /**
  * 
  */
-CourseOverview.prototype.createPrintAction = function() {
+CourseOverviewSubPane.prototype.createPrintAction = function() {
 
     var self = this;
 
-    this.actionPrint = new WorkSpaceFrameAction("gui/images/print.svg", "Einen Kurs drucken (Alt+P)", function() {
-	self.printCourse();
+    var action = new WorkSpaceFrameAction("gui/images/print.svg", "Einen Kurs drucken (Alt+P)", function() {
+
+	var menu = new PopupMenu(action.btn);
+	menu.makeMenuItem("Kurs-Übersicht drucken", function() {
+	    self.printCourse();
+	});
+
+	menu.makeMenuItem("MSJ-Liste drucken", function() {
+	    self.printMSJListe();
+	});
+
     });
-    this.addAction(this.actionPrint);
+    this.addAction(action);
     this.keyMap[80] = function(tbody, evt) { // 'P'-Taste
-	self.actionPrint.invoke();
+	action.invoke();
     }
+    action.hide();
+    return action;
 }
 
 /**
  * 
  */
-CourseOverview.prototype.onSelectionChange = function(selection) {
-
-    if (selection && selection.length) {
-	this.actionEdit.show();
-	this.actionRemove.show();
-	this.actionCopy.show();
-	this.actionPrint.show();
-    } else {
-	this.actionEdit.hide();
-	this.actionRemove.hide();
-	this.actionCopy.hide();
-	this.actionPrint.hide();
-    }
-}
-
-/**
- * 
- */
-CourseOverview.prototype.removeCourse = function() {
+CourseOverviewSubPane.prototype.removeCourse = function() {
 
     var self = this;
     var caller = new ServiceCaller();
     caller.onSuccess = function(rsp) {
 	switch (rsp.documentElement.nodeName) {
 	case "remove-course-ok-response":
-	    self.model.removeElement(self.selection[0]);
+	    self.model.removeElement(self.currCourse);
+	    UIUtils.removeElement(self.currRow);
+	    self.currCourse = self.currRow = null;
 	    break;
 
 	case "error-response":
@@ -321,21 +391,21 @@ CourseOverview.prototype.removeCourse = function() {
     }
 
     var req = XmlUtils.createDocument("remove-course-request");
-    XmlUtils.setNode(req, "id", this.model.getValue(this.selection[0] + "/id"));
+    XmlUtils.setNode(req, "id", this.model.getValue(this.currCourse + "/id"));
     caller.invokeService(req);
 }
 
 /**
  * 
  */
-CourseOverview.prototype.copyCourse = function() {
+CourseOverviewSubPane.prototype.copyCourse = function() {
 
     var self = this;
     var caller = new ServiceCaller();
     caller.onSuccess = function(rsp) {
 	switch (rsp.documentElement.nodeName) {
 	case "copy-course-ok-response":
-	    self.close();
+	    self.parentFrame.close();
 	    new CourseEditor(rsp.getElementsByTagName("id")[0].textContent);
 	    break;
 
@@ -354,16 +424,26 @@ CourseOverview.prototype.copyCourse = function() {
     }
 
     var req = XmlUtils.createDocument("copy-course-request");
-    XmlUtils.setNode(req, "id", this.model.getValue(this.selection[0] + "/id"));
+    XmlUtils.setNode(req, "id", this.model.getValue(this.currCourse + "/id"));
     caller.invokeService(req);
 }
 
 /**
  * 
  */
-CourseOverview.prototype.printCourse = function() {
+CourseOverviewSubPane.prototype.printCourse = function() {
 
-    var url = "getDocument/course_details.pdf?id=" + this.model.getValue(this.selection[0] + "/id");
-    var title = "Kurs-Details '" + this.model.getValue(this.selection[0] + "/name") + "'";
+    var url = "getDocument/course_details.pdf?id=" + this.model.getValue(this.currCourse + "/id");
+    var title = "Kurs-Details '" + this.model.getValue(this.currCourse + "/name") + "'";
+    new DocumentViewer(url, title);
+}
+
+/**
+ * 
+ */
+CourseOverviewSubPane.prototype.printMSJListe = function() {
+
+    var url = "getDocument/msj_liste.pdf?id=" + this.model.getValue(this.currCourse + "/id");
+    var title = "MSJ-Liste für den Kurs '" + this.model.getValue(this.currCourse + "/name") + "'";
     new DocumentViewer(url, title);
 }

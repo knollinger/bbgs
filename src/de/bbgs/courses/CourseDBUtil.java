@@ -41,7 +41,8 @@ public class CourseDBUtil
         try
         {
             List<Course> result = new ArrayList<>();
-            stmt = conn.prepareStatement("select * from courses order by name");
+//            stmt = conn.prepareStatement("select * from courses order by name");
+            stmt = conn.prepareStatement("select c.*, min(t.date) as start, max(t.date) as end from courses c left join course_termins t on c.id = t.ref_id group by c.id  order by start,end,c.name");
             rs = stmt.executeQuery();
             while (rs.next())
             {
@@ -51,6 +52,8 @@ public class CourseDBUtil
                 c.type = ECourseType.valueOf(rs.getString("type"));
                 c.color = rs.getInt("color_id");
                 c.description = rs.getString("description");
+                c.start = DBUtils.getDate(rs, "start");
+                c.end = DBUtils.getDate(rs, "end");
                 result.add(c);
             }
             return result;

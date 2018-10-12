@@ -92,7 +92,6 @@ CourseEditor.prototype.adjustTitle = function() {
  */
 CourseEditor.prototype.setupCoreDataEditor = function() {
 
-    var self = this;
     var tabBinder = this.addTab("gui/images/course-edit.svg", "Details");
     var subFrame = new CourseCoreDataEditor(this, tabBinder.contentPane, this.model);
     tabBinder.associateTabPane(subFrame);
@@ -376,7 +375,6 @@ CourseTerminAndLocationOverview.prototype.createLocationSelector = function(term
 
     var selector = document.createElement("select");
     selector.className = "inplace-select";
-    selector.style.width = "100%";
     var opt = document.createElement("option");
     opt.value = "";
     opt.textContent = "Lokation";

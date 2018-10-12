@@ -26,4 +26,10 @@ public class Course
 
     @XmlElement(name = "action")
     public EAction action = EAction.NONE;
+    
+    @XmlElement(name="start")
+    public String start = "";
+    
+    @XmlElement(name="end")
+    public String end = "";
 }

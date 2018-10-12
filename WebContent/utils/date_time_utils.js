@@ -88,7 +88,10 @@ var DateTimeUtils = (function() {
          * berechne das ProjektJahr aus einem Date
          */
         getProjectYear : function(date) {
-          
+
+            if(typeof date == "string") {
+        	date = DateTimeUtils.parseDate(date, "dd.mm.yyyy");
+            }
             var result = date.getFullYear() - 2014;
             if (date.getMonth() > 8) {
         	result++;

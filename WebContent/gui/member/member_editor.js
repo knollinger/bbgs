@@ -736,7 +736,7 @@ MemberCourseOverview.prototype.createAddAction = function() {
     var self = this;
     var action = new WorkSpaceFrameAction("gui/images/course-add.svg", "Einen Kurs hinzu fügen", function() {
 
-	new CourseFinder(true, function(newCourses) {
+	new NewCourseOverview(false, function(newCourses) {
 
 	    for (var i = 0; i < newCourses.length; i++) {
 		var xPath = self.model.addElement("/member-model/courses", newCourses[i]);
