@@ -411,16 +411,17 @@ var UIUtils = (function() {
 	 *                die ID des gewünschten Elements oder das element
 	 *                selbst
 	 * @param bindings
-	 *                Ein Object, welches den KeyCode als propertyNames hat
-	 *                und den Callback als PropertyValues. Der Callback
+	 *                Ein Object, welches die KeyCodes als propertyNames hat
+	 *                und die Callback als PropertyValues. Der Callback
 	 *                bekommt die Referenz auf das Element und das
 	 *                KeyUpEvent als Parameter übergeben
 	 */
 	addKeyMap : function(anchor, bindings) {
 
 	    var elem = UIUtils.getElement(anchor);
+	    
 	    elem.addEventListener("keyup", function(evt) {
-		if (evt.altKey) {
+		if (evt.altKey || evt.keyCode === 27) { // für ESC verlangen wir nicht unbedingt ALT+ESC :-)
 		    var cb = bindings[evt.keyCode];
 		    if (cb) {
 			evt.stopPropagation();

@@ -13,7 +13,32 @@ WorkSpace = (function() {
 	evt.stopPropagation();
     }, false);
 
+    var frames = [];
     return {
+
+	addFrame : function(frame) {
+
+	    if (frames.length > 0) {
+		frames[frames.length - 1].onDeActivation();
+	    }
+	    UIUtils.getElement("workspace").appendChild(frame.frame);
+	    frames.push(frame);
+	    frame.onActivation();
+	},
+
+	removeFrame : function(frame) {
+
+	    var idx = frames.indexOf(frame);
+	    if (idx != -1) {
+		frames.splice(idx, 1);
+		frame.onDeActivation();
+		frame.frame.remove();
+
+		if (frames.length > 0) {
+		    frames[frames.length - 1].onActivation();
+		}
+	    }
+	},
 
 	clearAll : function() {
 	    UIUtils.clearChilds(document.getElementById("workspace"));
@@ -54,8 +79,7 @@ var WorkSpaceFrame = function(logoUrl) {
     this.content.className = "workspace-frame-body";
     this.frame.appendChild(this.content);
 
-    var workSpace = UIUtils.getElement("workspace");
-    workSpace.appendChild(this.frame);
+    WorkSpace.addFrame(this);
 
     var self = this;
     this.keyMap = {};
@@ -63,8 +87,6 @@ var WorkSpaceFrame = function(logoUrl) {
 	self.handleEscape();
     }
     UIUtils.addKeyMap(this.content, this.keyMap);
-
-
     this.content.focus();
 }
 
@@ -139,7 +161,7 @@ WorkSpaceFrame.prototype.close = function() {
     if (this.onClose) {
 	this.onClose();
     }
-    this.frame.parentElement.removeChild(this.frame);
+    WorkSpace.removeFrame(this);
 }
 
 /**
@@ -325,6 +347,20 @@ WorkSpaceFrame.prototype.makeActionBtn = function(imgUrl, title, onclick) {
 }
 
 /**
+ * 
+ */
+WorkSpaceFrame.prototype.onActivation = function() {
+
+}
+
+/**
+ * 
+ */
+WorkSpaceFrame.prototype.onDeActivation = function() {
+
+}
+
+/**
  * actions für den WorkSpaceFrame
  */
 var WorkSpaceFrameAction = function(img, text, onClick) {
@@ -353,7 +389,7 @@ var WorkSpaceFrameAction = function(img, text, onClick) {
  */
 WorkSpaceFrameAction.prototype.invoke = function() {
 
-    if(this.isVisible()) {
+    if (this.isVisible()) {
 	this.onClick();
     }
 }
@@ -535,7 +571,7 @@ var WorkSpaceTabPane = function(parentFrame, targetContainer) {
  * Der Methodenrumpf ist nur zur dokumentation vorhanden.
  */
 WorkSpaceTabPane.prototype.activate = function() {
-    
+
 }
 
 /**

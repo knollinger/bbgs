@@ -95,3 +95,16 @@ Navigation.prototype.handleArrowDown = function(btn) {
 	btn.parentElement.firstChild.focus();
     }
 }
+
+/**
+ * 
+ */
+Navigation.prototype.onActivation = function() {
+
+    if (this.buttonBox) {
+	var btn = this.buttonBox.firstChild;
+	if (btn) {
+	    btn.focus();
+	}
+    }
+}
