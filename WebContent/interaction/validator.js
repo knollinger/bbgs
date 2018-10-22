@@ -16,7 +16,7 @@ Validator.prototype.validate = function(parent) {
     var parent = UIUtils.getElement(parent);
     if (parent) {
 
-	var allChilds = this.getAllInputFields(parent);
+	var allChilds = parent.querySelectorAll(".mandatory");
 	for (var i = 0; result && i < allChilds.length; i++) {
 
 	    var currElem = allChilds[i];
@@ -31,31 +31,6 @@ Validator.prototype.validate = function(parent) {
 		}
 	    }
 	}
-    }
-    return result;
-}
-
-/**
- * 
- * @param parent
- * @returns {Array}
- */
-Validator.prototype.getAllInputFields = function(parent) {
-
-    var result = [];
-
-    var tags = [ "input", "textarea", "select" ];
-    for (var i = 0; i < tags.length; i++) {
-
-	var childs = parent.getElementsByTagName(tags[i]);
-	for (var j = 0; j < childs.length; j++) {
-	    result.push(childs[j]);
-	}
-    }
-
-    var childs = parent.getElementsByClassName("multsel-cnr");
-    for (var j = 0; j < childs.length; j++) {
-	result.push(childs[j]);
     }
     return result;
 }

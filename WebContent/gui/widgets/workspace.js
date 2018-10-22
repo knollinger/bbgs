@@ -212,11 +212,12 @@ WorkSpaceFrame.prototype.makeHeader = function() {
     this.header.className = "workspace-frame-header";
 
     // Menu
+    var self = this;
     this.menu = document.createElement("img");
     this.menu.className = "workspace-frame-header-icon";
     this.menu.src = "gui/images/navigation-menu.svg";
     this.menu.addEventListener("click", function() {
-	new MainMenu(menu);
+	new MainMenu(self.menu);
     })
     this.header.appendChild(this.menu);
 

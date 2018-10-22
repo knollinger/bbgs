@@ -519,6 +519,9 @@ var IncommingsOverview = function() {
     var self = this;
     this.loadModel(function() {
 
+	// stelle sicher, dass wenigstens der Tab für das aktuelle Projektjahr existiert
+	self.getSubPaneForYear(new Date);
+	
 	self.model.addChangeListener("//invoice-records-model/records", function() {
 	    self.enableSaveButton(true);
 	});
@@ -823,7 +826,6 @@ IncommingsSubView.prototype.getColumnDescriptor = function() {
 	var self = this;
 	this.COL_DESC = [];
 	this.COL_DESC.push(function(td, node) {
-	    td.style.verticalAlign = "middle";
 	    var radio = document.createElement("input");
 	    radio.type = "radio";
 	    radio.name = "incomming";
@@ -831,7 +833,6 @@ IncommingsSubView.prototype.getColumnDescriptor = function() {
 	});
 
 	this.COL_DESC.push(function(td, node) {
-	    td.style.verticalAlign = "middle";
 	    if (node.getElementsByTagName("action")[0].textContent == "CREATE") {
 		return self.createKontoDropdown(node);
 	    }

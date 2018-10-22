@@ -55,7 +55,7 @@ CourseEditor.prototype.loadModel = function(id, onSuccess) {
 
     caller.onError = function(req, status) {
 	var title = MessageCatalog.getMessage("COURSE_GET_ERROR_TITLE");
-	var messg = MessageCatalog.getMessage("COURSE_GET_TECH_ERROR_TITLE", status);
+	var messg = MessageCatalog.getMessage("COURSE_GET_TECH_ERROR", status);
 	new MessageBox(MessageBox.ERROR, title, messg);
     }
 
@@ -239,7 +239,6 @@ var CourseTerminAndLocationOverview = function(parentFrame, targetCnr, model, te
 	}
     });
 }
-
 CourseTerminAndLocationOverview.prototype = Object.create(WorkSpaceTabPane.prototype);
 
 /**
@@ -337,7 +336,8 @@ CourseTerminAndLocationOverview.prototype.getColumnDescriptor = function() {
 CourseTerminAndLocationOverview.prototype.createDateEdit = function(termin) {
 
     var edit = document.createElement("input");
-    edit.className = "inplace-edit";
+    edit.className = "inplace-edit mandatory";
+    edit.dataset.type = "date";
     edit.size = "10";
     this.model.createValueBinding(edit, XmlUtils.getXPathTo(termin) + "/date", "change");
     new DatePicker(edit, "Kurs-Datum");
@@ -350,7 +350,8 @@ CourseTerminAndLocationOverview.prototype.createDateEdit = function(termin) {
 CourseTerminAndLocationOverview.prototype.createFromEdit = function(termin) {
 
     var edit = document.createElement("input");
-    edit.className = "inplace-edit";
+    edit.className = "inplace-edit mandatory";
+    edit.dataset.type = "time";
     edit.size = "6";
     this.model.createValueBinding(edit, XmlUtils.getXPathTo(termin) + "/begin", "change");
     return edit;
@@ -362,7 +363,8 @@ CourseTerminAndLocationOverview.prototype.createFromEdit = function(termin) {
 CourseTerminAndLocationOverview.prototype.createUntilEdit = function(termin) {
 
     var edit = document.createElement("input");
-    edit.className = "inplace-edit";
+    edit.className = "inplace-edit mandatory";
+    edit.dataset.type = "time";
     edit.size = "6";
     this.model.createValueBinding(edit, XmlUtils.getXPathTo(termin) + "/end", "change");
     return edit;
@@ -374,7 +376,7 @@ CourseTerminAndLocationOverview.prototype.createUntilEdit = function(termin) {
 CourseTerminAndLocationOverview.prototype.createLocationSelector = function(termin) {
 
     var selector = document.createElement("select");
-    selector.className = "inplace-select";
+    selector.className = "inplace-select mandatory";
     var opt = document.createElement("option");
     opt.value = "";
     opt.textContent = "Lokation";

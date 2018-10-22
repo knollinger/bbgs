@@ -62,6 +62,9 @@ select {
 }
 
 option {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-ms-appearance: none;
 	apperance: none;
 	white-space: nowrap;
 	background-color: white;
@@ -1916,6 +1919,9 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	padding: 0;
 }
 
+.multsel-option:hover {
+	background-color: #d0d0d0;
+}
 .multsel-option:first-child {
 	margin: 0 0 0;
 }
@@ -2161,15 +2167,16 @@ input[type='radio']:checked+.calendar-termin-monthly {
 .inplace-textarea {
 	border: 0px solid transparent;
 	border-radius: 0;
-	height: calc(1em + 8px);
+	height: calc(1em + 10px);
 	min-height: unset;
 	width: 100%;
 	background-color: inherit;
 	overflow: hidden;
+	transition: height 0.25s ease;
 }
 
 .inplace-textarea:focus {
-	min-height: calc(5em + 8px);
+	height: calc(5em + 10px);
 	background-color: #ffffff;
 	overflow: auto;
 }

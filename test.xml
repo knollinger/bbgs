@@ -1,89 +1,13 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<product-model>
-	<products>
-		<product>
-			<id>2</id>
-			<action>NONE</action>
-			<name>Apfelschorle</name>
-			<extern>2.5</extern>
-			<intern>1.5</intern>
-		</product>
-		<product>
-			<id>8</id>
-			<action>NONE</action>
-			<name>Capu</name>
-			<extern>0.0</extern>
-			<intern>0.0</intern>
-		</product>
-		<product>
-			<id>13</id>
-			<action>NONE</action>
-			<name>Chalk</name>
-			<extern>8</extern>
-			<intern>0.0</intern>
-		</product>
-		<product>
-			<id>6</id>
-			<action>NONE</action>
-			<name>Eintrit Kinder/Jugendliche bis 14Jahre</name>
-			<extern>0.0</extern>
-			<intern>0.0</intern>
-		</product>
-		<product>
-			<id>4</id>
-			<action>NONE</action>
-			<name>Eintritt Mitglieder</name>
-			<extern>0.0</extern>
-			<intern>0.0</intern>
-		</product>
-		<product>
-			<id>5</id>
-			<action>NONE</action>
-			<name>Eintritt ohne Mitgliedschaft</name>
-			<extern>0.0</extern>
-			<intern>0.0</intern>
-		</product>
-		<product>
-			<id>7</id>
-			<action>NONE</action>
-			<name>Espresso</name>
-			<extern>0.0</extern>
-			<intern>0.0</intern>
-		</product>
-		<product>
-			<id>3</id>
-			<action>NONE</action>
-			<name>Helles/Radler</name>
-			<extern>3.0</extern>
-			<intern>2.0</intern>
-		</product>
-		<product>
-			<id>9</id>
-			<action>NONE</action>
-			<name>Milchkaffe</name>
-			<extern>0.0</extern>
-			<intern>0.0</intern>
-		</product>
-		<product>
-			<id>1</id>
-			<action>NONE</action>
-			<name>Spezi</name>
-			<extern>2.5</extern>
-			<intern>1.5</intern>
-		</product>
-		<product>
-			<id>10</id>
-			<action>NONE</action>
-			<name>Tape (groß)</name>
-			<extern>0.0</extern>
-			<intern>0.0</intern>
-		</product>
-		<product>
-			<id>11</id>
-			<action>NONE</action>
-			<name>Tape (klein)</name>
-			<extern>0.0</extern>
-			<intern>0.0</intern>
-		</product>
-	</products>
-</product-model>
+<register-member-req>
+	<course-id>50</course-id>
+	<member-type>IS_MEMBER</member-type>
+	<core-data>
+		<zname>name</zname>
+		<vname>vname</vname>
+		<birthday>birth</birthday>
+		<sex>M</sex>
+		<zipcode>12345</zipcode>
+		<city>ort</city>
+		<street>strasse</street>
+	</core-data>
+</register-member-req>

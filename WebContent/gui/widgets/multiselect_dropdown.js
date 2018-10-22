@@ -1,6 +1,6 @@
 /**
  * Der MultiSelectDropDown adaptiert eine select-box und baut das ganze in eine
- * Dropdown-Box mit Multiselect-Eigenschafften um.
+ * Dropdown-Box mit Multiselect-Eigenschafften (via checkboxen) um.
  * 
  * @param dropdown
  *                die id oder die referenz auf die select-box
@@ -18,10 +18,7 @@ var MultiSelectDropdown = function(dropdown, optRenderer) {
     var elem = UIUtils.getElement(dropdown);
     if (elem) {
 
-	// now, create the replacement UI
 	this.cnr = this.createUI(elem);
-
-	// now, define the valueProperty
 	this.setupValueProperty();
     }
 }

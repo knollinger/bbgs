@@ -241,7 +241,7 @@ public class CourseDBUtil
                 result.id = id;
                 result.name = rs.getString("c.name");
                 result.description = rs.getString("c.description");
-                result.colorId = rs.getInt("c.color_id");
+                result.colorId = Integer.toString(rs.getInt("c.color_id"));
                 result.color = rs.getString("n.color");
                 result.type = ECourseType.valueOf(rs.getString("type"));
             }
@@ -381,7 +381,7 @@ public class CourseDBUtil
             stmt = conn.prepareStatement("insert into courses set name=?, description=?, color_id=?, type=?");
             stmt.setString(1, model.name);
             stmt.setString(2, model.description);
-            stmt.setInt(3, model.colorId);
+            stmt.setInt(3, Integer.parseInt(model.colorId));
             stmt.setString(4, model.type.name());
             stmt.executeUpdate();
             rs = stmt.getGeneratedKeys();
@@ -410,7 +410,7 @@ public class CourseDBUtil
             stmt = conn.prepareStatement("update courses set name=?, description=?, color_id=?, type=? where id=?");
             stmt.setString(1, model.name);
             stmt.setString(2, model.description);
-            stmt.setInt(3, model.colorId);
+            stmt.setInt(3, Integer.parseInt(model.colorId));
             stmt.setString(4, model.type.name());
             stmt.setInt(5, model.id);
             stmt.executeUpdate();

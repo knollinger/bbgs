@@ -30,7 +30,7 @@ public class CourseModel implements IJAXBObject
     public String description = "";
 
     @XmlElement(name = "color-id")
-    public int colorId = 0;
+    public String colorId = "";
 
     @XmlElement(name = "color")
     public String color = "";

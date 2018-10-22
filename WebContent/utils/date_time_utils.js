@@ -9,7 +9,6 @@ var DateTimeUtils = (function() {
         
         /**
          * 
-         * 
          */
         formatDate : function(date, format) {
 
@@ -29,6 +28,9 @@ var DateTimeUtils = (function() {
             return result;
         },
 
+        /**
+         * 
+         */
         formatTime : function(time, format) {
 
             var date = new Date(time);
@@ -148,26 +150,38 @@ var DateTimeUtils = (function() {
             return dayOfYear;
         },
         
+        /**
+         * 
+         */
         isDate : function(date) {
 
             var dateReg = /^\d{1,2}.\d{1,2}.\d{4}$/;
-            return date.match(dateReg);
+            return dateReg.test(date);
             
         },
 
+        /**
+         * 
+         */
         isTime : function(time) {
 
-            var dateReg = /^0[0-9]|1[0-9]|2[0.3]:[0-5][0-9]/;
-            return time.match(dateReg);
+            var timeReg = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+            return timeReg.test(time);
             
         },
         
+        /**
+         * 
+         */
         milliesSinceMidnight : function(date)  {
           
             var midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
             return date - midnight;
         },
 
+        /**
+         * 
+         */
         normalizeDayOfWeek : function(date) {
         
             var day = date.getDay();
@@ -178,6 +192,9 @@ var DateTimeUtils = (function() {
             
         },
         
+        /**
+         * 
+         */
         shortDayName : function(day) {
 
             return daysAsShortString[day % 7];

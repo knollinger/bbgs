@@ -104,6 +104,10 @@ var MessageCatalog = (function() {
 	COURSE_GETALL_ERROR : "Beim laden der Kurs-Informationen ist ein technischer Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
 	COURSE_GETALL_TECH_ERROR_TITLE : "Beim laden der Kurs-Informationen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
 
+	COURSE_GET_ERROR_TITLE: "Fehler beim laden der Kurs-Informationen",
+	COURSE_GET_ERROR : "Beim laden der Kurs-Informationen ist ein Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
+	COURSE_GET_TECH_ERROR : "Beim laden der Kurs-Informationen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
+	
 	COURSE_ASSIGN_QUERY_REMOVE_TITLE : "Bist Du sicher ?",
 	COURSE_ASSIGN_QUERY_REMOVE : "M&ouml;chtest Du wirklich die Zuordnung zum Kurs '{1}' l&ouml;schen ?",
 

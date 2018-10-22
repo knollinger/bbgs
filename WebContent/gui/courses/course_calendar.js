@@ -15,7 +15,6 @@ var CourseCalendar = function(mode, date) {
 	self.update();
 	new TouchGesturesObserver(self.frame, self);
     });
-
 }
 
 /**
@@ -80,7 +79,7 @@ CourseCalendar.prototype.setupUI = function() {
 	    break;
 	}
 	self.update();
-    });
+    });    
 }
 
 /**
@@ -133,6 +132,10 @@ CourseCalendar.prototype.createEditAction = function() {
     });
     this.addAction(this.actionEdit);
     this.actionEdit.hide();
+    
+    this.keyMap[13] = function(table, evt) {
+	self.actionEdit.invoke();
+    }
 }
 
 /**
@@ -177,6 +180,10 @@ CourseCalendar.prototype.createRemoveAction = function() {
     });
     this.addAction(this.actionRemove);
     this.actionRemove.hide();
+
+    this.keyMap[46] = function(table, evt) {
+	self.actionRemove.invoke();
+    }
 }
 
 /**
@@ -212,6 +219,8 @@ CourseCalendar.prototype.createPrintAction = function() {
 
     });
     this.addAction(action);
+    
+    
     return action;
 }
 
@@ -455,8 +464,12 @@ CourseCalendar.prototype.createWeeklyTermin = function(termin) {
 	self.actionRemove.show();
 	radio.click();
     });
-    self.prepareInfoPopup(t, termin);
-
+    this.prepareInfoPopup(t, termin);
+    
+    t.addEventListener("dblclick", function() {	
+	self.actionEdit.invoke();
+    });
+    
     var start = termin.getElementsByTagName("begin")[0].textContent;
     start = DateTimeUtils.parseTime(start, "{hh}:{mm}");
     if (start.getHours() < 9) {
@@ -593,7 +606,11 @@ CourseCalendar.prototype.createMonthlyTermin = function(termin) {
 	self.actionRemove.show();
 	radio.click();
     });
-    self.prepareInfoPopup(t, termin);
+    this.prepareInfoPopup(t, termin);
+
+    t.addEventListener("dblclick", function() {	
+	self.actionEdit.invoke();
+    });
 
     resultCnr.appendChild(t);
     return resultCnr;
