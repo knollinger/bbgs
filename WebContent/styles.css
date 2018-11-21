@@ -32,6 +32,15 @@ input {
 	background-color: white;
 	padding: 4px 4px 4px 4px;
 	border-radius: 2px;
+	height: 2em;
+}
+
+input[type="radio"] {
+	height: unset;
+}
+
+input[type="checkbox"] {
+	height: unset;
 }
 
 input::-ms-clear {
@@ -88,7 +97,6 @@ button::-moz-focus-inner {
 
 label {
 	vertical-align: middle;
-	height: 1em;
 	padding: 6px;
 }
 
@@ -1595,6 +1603,7 @@ iframe {
 	border-color: #d0d0d0;
 	background-color: #e0e0e0;
 	padding: 2px;
+	text-align: center;
 }
 
 .calendar-weekly-row-ruler {

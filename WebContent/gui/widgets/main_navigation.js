@@ -18,10 +18,10 @@ var MainNavigation = function() {
         new CourseMainNavigation();
     });
     
-    btn = this.addNavigationButton("gui/images/money.svg", "Buchhaltung", function() {
-        new AccountingNavigation();
-    });
-    UIUtils.addClass(btn, "hide-on-mobile");
+//    btn = this.addNavigationButton("gui/images/money.svg", "Buchhaltung", function() {
+//        new AccountingNavigation();
+//    });
+//    UIUtils.addClass(btn, "hide-on-mobile");
     
     btn = this.addNavigationButton("gui/images/mail.svg", "Mail/SMS", function() {
         new MailNavigation();

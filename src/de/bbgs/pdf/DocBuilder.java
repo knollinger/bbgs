@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Date;
 import java.sql.Time;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import de.bbgs.utils.IOUtils;
 
@@ -147,7 +149,10 @@ public class DocBuilder
          */
         public void replaceTag(String key, double val)
         {
-            this.replaceTag(key, Double.toString(val));
+            NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.GERMAN);
+//            String moneyString = formatter.format(val);
+            
+            this.replaceTag(key, formatter.format(val));
         }
 
         /**

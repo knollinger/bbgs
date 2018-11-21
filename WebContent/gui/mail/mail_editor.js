@@ -13,9 +13,9 @@ var MailEditor = function() {
 	self.actionAddPerson = self.createAddPersonAction();
 	self.actionAddAttachment = self.createAddAttachmentAction();
 	self.actionSendMail = self.createSendMailAction();
-	
+
 	self.model.createValueBinding("edit_email_subject", "/send-mail-req/subject");
-	
+
 	self.model.addChangeListener("/send-mail-req/send-to", function() {
 	    self.fillSendTo();
 	});
@@ -27,6 +27,17 @@ var MailEditor = function() {
 	self.model.addChangeListener("/send-mail-req", function() {
 	    self.adjustSendMailAction();
 	});
+	
+	UIUtils.getElement("edit_email_sendto").addEventListener("click", function(evt) {
+	    evt.stopPropagation();
+	    self.actionAddPerson.invoke();
+	});
+
+	UIUtils.getElement("edit_email_attachments").addEventListener("click", function(evt) {
+	    evt.stopPropagation();
+	    self.actionAddAttachment.invoke();
+	});
+
     });
 }
 MailEditor.prototype = Object.create(WorkSpaceFrame.prototype);
@@ -50,7 +61,7 @@ MailEditor.prototype.setupCKEditor = function() {
 
 	    },
 	    change : function() {
-		self.model.setValue("/send-mail-req/body", CKEDITOR.instances.edit_email_content.getData());
+		self.model.setValue("//send-mail-req/body", CKEDITOR.instances.edit_email_content.getData());
 	    }
 	}
     });
@@ -298,12 +309,11 @@ MailEditor.prototype.adjustSendMailAction = function() {
     var partners = this.model.evaluateXPath("/send-mail-req/send-to/partners/partner");
     var groups = this.model.evaluateXPath("/send-mail-req/send-to/custom-groups/custom-group");
     var subject = this.model.getValue("/send-mail-req/subject");
-    
-    if((members.length || types.length || courses.length || partners.length || groups.length) && subject) {
+
+    if ((members.length || types.length || courses.length || partners.length || groups.length) && subject) {
 	this.actionSendMail.show();
-    }
-    else {
-	this.actionSendMail.hide();	
+    } else {
+	this.actionSendMail.hide();
     }
 }
 
@@ -311,24 +321,24 @@ MailEditor.prototype.adjustSendMailAction = function() {
  * 
  */
 MailEditor.prototype.sendMail = function() {
-    
+
     var self = this;
     var caller = new ServiceCaller();
     caller.onSuccess = function(rsp) {
-	switch(rsp.documentElement.nodeName) {
+	switch (rsp.documentElement.nodeName) {
 	case "send-mail-ok-rsp":
 	    self.close();
 	    break;
-	    
+
 	case "error-response":
 	    alert("error-response");
 	    break;
 	}
     }
-    
+
     caller.onError = function(req, status) {
-	    alert("status: " + status);
-	
+	alert("status: " + status);
+
     }
     caller.invokeService(this.model.getDocument());
 }

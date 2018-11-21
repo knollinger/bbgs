@@ -210,7 +210,7 @@ public class AccountingDBUtils
         ResultSet rs = null;
         try
         {
-            stmt = conn.prepareStatement("select * from invoice_records where date between ? and ? order by date");
+            stmt = conn.prepareStatement("select * from invoice_records where  source=0 and date between ? and ? order by date");
             stmt.setDate(1, from);
             stmt.setDate(2, until);
             rs = stmt.executeQuery();

@@ -1,6 +1,17 @@
-{HEADER}
-= Kurs-Details für den Kurs $COURSE_NAME$
-$COURSE_DESC$
-{/HEADER}
+{TITLE_PAGE}
+= Übersicht der Einnahmen
+$FROM-UNTIL$
+Stand vom $TODAY$
+{/TITLE_PAGE}
 
-= Notizen/Kommentare
+<<<<<
+[width="100%", cols="<2,>1,<1,<4", options="header,footer"]
+|=======================
+| Eingangs-Konto | Betrag | Datum | Beschreibung
+{ROW}
+| $KTO$ | $AMOUNT$ | $DATE$ | $DESC$
+{/ROW}
+{TOTAL}
+|  total: | $AMOUNT$ |  | 
+{/TOTAL}
+|=======================
