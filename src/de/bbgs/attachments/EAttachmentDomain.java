@@ -11,8 +11,7 @@ public enum EAttachmentDomain
      * Anhänge für die Partner
      */
     PARTNER,
-    
-    
+        
     /**
      * Wird für internes Attachment für das Thumbnail verwendet
      */
@@ -22,11 +21,6 @@ public enum EAttachmentDomain
      * Wird für internes Attachment für die Mailsignatur verwendet
      */
     MAILSIG,
-    
-    /**
-     * Attachments an AccountingRecords, die id ist die accRecordId
-     */
-    ACCRECORD,
     
     /**
      * Attachments an Kursen, die id ist die CourseId
@@ -39,22 +33,7 @@ public enum EAttachmentDomain
     COURSELOC,
     
     /**
-     * Attachments, welche im FIleSystemBrowser angezeigt werden
+     * Datenschutzerklärung
      */
-    FILESYS, 
-
-    /**
-     * Attachments für die TODO-List
-     */
-    TODOLIST, 
-    
-    /**
-     * Attachments für ein Projekt
-     */
-    PROJECT,
-    
-    /**
-     * Der Content von EMails
-     */
-    EMAIL
+    DSE
 }

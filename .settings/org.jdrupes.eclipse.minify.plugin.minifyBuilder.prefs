@@ -1,4 +1,3 @@
-//disableOptimizations//WebContent/gui/accounting/accounting.js=true
 //disableOptimizations//WebContent/gui/attachments/attachments_editor.js=true
 //disableOptimizations//WebContent/gui/attachments/document_viewer.js=true
 //disableOptimizations//WebContent/gui/attachments/mimetype_visualizer.js=true
@@ -47,7 +46,6 @@
 //disableOptimizations//WebContent/utils/date_time_utils.js=true
 //disableOptimizations//WebContent/utils/message_catalog.js=true
 //disableOptimizations//WebContent/utils/xmlutils.js=true
-//minifier//WebContent/gui/accounting/accounting.js=YuiCompressor
 //minifier//WebContent/gui/attachments/attachments_editor.js=YuiCompressor
 //minifier//WebContent/gui/attachments/document_viewer.js=YuiCompressor
 //minifier//WebContent/gui/attachments/mimetype_visualizer.js=YuiCompressor
@@ -97,7 +95,6 @@
 //minifier//WebContent/utils/date_time_utils.js=YuiCompressor
 //minifier//WebContent/utils/message_catalog.js=YuiCompressor
 //minifier//WebContent/utils/xmlutils.js=YuiCompressor
-//preserveSemicolons//WebContent/gui/accounting/accounting.js=true
 //preserveSemicolons//WebContent/gui/attachments/attachments_editor.js=true
 //preserveSemicolons//WebContent/gui/attachments/document_viewer.js=true
 //preserveSemicolons//WebContent/gui/attachments/mimetype_visualizer.js=true

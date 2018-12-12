@@ -239,7 +239,7 @@ public class MemberDBUtil
 
         try
         {
-            stmt = conn.prepareStatement("select * from members order by zname");
+            stmt = conn.prepareStatement("select * from members where not (type = 'REG_COURSE' or type = 'REG_EVENT') order by zname");
             rs = stmt.executeQuery();
             while (rs.next())
             {

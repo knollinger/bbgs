@@ -1,0 +1,31 @@
+<div class="workspace-frame-content" data-has-backbutton="yes"
+	data-has-main-menu="yes"
+	data-frame-title="Datenschutz-Erkl&auml;rung bearbeiten"></div>
+
+<div class="workspace-frame-hint">
+	<p>Hier werden Dir alle Versionen der Datenschutz-Erkl&auml;rung
+		angezeigt. Das jüngste Dokument ist das aktuell gültige.</p>
+	<p>
+		Um eine neue Version der Datenschutz-Erklärung hoch zu laden, kannst
+		Du entweder die Schaltfläche <img src="gui/images/document-add.svg"
+			style="height: 1em;"> verwenden oder das neue Dokument auf die
+		Tabelle ziehen.
+	</p>
+	<p>Ein l&ouml;schen ist aus Gr&uuml;nden der Revisions-Sicherheit
+		nicht m&ouml;glich, wir wollen den verwendeten Stand der
+		Datenschutz-Erklärung historisieren.</p>
+</div>
+<table id="dse-editor-table">
+	<thead>
+		<tr>
+			<th></th>
+			<th>Dateiname</th>
+			<th>G&uuml;ltig ab</th>
+			<th>Hochgeladen von</th>
+		</tr>
+	</thead>
+	<tbody id="dse-editor-table-body"></tbody>
+</table>
+<input type="file" accept="application/pdf" id="dse-editor-filepicker"
+	class="hidden">
+

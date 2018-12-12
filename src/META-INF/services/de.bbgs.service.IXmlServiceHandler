@@ -62,30 +62,10 @@ de.bbgs.named_colors.SaveNamedColorsHandler
 
 #------------------------------------------------------------------------------
 #
-# all about registration
-#
-de.bbgs.registration.GetRegistrationModelHandler
-de.bbgs.registration.SaveRegistrationModelHandler
-
-
-#------------------------------------------------------------------------------
-#
 # all about the DSGVO bullshit
 #
 de.bbgs.dsgvo.GetDSEOverviewHandler
 de.bbgs.dsgvo.SendDSEHandler
-
-#------------------------------------------------------------------------------
-#
-# all about accounting
-#
-de.bbgs.accounting.GetInvoiceItemsHandler
-de.bbgs.accounting.SaveInvoiceItemsHandler
-
-de.bbgs.accounting.GetAllIncommingsHandler
-de.bbgs.accounting.SaveIncommingsHandler
-
-de.bbgs.accounting.GetAllProjectsHandler
-de.bbgs.accounting.GetProjectModelHandler
-de.bbgs.accounting.SaveProjectModelHandler
+de.bbgs.dsgvo.GetDSEVersionsHandler
+de.bbgs.dsgvo.SaveDSEVersionHandler
 

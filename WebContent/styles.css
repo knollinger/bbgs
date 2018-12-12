@@ -2,7 +2,7 @@
 	margin: 0;
 	padding: 0;
 	font-family: Arial;
-	font-size: 14px;
+	font-size: 16px;
 	box-sizing: border-box;
 }
 
@@ -458,28 +458,52 @@ iframe {
 	border-bottom: unset;
 }
 
-/*---------------------------------------------------------------------------*/
-/**
- * All about the member finder
- */
-.found-locations-cnr {
-	
-}
-
-.found-location-tag {
-	display: inline-block;
+.workspace-frame-content-body {
+	-webkit-flex: 1;
+	-moz-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: flex;
+	-webkit-flex-direction: column;
+	-moz-flex-direction: column;
+	-ms-flex-direction: column;
+	flex-direction: column;
 	border: 1px solid #d0d0d0;
-	border-radius: 2px;
-	padding: 5px;
-	margin: 2px 5px 2px 0px;
-	background-color: #f8f8f8;
-	white-space: nowrap;
+	overflow-x: hidden;
+	overflow-y: auto;
+	border: 1px solid #d0d0d0;
 }
 
-.found-location-tag>img {
-	width: 16px;
-	margin-right: 5px;
-	vertical-align: middle;
+.workspace-frame-content-footer {
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: flex;
+	-webkit-flex-direction: row;
+	-moz-flex-direction: row;
+	-ms-flex-direction: row;
+	flex-direction: row;
+	-webkit-align-items: center;
+	-moz-align-items: center;
+	-ms-align-items: center;
+	align-items: center;
+	-webkit-flex: 0 auto;
+	-moz-flex: 0 auto;
+	-ms-flex: 0 auto;
+	flex: 0 auto;
+	padding: 0;
+	margin-top: 10px;
+}
+
+.workspace-frame-hint {
+	
+	padding: 5px;
+	border: 1px solid #d0d0d0;
+	margin-bottom: 10px;
+	background-color: #f8f8f8;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1092,7 +1116,7 @@ iframe {
 	flex: 2;
 }
 
-[class*='grid-row-']:before, [class*='grid-row-']:after { 
+[class*='grid-row-']:before, [class*='grid-row-']:after {
 	content: ' ';
 	display: table;
 	clear: both;
@@ -1518,27 +1542,6 @@ iframe {
 	height: 100%;
 }
 
-.workspace-frame-content-footer {
-	display: -webkit-flex;
-	display: -moz-flex;
-	display: -ms-flex;
-	display: flex;
-	-webkit-flex-direction: row;
-	-moz-flex-direction: row;
-	-ms-flex-direction: row;
-	flex-direction: row;
-	-webkit-align-items: center;
-	-moz-align-items: center;
-	-ms-align-items: center;
-	align-items: center;
-	-webkit-flex: 0 auto;
-	-moz-flex: 0 auto;
-	-ms-flex: 0 auto;
-	flex: 0 auto;
-	padding: 0;
-	margin-top: 10px;
-}
-
 .calendar-title {
 	-webkit-flex: 1;
 	-moz-flex: 1;
@@ -1553,25 +1556,6 @@ iframe {
 
 .calendar-title:hover {
 	text-decoration: underline;
-}
-
-.workspace-frame-content-body {
-	-webkit-flex: 1;
-	-moz-flex: 1;
-	-ms-flex: 1;
-	flex: 1;
-	display: -webkit-flex;
-	display: -moz-flex;
-	display: -ms-flex;
-	display: flex;
-	-webkit-flex-direction: column;
-	-moz-flex-direction: column;
-	-ms-flex-direction: column;
-	flex-direction: column;
-	border: 1px solid #d0d0d0;
-	overflow-x: hidden;
-	overflow-y: auto;
-	border: 1px solid #d0d0d0;
 }
 
 .calendar-weekly-row {
@@ -1708,6 +1692,7 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	-ms-box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
 	box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
 }
+
 /**
  * all about the accordeon
  */
@@ -1931,6 +1916,7 @@ input[type='radio']:checked+.calendar-termin-monthly {
 .multsel-option:hover {
 	background-color: #d0d0d0;
 }
+
 .multsel-option:first-child {
 	margin: 0 0 0;
 }
@@ -1955,6 +1941,8 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	border: 1px solid #d0d0d0;
 	padding: 5px;
 	min-height: 2em;
+	max-height: 10em;
+	overflow: auto;
 }
 
 .send-to-tag {
@@ -2020,98 +2008,6 @@ input[type='radio']:checked+.calendar-termin-monthly {
 .placeholder:last-child {
 	display: inline-block;
 	color: #808080;
-}
-
-/*---------------------------------------------------------------------------*/
-/**
- * all about the Mailbox
- */
-.mail-subpanel-content {
-	display: block;
-	-webkit-flex: 1;
-	-moz-flex: 1;
-	-ms-flex: 1;
-	flex: 1;
-}
-
-.mail-cnr {
-	width: 100%;
-	border-width: 0 0 1px 0;
-	border-style: solid;
-	border-color: #d0d0d0;
-	display: -webkit-flex;
-	display: -moz-flex;
-	display: -ms-flex;
-	display: flex;
-	-webkit-flex-direction: row;
-	-moz-flex-direction: row;
-	-ms-flex-direction: row;
-	flex-direction: row;
-	-webkit-flex: 0 auto;
-	-moz-flex: 0 auto;
-	-ms-flex: 0 auto;
-	flex: 0 auto;
-	align-items: center;
-}
-
-.mail-cnr>input[type="radio"] {
-	-webkit-flex: 0 auto;
-	-moz-flex: 0 auto;
-	-ms-flex: 0 auto;
-	flex: 0 auto;
-	margin-right: 10px;
-}
-
-.mail-envelope {
-	display: -webkit-flex;
-	display: -moz-flex;
-	display: -ms-flex;
-	display: flex;
-	-webkit-flex-direction: column;
-	-moz-flex-direction: column;
-	-ms-flex-direction: column;
-	flex-direction: column;
-	-webkit-flex: 0 auto;
-	-moz-flex: 0 auto;
-	-ms-flex: 0 auto;
-	flex: 0 auto;
-	width: 100%;
-	padding: 5px;
-}
-
-.mail-envelope-row {
-	display: -webkit-flex;
-	display: -moz-flex;
-	display: -ms-flex;
-	display: flex;
-	flex-direction: -webkit-row;
-	flex-direction: -moz-row;
-	flex-direction: -ms-row;
-	flex-direction: row;
-	margin-bottom: 5px;
-}
-
-.mail-envelope-subject {
-	-webkit-flex: 1;
-	-moz-flex: 1;
-	-ms-flex: 1;
-	flex: 1;
-	font-weight: 600;
-}
-
-.mail-envelope-label {
-	-webkit-flex: 0 auto;
-	-moz-flex: 0 auto;
-	-ms-flex: 0 auto;
-	flex: 0 auto;
-	min-width: 3em;
-}
-
-.mail-envelope-address {
-	-webkit-flex: 1;
-	-moz-flex: 1;
-	-ms-flex: 1;
-	flex: 1;
 }
 
 /*---------------------------------------------------------------------------*/

@@ -3,7 +3,6 @@ package de.bbgs.sms;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -33,8 +32,6 @@ import de.bbgs.xml.IJAXBObject;
  */
 public class SendSMSHandler implements IXmlServiceHandler
 {
-    private static final SimpleDateFormat TIMESTAMP_FMT = new SimpleDateFormat("dd.MM.yyyy-HH:mm:ss");
-    
     @Override
     public boolean needsSession()
     {
@@ -80,7 +77,6 @@ public class SendSMSHandler implements IXmlServiceHandler
     private static class SendSMSTask implements Runnable
     {
         private Request request;
-        private SessionWrapper session;
 
         /**
          * @param req
@@ -88,7 +84,6 @@ public class SendSMSHandler implements IXmlServiceHandler
         public SendSMSTask(Request req, SessionWrapper session)
         {
             this.request = req;
-            this.session = session;
         }
 
         @Override

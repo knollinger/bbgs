@@ -27,16 +27,20 @@ var MailEditor = function() {
 	self.model.addChangeListener("/send-mail-req", function() {
 	    self.adjustSendMailAction();
 	});
-	
+
 	UIUtils.getElement("edit_email_sendto").addEventListener("click", function(evt) {
 	    evt.stopPropagation();
 	    self.actionAddPerson.invoke();
 	});
 
-	UIUtils.getElement("edit_email_attachments").addEventListener("click", function(evt) {
-	    evt.stopPropagation();
-	    self.actionAddAttachment.invoke();
+	new FilePicker("edit_email_attachments", function(name, type, data) {
+	    self.addAttachment(name, type, data);
 	});
+	// UIUtils.getElement("edit_email_attachments").addEventListener("click",
+	// function(evt) {
+	// evt.stopPropagation();
+	// self.actionAddAttachment.invoke();
+	// });
 
     });
 }
@@ -89,27 +93,36 @@ MailEditor.prototype.createAddAttachmentAction = function() {
 
     var action = new WorkSpaceFrameAction("gui/images/document-add.svg", "Einen Anhang hinzu fügen");
     this.addAction(action);
+
+    var self = this;
     new FilePicker(action.btn, function(name, type, data) {
-
-	var doc = XmlUtils.createDocument("attachment");
-	var attachment = doc.documentElement;
-
-	var node = doc.createElement("name");
-	node.textContent = name;
-	attachment.appendChild(node);
-
-	node = doc.createElement("mime-type");
-	node.textContent = type;
-	attachment.appendChild(node);
-
-	node = doc.createElement("content");
-	node.textContent = data;
-	attachment.appendChild(node);
-
-	self.model.addElement("/send-mail-req/attachments", attachment);
+	self.addAttachment(name, type, data);
     });
 
     return action;
+}
+
+/**
+ * 
+ */
+MailEditor.prototype.addAttachment = function(name, type, data) {
+
+    var doc = XmlUtils.createDocument("attachment");
+    var attachment = doc.documentElement;
+
+    var node = doc.createElement("name");
+    node.textContent = name;
+    attachment.appendChild(node);
+
+    node = doc.createElement("mime-type");
+    node.textContent = type;
+    attachment.appendChild(node);
+
+    node = doc.createElement("content");
+    node.textContent = data;
+    attachment.appendChild(node);
+
+    this.model.addElement("/send-mail-req/attachments", attachment);
 }
 
 /**

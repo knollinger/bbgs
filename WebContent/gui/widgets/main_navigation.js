@@ -17,18 +17,12 @@ var MainNavigation = function() {
     btn = this.addNavigationButton("gui/images/course.svg", "Kurse verwalten", function() {
         new CourseMainNavigation();
     });
-    
-//    btn = this.addNavigationButton("gui/images/money.svg", "Buchhaltung", function() {
-//        new AccountingNavigation();
-//    });
-//    UIUtils.addClass(btn, "hide-on-mobile");
-    
     btn = this.addNavigationButton("gui/images/mail.svg", "Mail/SMS", function() {
         new MailNavigation();
     });
      
-    btn = this.addNavigationButton("gui/images/certificate.svg", "Datenschutz-Erklärung verwalten", function() {
-	new DSEOverview();
+    btn = this.addNavigationButton("gui/images/dse.svg", "Datenschutz-Erklärung verwalten", function() {
+	new DSENavigation();
     });
      
     this.setTitle("Bayerns beste Gipfelstürmer");

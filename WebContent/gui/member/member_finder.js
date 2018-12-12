@@ -77,6 +77,10 @@ MemberFinder.prototype.fillTable = function(multiselect) {
     });
     fields.push("zname");
     fields.push("vname");
+    fields.push(function(td, member) {
+	var type = member.getElementsByTagName("type")[0].textContent;
+	return MemberTypeTranslator[type];
+    });
 
     var self = this;
     this.model.createTableBinding("member_finder_result", fields, "//get-all-members-ok-rsp/members/member[action != 'REMOVE']", function(tr, member) {

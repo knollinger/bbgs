@@ -3,6 +3,7 @@ package de.bbgs.dsgvo;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -26,6 +27,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 import javax.xml.bind.JAXBException;
 
+import de.bbgs.attachments.EAttachmentDomain;
 import de.bbgs.mail.MailHelper;
 import de.bbgs.session.SessionWrapper;
 import de.bbgs.setup.SetupReader;
@@ -205,10 +207,10 @@ public class DSEUtils
      * @return
      * @throws MessagingException
      * @throws IOException
+     * @throws SQLException 
      */
-    private static BodyPart createAttachment() throws MessagingException, IOException
+    private static BodyPart createAttachment() throws MessagingException, IOException, SQLException
     {
-
         InputStream in = null;
 
         try
@@ -216,11 +218,12 @@ public class DSEUtils
             BodyPart attachBodyPart = new MimeBodyPart();
             attachBodyPart.setFileName("Datenschutz-Erklärung.pdf");
 
-            String path = "/" + DSEUtils.class.getPackage().getName();
-            path = path.replaceAll("\\.", "/");
-            path += "/dse.pdf";
-            in = DSEUtils.class.getResourceAsStream(path);
+//            String path = "/" + DSEUtils.class.getPackage().getName();
+//            path = path.replaceAll("\\.", "/");
+//            path += "/dse.pdf";
+//            in = DSEUtils.class.getResourceAsStream(path);
 
+            in = DSEUtils.getDSEDocument();
             DataSource src = new ByteArrayDataSource(in, "application/pdf");
             attachBodyPart.setDataHandler(new DataHandler(src));
             return attachBodyPart;
@@ -228,6 +231,39 @@ public class DSEUtils
         finally
         {
             IOUtils.closeQuitly(in);
+        }
+    }
+
+    /**
+     * @return <code>null</code>, wenn kein DSE-Dokument gefunden wurde
+     * 
+     * @throws SQLException 
+     */
+    private static InputStream getDSEDocument() throws SQLException
+    {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            InputStream result = null;
+            conn = ConnectionPool.getConnection();
+            stmt = conn.prepareStatement("select file from attachments where domain=? order by attached_at desc");
+            stmt.setString(1, EAttachmentDomain.DSE.name());
+            rs = stmt.executeQuery();
+            if (rs.next())
+            {
+                Blob b = rs.getBlob("file");
+                result = b.getBinaryStream();
+            }
+            return result;
+        }
+        finally
+        {
+            DBUtils.closeQuitly(rs);
+            DBUtils.closeQuitly(stmt);
+            DBUtils.closeQuitly(conn);
         }
     }
 }

@@ -104,10 +104,10 @@ var MessageCatalog = (function() {
 	COURSE_GETALL_ERROR : "Beim laden der Kurs-Informationen ist ein technischer Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
 	COURSE_GETALL_TECH_ERROR_TITLE : "Beim laden der Kurs-Informationen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
 
-	COURSE_GET_ERROR_TITLE: "Fehler beim laden der Kurs-Informationen",
+	COURSE_GET_ERROR_TITLE : "Fehler beim laden der Kurs-Informationen",
 	COURSE_GET_ERROR : "Beim laden der Kurs-Informationen ist ein Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
 	COURSE_GET_TECH_ERROR : "Beim laden der Kurs-Informationen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
-	
+
 	COURSE_ASSIGN_QUERY_REMOVE_TITLE : "Bist Du sicher ?",
 	COURSE_ASSIGN_QUERY_REMOVE : "M&ouml;chtest Du wirklich die Zuordnung zum Kurs '{1}' l&ouml;schen ?",
 
@@ -212,7 +212,6 @@ var MessageCatalog = (function() {
 	TITLE_REMOVE_TASK : "Bist DU sicher?",
 	QUERY_REMOVE_TASK : "M&ouml;chtest Du die Aufgabe '{1}' wirklich l&ouml;schen?",
 
-
 	// --------------------------------------------------------------------
 	//
 	// all about the DSGVO stuff
@@ -222,65 +221,13 @@ var MessageCatalog = (function() {
 	SEND_DSEMAIL_SUCCESS : "Die Mails mit der Datenschutz-Erklärung wurde erfolgreich zur Zustellung &uuml;bergeben",
 	SEND_DSEMAIL_ERR : "Beim senden der Datenschutz-Erkl&auml;rungen ist ein Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
 	SEND_DSEMAIL_TECHERR : "Beim senden der Datenschutz-Erkl&auml;rungen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
-
-	// --------------------------------------------------------------------
-	//
-	// all about the file system
-	//
-	TITLE_REMOVE_FILESYS_OBJ : "Bist Du sicher?",
-	QUERY_REMOVE_FILESYS_FOLDER : "M&ouml;chtes Du den Ordner '{1}' <b>und alle seine Unterordner und Dateien</b> wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
-	QUERY_REMOVE_FILESYS_FILE : "M&ouml;chtes Du die Datei '{1}' wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
-	INFO_FSO_METADATA : "Angelegt am: {1}<br>Letzte &Auml;nderung: {1}",
 	
-	// --------------------------------------------------------------------
-	//
-	// all about accounting
-	//
-	GET_INVOICE_ITEMS_TITLE : "Fehler beim lesen der Buchungsposten",
-	GET_INVOICE_ITEMS_ERROR : "Bei der Ermittling der Buchungsposten ist ein Fehler aufgetreten.<br>Antwort vom Server:<br> {1}",
-	GET_INVOICE_ITEMS_TECH_ERROR : "Bei der Ermittling der Buchungsposten ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
-	
-	SAVE_INVOICE_ITEMS_TITLE : "Fehler beim speichern der Buchungsposten",
-	SAVE_INVOICE_ITEMS_ERROR : "Beim speichern der Buchungsposten ist ein Fehler aufgetreten.<br>Antwort vom Server:<br> {1}",
-	SAVE_INVOICE_ITEMS_TECH_ERROR : "Beim speichern der Buchungsposten ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
-	
-	REMOVE_INVOICE_ITEM_TITLE : "Bist Du sicher?",
-        REMOVE_INVOICE_ITEM_MESSG : "M&ouml;chtest Du diesen Buchungs-Posten wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
-        
-	GET_INCOMMINGS_TITLE : "Fehler beim laden der Einnahmen",
-	GET_INCOMMINGS_ERROR : "Beim laden der Einnahmen ist ein Fehler aufgetreten.<br>Antwort vom Server:<br> {1}",
-	GET_INCOMMINGS_TECH_ERROR : "Beim laden der Einnahmen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
-	
-	SAVE_INCOMMINGS_TITLE : "Fehler beim speichern der Einnahmen",
-	SAVE_INCOMMINGS_ERROR : "Beim speichern der Einnahmen ist ein Fehler aufgetreten.<br>Antwort vom Server:<br> {1}",
-	SAVE_INCOMMINGS_TECH_ERROR : "Beim speichern der Einnahmen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
-	
-	REMOVE_INCOMMING_TITLE : "Bist Du sicher?",
-        REMOVE_INCOMMING_MESSG : "M&ouml;chtest Du diese Einnahme wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
-        
-	LOAD_PROJECTS_TITLE : "Fehler beim laden der Projekte",
-	LOAD_PROJECTS_ERROR : "Beim laden der Projekte ist ein Fehler aufgetreten.<br>Antwort vom Server:<br> {1}",
-	LOAD_PROJECTS_TECH_ERROR : "Beim laden der Projekte ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
-	        
-	LOAD_PROJ_MODEL_TITLE : "Fehler beim laden des Projektes",
-	LOAD_PROJ_MODEL_ERROR : "Beim laden des Projektes ist ein Fehler aufgetreten.<br>Antwort vom Server:<br> {1}",
-	LOAD_PROJ_MODEL_TECH_ERROR : "Beim laden des Projektes ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
-
-	SAVE_PROJ_MODEL_TITLE : "Fehler beim speichern des Projektes",
-	SAVE_PROJ_MODEL_ERROR : "Beim speichern des Projektes ist ein Fehler aufgetreten.<br>Antwort vom Server:<br> {1}",
-	SAVE_PROJ_MODEL_TECH_ERROR : "Beim speichern des Projektes ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
-	
-
-	REMOVE_PLANNING_ITEM_TITLE : "Bist Du sicher?",
-        REMOVE_PLANNING_ITEM_MESSG : "M&ouml;chtest Du diesen Planungs-Posten wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
-        
-	REMOVE_PAYMENT_ITEM_TITLE : "Bist Du sicher?",
-        REMOVE_PAYMENT_ITEM_MESSG : "M&ouml;chtest Du diesen Finanzierungs-Posten wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
-        
-	REMOVE_OUTGOING_ITEM_TITLE : "Bist Du sicher?",
-        REMOVE_OUTGOING_ITEM_MESSG : "M&ouml;chtest Du diesen Ausgabe-Posten wirklich l&ouml;schen?<br><br>Dieser Vorgang kann nicht r&uuml;ckg&auml;ngig gemacht werden!",
-        
-
+	LOAD_DSE_VERSIONS_ERROR_TITLE : "Fehler beim laden der Datenschutz-Erklärungen",
+	LOAD_DSE_VERSIONS_ERROR : "Fehler beim laden der Datenschutz-Erkl&auml;rung.<br>Antwort vom Server:<br>{1}",
+	LOAD_DSE_VERSIONS_TECHERROR : "Beim laden der Datenschutz-Erkl&auml;rungen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
+	SAVE_DSE_VERSIONS_ERROR_TITLE : "Fehler beim speichern der Datenschutz-Erklärungen",
+	SAVE_DSE_VERSIONS_ERROR : "Fehler beim speichern der Datenschutz-Erkl&auml;rung.<br>Antwort vom Server:<br>{1}",
+	SAVE_DSE_VERSIONS_TECHERROR : "Beim speichern der Datenschutz-Erkl&auml;rungen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
     }
 
     return {

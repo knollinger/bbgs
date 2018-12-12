@@ -1,3 +1,271 @@
+var DSENavigation = function() {
+
+    Navigation.call(this);
+
+    this.addNavigationButton("gui/images/dse-edit.svg", "Datenschutzerklärung bearbeiten", function() {
+	new DSEEditor();
+    });
+
+    this.addNavigationButton("gui/images/dse-person.svg", "Datenschutz-Erklärung pro Mitglied", function() {
+	new DSEOverview();
+    });
+    this.setTitle("Mitglieder-Verwaltung");
+}
+DSENavigation.prototype = Object.create(Navigation.prototype);
+
+/*---------------------------------------------------------------------------*/
+/**
+ * 
+ */
+var DSEEditor = function() {
+
+    WorkSpaceFrame.call(this);
+
+    var self = this;
+    this.load("gui/dsgvo/dse_editor.html", function() {
+	self.actionShow = self.createShowAction();
+	self.actionAdd = self.createAddAction();
+	self.setupFilePicker();
+	self.setupDropZone();
+	self.loadModel();
+    });
+}
+DSEEditor.prototype = Object.create(WorkSpaceFrame.prototype);
+
+/**
+ * 
+ */
+DSEEditor.prototype.loadModel = function() {
+
+    var self = this;
+    var caller = new ServiceCaller();
+    caller.onSuccess = function(rsp) {
+	switch (rsp.documentElement.nodeName) {
+	case "get-dse-versions-ok-rsp":
+	    self.model = new Model(rsp);
+	    self.fillTable();
+	    break;
+
+	case "error-response":
+	    var title = MessageCatalog.getMessage("LOAD_DSE_VERSIONS_ERROR_TITLE");
+	    var messg = MessageCatalog.getMessage("LOAD_DSE_VERSIONS_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
+	    new MessageBox(MessageBox.ERROR, title, messg);
+	    break;
+	}
+    }
+    caller.onError = function(req, status) {
+	var title = MessageCatalog.getMessage("LOAD_DSE_VERSIONS_ERROR_TITLE");
+	var messg = MessageCatalog.getMessage("LOAD_DSE_VERSIONS_TECHERROR", status);
+	new MessageBox(MessageBox.ERROR, title, messg);
+    }
+
+    var req = XmlUtils.createDocument("get-dse-versions-req");
+    caller.invokeService(req);
+}
+
+/**
+ * 
+ */
+DSEEditor.prototype.fillTable = function() {
+
+    UIUtils.clearChilds("dse-editor-table-body");
+    var xpath = "//get-dse-versions-ok-rsp/versions/version";
+    var allVersions = this.model.evaluateXPath(xpath);
+    for (var i = 0; i < allVersions.length; i++) {
+	this.renderOneVersionEntry(allVersions[i]);
+    }
+
+}
+
+DSEEditor.prototype.renderOneVersionEntry = function(version) {
+
+    var self = this;
+    var onclick = function() {
+	self.currVersionId = version.getElementsByTagName("id")[0].textContent;
+	self.actionShow.show();
+    }
+
+    var tbody = UIUtils.getElement("dse-editor-table-body");
+    var row = this.model.createTableRow(version, this.getColumnDesc(), onclick);
+    tbody.appendChild(row);
+}
+/**
+ * 
+ */
+DSEEditor.prototype.getColumnDesc = function() {
+
+    var cols = [];
+    cols.push(function(td, version) {
+	var result = document.createElement("input");
+	result.type = "radio";
+	result.name = "dsgvo_version_sel";
+	return result;
+    });
+    cols.push("file-name");
+    cols.push("date");
+    cols.push("account");
+    return cols;
+}
+
+/**
+ * 
+ */
+DSEEditor.prototype.createAddAction = function() {
+
+    var self = this;
+    var title = "Neue Version der Datenschutz-Erklärug hoch laden";
+    var action = new WorkSpaceFrameAction("gui/images/document-add.svg", title, function() {
+	UIUtils.getElement("dse-editor-filepicker").click();
+    });
+    this.addAction(action);
+    return action;
+}
+/**
+ * 
+ */
+DSEEditor.prototype.createShowAction = function() {
+
+    var self = this;
+    var title = "Ausgewählte Version der Datenschutz-Erklärung anzeigen";
+    var action = new WorkSpaceFrameAction("gui/images/document-edit.svg", title, function() {
+
+	var xpath = "//get-dse-versions-ok-rsp/versions/version[id='" + self.currVersionId + "']";
+	var title = self.model.getValue(xpath + "/file-name") + " - gültig ab: " + self.model.getValue(xpath + "/date");
+	var url = "getDocument/attachment?id=" + self.currVersionId;	 
+	new DocumentViewer(url, title);
+    });
+    this.addAction(action);
+    action.hide();
+    return action;
+}
+
+/**
+ * 
+ */
+DSEEditor.prototype.setupFilePicker = function() {
+
+    var self = this;
+    var picker = UIUtils.getElement("dse-editor-filepicker");
+    picker.addEventListener("change", function(evt) {
+	self.readFile(picker.files[0]);
+    });
+}
+
+/**
+ * 
+ */
+DSEEditor.prototype.setupDropZone = function() {
+
+    var dropZone = this.content;
+
+    var self = this;
+    dropZone.addEventListener('dragover', function(evt) {
+	self.handleDragOver(evt);
+    });
+    dropZone.addEventListener('drop', function(evt) {
+	self.handleDrop(evt);
+    });
+}
+
+/**
+ * 
+ */
+DSEEditor.prototype.handleDragOver = function(evt) {
+
+    evt.stopPropagation();
+    evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'copy';
+}
+
+/**
+ * 
+ */
+DSEEditor.prototype.handleDrop = function(evt) {
+
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    var file = evt.dataTransfer.files[0];
+    this.readFile(file);
+}
+
+/**
+ * 
+ */
+DSEEditor.prototype.readFile = function(file) {
+
+    var size = parseInt(file.size / (1024 * 1024));
+    if (size > 16) {
+
+	var title = MessageCatalog.getMessage("UPLOD_TOO_BIG_TITLE");
+	var messg = MessageCatalog.getMessage("UPLOD_TOO_BIG", file.name, size, 16);
+	new MessageBox(MessageBox.ERROR, title, messg);
+    } else {
+
+	var reader = new FileReader();
+	var self = this;
+
+	reader.onloadstart = function() {
+	    BusyIndicator.show();
+	}
+	reader.onload = function(evt) {
+
+	    BusyIndicator.hide();
+
+	    var binary = "";
+	    var bytes = new Uint8Array(reader.result);
+	    var length = bytes.byteLength;
+	    for (var i = 0; i < length; i++) {
+		binary += String.fromCharCode(bytes[i]);
+	    }
+	    var data = btoa(binary);
+	    self.uploadFile(file.name, file.type, data);
+	};
+
+	reader.onerror = function() {
+	    BusyIndicator.hide();
+	}
+
+	reader.readAsArrayBuffer(file);
+    }
+}
+
+/**
+ * 
+ */
+DSEEditor.prototype.uploadFile = function(name, mimeType, data) {
+
+    var self = this;
+    var caller = new ServiceCaller();
+    caller.onSuccess = function(rsp) {
+	switch (rsp.documentElement.nodeName) {
+	case "save-dse-version-ok-rsp":
+	    self.loadModel();
+	    break;
+
+	case "error-response":
+	    var title = MessageCatalog.getMessage("SAVE_DSE_VERSIONS_ERROR_TITLE");
+	    var messg = MessageCatalog.getMessage("SAVE_DSE_VERSIONS_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
+	    new MessageBox(MessageBox.ERROR, title, messg);
+	    break;
+	}
+    };
+    caller.onError = function(req, status) {
+	var title = MessageCatalog.getMessage("SAVE_DSE_VERSIONS_ERROR_TITLE");
+	var messg = MessageCatalog.getMessage("SAVE_DSE_VERSIONS_TECHERROR", status);
+	new MessageBox(MessageBox.ERROR, title, messg);
+
+    }
+
+    var req = XmlUtils.createDocument("save-dse-version-req");
+    XmlUtils.setNode(req, "name", name);
+    XmlUtils.setNode(req, "type", mimeType);
+    XmlUtils.setNode(req, "data", data);
+    caller.invokeService(req);
+
+}
+
+/*---------------------------------------------------------------------------*/
 /**
  * 
  */
@@ -21,28 +289,28 @@ DSEOverview.prototype.prepareSections = function() {
 
     this.panels = {};
 
-    var tab = this.addTab("gui/images/certificate.svg", "Datenschutz-Erklärung noch nicht verschickt");
+    var tab = this.addTab("gui/images/dse-person.svg", "Datenschutz-Erklärung noch nicht verschickt");
     var panel = new DSESubPanelNone(this, tab.contentPane, this.model);
     tab.associateTabPane(panel);
     this.panels["NONE"] = panel;
     tab.select();
 
-    tab = this.addTab("gui/images/certificate.svg", "Noch nicht reagiert");
+    tab = this.addTab("gui/images/dse-person.svg", "Noch nicht reagiert");
     panel = new DSESubPanelPending(this, tab.contentPane, this.model);
     tab.associateTabPane(panel);
     this.panels["PENDING"] = panel;
 
-    tab = this.addTab("gui/images/certificate.svg", "Datenschutz-Erklärung zugestimmt");
+    tab = this.addTab("gui/images/dse-person.svg", "Datenschutz-Erklärung zugestimmt");
     panel = new DSESubPanelAccepted(this, tab.contentPane, this.model);
     tab.associateTabPane(panel);
     this.panels["ACCEPTED"] = panel;
 
-    tab = this.addTab("gui/images/certificate.svg", "Datenschutz-Erklärung abgelehnt");
+    tab = this.addTab("gui/images/dse-person.svg", "Datenschutz-Erklärung abgelehnt");
     panel = new DSESubPanelRejected(this, tab.contentPane, this.model);
     tab.associateTabPane(panel);
     this.panels["REJECTED"] = panel;
 
-    tab = this.addTab("gui/images/certificate.svg", "Datenschutz-Erklärung  nicht zustellbar");
+    tab = this.addTab("gui/images/dse-person.svg", "Datenschutz-Erklärung  nicht zustellbar");
     panel = new DSESubPanelNotDeliverable(this, tab.contentPane, this.model);
     tab.associateTabPane(panel);
     this.panels["NOT_DELIVERABLE"] = panel;
@@ -226,7 +494,7 @@ DSESubPanelNone.prototype.fillTable = function() {
 DSESubPanelNone.prototype.sendDSEMails = function() {
 
     if (this.selected.length) {
-	
+
 	var id = this.selected[0];
 	this.selected.splice(0, 1);
 
@@ -315,7 +583,7 @@ var DSESubPanelRejected = function(parentFrame, targetCnr, model) {
 
     DSESubPanel.call(this, parentFrame, targetCnr, [ "", "Name", "Vorname", "abgelehnt am", "Email" ]);
     this.model = model;
-    
+
     this.actionRemove = new WorkSpaceFrameAction("gui/images/person-remove.svg", "Ein Mitglied löschen", function() {
 	self.removeMember();
     });
