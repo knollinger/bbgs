@@ -2,7 +2,7 @@
 	margin: 0;
 	padding: 0;
 	font-family: Arial;
-	font-size: 16px;
+	font-size: 18px;
 	box-sizing: border-box;
 }
 
@@ -263,6 +263,72 @@ iframe {
 
 /*---------------------------------------------------------------------------*/
 /**
+ * shortcuts für den flexbox-kram
+ */
+.disp-flex {
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: flex;
+}
+
+.flex-col {
+	-webkit-flex-direction: column;
+	-moz-flex-direction: column;
+	-ms-direction: column;
+	flex-direction: column;
+}
+
+.flex-row {
+	-webkit-flex-direction: row;
+	-moz-flex-direction: row;
+	-ms-direction: row;
+	flex-direction: row;
+}
+
+.flex-0 {
+	-webkit-flex: 0 auto;
+	-moz-flex: 0 auto;
+	-ms-flex: 0 auto;
+	flex: 0 auto;
+}
+
+.flex-1 {
+	-webkit-flex: 1;
+	-moz-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+}
+
+.flex-justify-start {
+	-webkit-justify-content: flex-start;
+	-moz-justify-content: flex-start;
+	-ms-justify-content: flex-start;
+	justify-content: flex-start;
+}
+
+.flex-justify-end {
+	-webkit-justify-content: flex-end;
+	-moz-justify-content: flex-end;
+	-ms-justify-content: flex-end;
+	justify-content: flex-end;
+}
+
+.flex-justify-center {
+	-webkit-justify-content: center;
+	-moz-justify-content: center;
+	-ms-justify-content: center;
+	justify-content: center;
+}
+
+.flex-alignitems-center {
+	-webkit-align-items: center;
+	-moz-align-items: center;
+	-ms-align-items: center;
+	align-items: center;
+}
+/*---------------------------------------------------------------------------*/
+/**
  * all about action buttons
  */
 .action-button {
@@ -499,7 +565,6 @@ iframe {
 }
 
 .workspace-frame-hint {
-	
 	padding: 5px;
 	border: 1px solid #d0d0d0;
 	margin-bottom: 10px;
@@ -2142,4 +2207,83 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	-moz-flex-direction: column;
 	-ms-flex-direction: column;
 	flex-direction: column;
+}
+
+/* Suchfelder und co */
+.searchfield-cnr {
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+	width: 80%;
+	margin-left: 10%;
+	margin-top: 10%;
+}
+
+.searchfield-entry {
+	position: relative;
+	width: 100%;
+}
+
+.searchfield-entry>input {
+	height: 2em;
+	padding: 0.4em;
+	border: 1px solid #d0d0d0;
+	border-radius: 2px 0 0 2px;
+}
+
+.searchfield-entry>input:focus {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	-ms-box-shadow: none;
+	box-shadow: none;
+	outline: none;
+}
+
+.searchfield-entry>button {
+	height: 2em;
+	min-width: 2em;
+	border-width: 1px 1px 1px 0;
+	border-style: solid;
+	border-color: #d0d0d0;
+	border-radius: 0 2px 2px 0;
+	cursor: pointer;
+	background: white url("gui/images/searchfield-markup.png") no-repeat
+		center center;
+}
+
+.searchfield-entry>button:focus {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	-ms-box-shadow: none;
+	box-shadow: none;
+	outline: none;
+}
+
+.searchfield-content {
+	width: 100%;
+	border: 1px solid #d0d0d0;
+	position: absolute;
+	padding: 10px;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+	background-color: #fff;
+	color: #000;
+	max-height: 10em;
+	overflow: auto;
+}
+
+.searchfield-content:empty {
+	display: none;
+}
+
+.searchfield-content>div {
+	padding: 5px;
+	white-space: nowrap;
+}
+
+.searchfield-content>div:last-child {
+	padding-bottom: 0;
+}
+.searchfield-content>div:hover {
+	background-color: #d0d0d0;
 }

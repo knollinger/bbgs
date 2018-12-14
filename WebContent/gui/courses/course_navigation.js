@@ -3,7 +3,7 @@
  */
 var CourseMainNavigation = function() {
     
-    Navigation.call(this);
+    Navigation.call(this, "gui/images/header3.jpg");
     
     var self = this;
     

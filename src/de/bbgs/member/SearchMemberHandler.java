@@ -70,15 +70,24 @@ public class SearchMemberHandler implements IXmlServiceHandler
         {
             Response response = new Response();
             Request req = (Request) request;
-            conn = ConnectionPool.getConnection();
-            
-            stmt = conn.prepareStatement("select * from members where zname like ? and vname like ? order by zname, vname");
-            stmt.setString(1, req.zname == null ? "" : "%" + req.zname + "%");
-            stmt.setString(2, req.vname == null ? "" : "%" + req.vname + "%");
-            rs = stmt.executeQuery();
-            while (rs.next())
+            if (req.search != null && req.search.trim().length() != 0)
             {
-                response.found.add(MemberDBUtil.personFromResultSet(rs));
+                conn = ConnectionPool.getConnection();
+
+                String search = "%" + req.search.trim() + "%";
+
+                stmt = conn.prepareStatement(
+                    "select * from members where zname like ? or vname like ? or zip_code like ? or city like ? or street like ? order by zname, vname");
+                stmt.setString(1, search);
+                stmt.setString(2, search);
+                stmt.setString(3, search);
+                stmt.setString(4, search);
+                stmt.setString(5, search);
+                rs = stmt.executeQuery();
+                while (rs.next())
+                {
+                    response.found.add(MemberDBUtil.personFromResultSet(rs));
+                }
             }
             rsp = response;
 
@@ -100,11 +109,8 @@ public class SearchMemberHandler implements IXmlServiceHandler
     @XmlType(name = "SearchMemberHandler.Request")
     public static class Request implements IJAXBObject
     {
-        @XmlElement(name = "zname")
-        public String zname;
-
-        @XmlElement(name = "vname")
-        public String vname;
+        @XmlElement(name = "search")
+        public String search;
     }
 
     @XmlRootElement(name = "search-member-ok-rsp")

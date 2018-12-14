@@ -1,6 +1,6 @@
 var DSENavigation = function() {
 
-    Navigation.call(this);
+    Navigation.call(this, "gui/images/header5.jpg");
 
     this.addNavigationButton("gui/images/dse-edit.svg", "Datenschutzerklärung bearbeiten", function() {
 	new DSEEditor();

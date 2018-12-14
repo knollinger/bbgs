@@ -4,11 +4,19 @@
  */
 var MemberNavigation = function() {
 
-    Navigation.call(this);
+    Navigation.call(this, "gui/images/header2.jpg");
 
-    this.addNavigationButton("gui/images/person-edit.svg", "Mitglieder bearbeiten", function() {
+    this.addNavigationButton("gui/images/person-add.svg", "Ein Mitglied anlegen", function() {
 	new MemberEditor(0);
     });
+
+    this.addNavigationButton("gui/images/person-edit.svg", "Mitglieder bearbeiten", function() {
+	
+	new NewMemberFinder(function(member) {
+	    new MemberEditor(member.getElementsByTagName("id")[0].textContent);
+	});
+    });
+
 
     this.addNavigationButton("gui/images/person-group.svg", "Alle Mitglieder anzeigen", function() {
 	new MemberOverview();
@@ -36,7 +44,7 @@ var MemberEditor = function(id) {
 
 	self.setupModelListener();
 	self.setupTitlebarListener();
-	self.setupCoreDataEditor(id == 0);
+	self.setupCoreDataEditor();
 	self.setupCommDataEditor();
 	self.setupContactsOverview();
 	self.setupAttachmentsOverview();
@@ -115,10 +123,10 @@ MemberEditor.prototype.setupTitlebarListener = function() {
 /**
  * 
  */
-MemberEditor.prototype.setupCoreDataEditor = function(enableSearchMode) {
+MemberEditor.prototype.setupCoreDataEditor = function() {
 
     this.coreDataTab = this.addTab("gui/images/person.svg", "Stamm-Daten");
-    var subFrame = new MemberCoreDataEditor(this, this.coreDataTab.contentPane, this.model, enableSearchMode);
+    var subFrame = new MemberCoreDataEditor(this, this.coreDataTab.contentPane, this.model);
     this.coreDataTab.associateTabPane(subFrame);
     this.coreDataTab.select();
 }
@@ -237,7 +245,7 @@ var MemberCoreDataEditor = function(parentFrame, targetCnr, model, enableSearchM
     var self = this;
     this.load("gui/member/member_editor_core.html", function() {
 
-	UIUtils.getElement("edit_member_zname").focus();
+	UIUtils.getElement("edit_member_type").focus();
 	self.fillCoopPartners();
 
 	self.model.createValueBinding("edit_member_type", "//member-model/core-data/type");
@@ -292,125 +300,9 @@ var MemberCoreDataEditor = function(parentFrame, targetCnr, model, enableSearchM
 	projYear.addEventListener("change", function() {
 	    self.onProjYearChange();
 	});
-
-	if (enableSearchMode) {
-	    self.setupSearchPreviewListener();
-	}
     });
 }
 MemberCoreDataEditor.prototype = Object.create(WorkSpaceTabPane.prototype);
-
-/**
- * 
- */
-MemberCoreDataEditor.prototype.setupSearchPreviewListener = function() {
-
-    var self = this;
-
-    var zname = UIUtils.getElement("edit_member_zname");
-    UIUtils.addClass(zname, "search-input");
-    zname.addEventListener("input", function() {
-	self.startSearchPreviewTimer(zname);
-    });
-
-    var vname = UIUtils.getElement("edit_member_vname");
-    UIUtils.addClass(vname, "search-input");
-    vname.addEventListener("input", function() {
-	self.startSearchPreviewTimer(vname);
-    });
-}
-
-/**
- * 
- */
-MemberCoreDataEditor.prototype.startSearchPreviewTimer = function(anchor) {
-
-    if (anchor.value != "") {
-	var self = this;
-	this.stopSearchPreviewTimer();
-	this.timer = window.setTimeout(function() {
-	    self.loadSearchPreview(anchor);
-	}, 400);
-    }
-}
-
-/**
- * 
- */
-MemberCoreDataEditor.prototype.stopSearchPreviewTimer = function() {
-
-    if (this.timer) {
-	window.clearTimeout(this.timer);
-	this.timer = null;
-    }
-}
-
-/**
- * 
- */
-MemberCoreDataEditor.prototype.loadSearchPreview = function(anchor) {
-
-    var znameSearch = UIUtils.getElement("edit_member_zname").value;
-    var vnameSearch = UIUtils.getElement("edit_member_vname").value
-
-    var self = this;
-    var caller = new ServiceCaller();
-    caller.onSuccess = function(rsp) {
-	switch (rsp.documentElement.nodeName) {
-	case "search-member-ok-rsp":
-	    self.showSearchPreview(anchor, new Model(rsp), znameSearch, vnameSearch);
-	    break;
-
-	case "error-response":
-	    console.log(rsp.getElementsByTagName("msg")[0].textContent);
-	    break;
-	}
-    }
-    caller.onError = function(req, status) {
-	console.log(status);
-    }
-
-    var req = XmlUtils.createDocument("search-member-req");
-    XmlUtils.setNode(req, "zname", znameSearch);
-    XmlUtils.setNode(req, "vname", vnameSearch);
-    caller.invokeService(req.documentElement);
-
-}
-
-/**
- * 
- */
-MemberCoreDataEditor.prototype.showSearchPreview = function(anchor, model, znameSearch, vnameSearch) {
-
-    var allMembers = model.evaluateXPath("//search-member-ok-rsp/members/member");
-    if (allMembers.length) {
-
-	var preview = new PopupMenu(anchor);
-	for (var i = 0; i < allMembers.length; i++) {
-
-	    var xpath = XmlUtils.getXPathTo(allMembers[i]);
-	    this.makeSearchPreviewItem(preview, model, xpath, znameSearch, vnameSearch);
-	}
-    }
-}
-
-/**
- * 
- */
-MemberCoreDataEditor.prototype.makeSearchPreviewItem = function(preview, model, xpath, znameSearch, vnameSearch) {
-
-    var self = this;
-    var text = model.getValue(xpath + "/zname") + ", ";
-    text += model.getValue(xpath + "/vname") + ", ";
-    text += model.getValue(xpath + "/zip_code") + ", ";
-    text += model.getValue(xpath + "/city") + ", ";
-    text += model.getValue(xpath + "/street");
-    preview.makeMenuItem(text, function() {
-	self.parentFrame.close();
-	var id = model.getValue(xpath + "/id");
-	new MemberEditor(id);
-    });
-}
 
 /**
  * Befülle die select-box mit den Kooperations-Partnern

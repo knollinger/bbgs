@@ -3,7 +3,7 @@
  */
 var MailNavigation = function() {
     
-    Navigation.call(this);
+    Navigation.call(this, "gui/images/header4.jpg");
     
     var self = this;
     
