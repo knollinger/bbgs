@@ -35,14 +35,29 @@ CourseCalendar.prototype.setupUI = function() {
 
     var self = this;
 
+    this.createGoBackAction();
+    this.createGoTodayAction();
+    this.createGoForeAction();
     this.createEditAction();
     this.createRemoveAction();
     this.createShowWeeklyAction();
     this.createShowMonthlyAction();
     this.createPrintAction();
 
-    // GoBack
-    document.getElementById("course_calendar_goback").addEventListener("click", function() {
+    // body
+    document.getElementById("course_calendar_body").addEventListener("mouseover", function(evt) {
+	evt.stopPropagation();
+	self.toggleClassByCourseId(null, ".calendar-termin-weekly,.calendar-termin-monthly", "calendar-course-hilite");
+    });
+}
+
+/**
+ * 
+ */
+CourseCalendar.prototype.createGoBackAction = function() {
+
+    var self = this;
+    this.actionGoBack = new WorkSpaceFrameAction("gui/images/go-previous.svg", "", function() {
 	switch (self.mode) {
 	case CourseCalendar.WEEKLY:
 	    self.currentDate.setDate(self.currentDate.getDate() - 7);
@@ -57,15 +72,29 @@ CourseCalendar.prototype.setupUI = function() {
 	}
 	self.update();
     });
+    this.addAction(this.actionGoBack);
+}
 
-    // TODAY
-    document.getElementById("course_calendar_go_today").addEventListener("click", function() {
+/**
+ * 
+ */
+CourseCalendar.prototype.createGoTodayAction = function() {
+
+    var self = this;
+    this.actionGoToday = new WorkSpaceFrameAction("gui/images/view-calendar-day.svg", "Gehe zu heute", function() {
 	self.currentDate = new Date();
 	self.update();
     });
+    this.addAction(this.actionGoToday);
+}
 
-    // GoFore
-    document.getElementById("course_calendar_gofore").addEventListener("click", function() {
+/**
+ * 
+ */
+CourseCalendar.prototype.createGoForeAction = function() {
+
+    var self = this;
+    this.actionGoFore = new WorkSpaceFrameAction("gui/images/go-next.svg", "", function() {
 	switch (self.mode) {
 	case CourseCalendar.WEEKLY:
 	    self.currentDate.setDate(self.currentDate.getDate() + 7);
@@ -79,7 +108,8 @@ CourseCalendar.prototype.setupUI = function() {
 	    break;
 	}
 	self.update();
-    });    
+    });
+    this.addAction(this.actionGoFore);
 }
 
 /**
@@ -132,7 +162,7 @@ CourseCalendar.prototype.createEditAction = function() {
     });
     this.addAction(this.actionEdit);
     this.actionEdit.hide();
-    
+
     this.keyMap[13] = function(table, evt) {
 	self.actionEdit.invoke();
     }
@@ -219,8 +249,7 @@ CourseCalendar.prototype.createPrintAction = function() {
 
     });
     this.addAction(action);
-    
-    
+
     return action;
 }
 
@@ -358,17 +387,18 @@ CourseCalendar.prototype.findLastDate = function() {
 CourseCalendar.prototype.updateHeader = function() {
 
     var title;
+    
     switch (this.mode) {
     case CourseCalendar.WEEKLY:
-	title = DateTimeUtils.formatDate(this.currentDate, "Kurs-Kalender für die KW {w}-{yyyy}");
-	UIUtils.getElement("course_calendar_goback").title = "Eine Woche zurück";
-	UIUtils.getElement("course_calendar_gofore").title = "Eine Woche vorwärts";
+	title = DateTimeUtils.formatDate(this.currentDate, "Kurs-Kalender für die KW {w}-{yyyy}");	
+	this.actionGoBack.setTitle("Eine Woche zurück");
+	this.actionGoFore.setTitle("Eine Woche vorwärts");
 	break;
 
     case CourseCalendar.MONTHLY:
 	title = DateTimeUtils.formatDate(this.currentDate, "Kurs-Kalender für {M} {yyyy}");
-	UIUtils.getElement("course_calendar_goback").title = "Einen Monat zurück";
-	UIUtils.getElement("course_calendar_gofore").title = "Einen Monat vorwärts";
+	this.actionGoBack.setTitle("Einen Monat zurück");
+	this.actionGoFore.setTitle("Einen Monat vorwärts");
 	break;
 
     default:
@@ -457,6 +487,9 @@ CourseCalendar.prototype.createWeeklyTermin = function(termin) {
     t.style.backgroundColor = termin.getElementsByTagName("color")[0].textContent;
     t.textContent = termin.getElementsByTagName("name")[0].textContent;
 
+    var courseId = termin.getElementsByTagName("course-id")[0].textContent;
+    t.setAttribute("data-course-id", courseId);
+
     // selectable machen um das aktivieren per click zu visualisieren
     t.addEventListener("click", function() {
 	self.currSelection = XmlUtils.getXPathTo(termin);
@@ -465,11 +498,16 @@ CourseCalendar.prototype.createWeeklyTermin = function(termin) {
 	radio.click();
     });
     this.prepareInfoPopup(t, termin);
-    
-    t.addEventListener("dblclick", function() {	
+
+    t.addEventListener("dblclick", function() {
 	self.actionEdit.invoke();
     });
-    
+
+    t.addEventListener("mouseover", function(evt) {
+	evt.stopPropagation();
+	self.toggleClassByCourseId(courseId, ".calendar-termin-weekly", "calendar-course-hilite");
+    });
+
     var start = termin.getElementsByTagName("begin")[0].textContent;
     start = DateTimeUtils.parseTime(start, "{hh}:{mm}");
     if (start.getHours() < 9) {
@@ -493,6 +531,23 @@ CourseCalendar.prototype.createWeeklyTermin = function(termin) {
 
     resultCnr.appendChild(t);
     return resultCnr;
+}
+
+/**
+ * 
+ */
+CourseCalendar.prototype.toggleClassByCourseId = function(courseId, selector, clazz) {
+
+    var body = document.getElementById("course_calendar_body");
+    var allTermine = body.querySelectorAll(selector);
+    for (var i = 0; i < allTermine.length; i++) {
+
+	if (courseId == allTermine[i].getAttribute("data-course-id")) {
+	    UIUtils.addClass(allTermine[i], clazz);
+	} else {
+	    UIUtils.removeClass(allTermine[i], clazz);
+	}
+    }
 }
 
 /**
@@ -583,6 +638,9 @@ CourseCalendar.prototype.updateMonthlyBody = function(body, startDate, endDate) 
     }
 }
 
+/**
+ * 
+ */
 CourseCalendar.prototype.createMonthlyTermin = function(termin) {
 
     var self = this;
@@ -599,6 +657,9 @@ CourseCalendar.prototype.createMonthlyTermin = function(termin) {
     t.style.backgroundColor = termin.getElementsByTagName("color")[0].textContent;
     t.appendChild(document.createTextNode(termin.getElementsByTagName("name")[0].textContent));
 
+    var courseId = termin.getElementsByTagName("course-id")[0].textContent;
+    t.setAttribute("data-course-id", courseId);
+
     // selectable machen um das aktivieren per click zu visualisieren
     t.addEventListener("click", function() {
 	self.currSelection = XmlUtils.getXPathTo(termin);
@@ -608,8 +669,13 @@ CourseCalendar.prototype.createMonthlyTermin = function(termin) {
     });
     this.prepareInfoPopup(t, termin);
 
-    t.addEventListener("dblclick", function() {	
+    t.addEventListener("dblclick", function() {
 	self.actionEdit.invoke();
+    });
+
+    t.addEventListener("mouseover", function(evt) {
+	evt.stopPropagation();
+	self.toggleClassByCourseId(courseId, ".calendar-termin-monthly", "calendar-course-hilite");
     });
 
     resultCnr.appendChild(t);

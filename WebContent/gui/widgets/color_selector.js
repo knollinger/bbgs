@@ -285,6 +285,7 @@ ColorsOverview.prototype.getColumnDescriptor = function() {
 	var radio = document.createElement("input");
 	radio.type = "radio";
 	radio.name = "edit_color_radio";
+	td.style.verticalAlign = "middle";
 	return radio;
     });
 
@@ -293,6 +294,7 @@ ColorsOverview.prototype.getColumnDescriptor = function() {
 	var result = document.createElement("div");
 	var chooser = new ColorChooser(result);
 	self.model.createValueBinding(result, XmlUtils.getXPathTo(color) + "/value", "change");
+	td.style.verticalAlign = "middle";
 	return result;
     });
 

@@ -16,6 +16,9 @@ WorkSpace = (function() {
     var frames = [];
     return {
 
+	/**
+	 * 
+	 */
 	addFrame : function(frame) {
 
 	    if (frames.length > 0) {
@@ -26,6 +29,9 @@ WorkSpace = (function() {
 	    frame.onActivation();
 	},
 
+	/**
+	 * 
+	 */
 	removeFrame : function(frame) {
 
 	    var idx = frames.indexOf(frame);
@@ -44,7 +50,6 @@ WorkSpace = (function() {
 	    UIUtils.clearChilds(document.getElementById("workspace"));
 	    UIUtils.clearChilds(document.getElementById("dialogs"));
 	}
-
     }
 })();
 
@@ -273,7 +278,7 @@ WorkSpaceFrame.prototype.makeNaviBox = function() {
     var self = this;
 
     // Back-Button
-    this.backButton = this.makeActionBtn("gui/images/go-previous.svg", "Zurück", function(evt) {
+    this.backButton = this.makeActionBtn("gui/images/go-up.svg", "Zurück", function(evt) {
 	evt.stopPropagation();
 	if (self.onBack) {
 	    self.onBack();
@@ -361,6 +366,14 @@ WorkSpaceFrame.prototype.onDeActivation = function() {
 }
 
 /**
+ * 
+ */
+WorkSpaceFrame.prototype.validate = function() {
+
+    return new Validator().validate(this.content);
+}
+
+/**
  * actions für den WorkSpaceFrame
  */
 var WorkSpaceFrameAction = function(img, text, onClick) {
@@ -369,18 +382,39 @@ var WorkSpaceFrameAction = function(img, text, onClick) {
     this.img = img;
     this.text = text;
     this.onClick = onClick;
+}
 
-    var self = this;
-    this.show = function() {
-	self.btn.style.display = "inline-block";
+/**
+ * 
+ */
+WorkSpaceFrameAction.prototype.show = function() {
+    if (this.btn) {
+	this.btn.style.display = "inline-block";
     }
+}
 
-    this.hide = function() {
-	self.btn.style.display = "none";
+/**
+ * 
+ */
+WorkSpaceFrameAction.prototype.hide = function() {
+    if (this.btn) {
+	this.btn.style.display = "none";
     }
+}
 
-    this.isVisible = function() {
-	return self.btn.style.display != "none";
+/**
+ * 
+ */
+WorkSpaceFrameAction.prototype.isVisible = function() {
+    return this.btn && this.btn.style.display != "none";
+}
+/**
+ * 
+ */
+WorkSpaceFrameAction.prototype.setTitle = function(text) {
+    this.text = text;
+    if (this.btn) {
+	this.btn.title = text;
     }
 }
 
@@ -392,14 +426,6 @@ WorkSpaceFrameAction.prototype.invoke = function() {
     if (this.isVisible()) {
 	this.onClick();
     }
-}
-
-/**
- * 
- */
-WorkSpaceFrame.prototype.validate = function() {
-
-    return new Validator().validate(this.content);
 }
 
 /*---------------------------------------------------------------------------*/
