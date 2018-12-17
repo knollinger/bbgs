@@ -16,6 +16,9 @@ WorkSpace = (function() {
     var frames = [];
     return {
 
+	/**
+	 * 
+	 */
 	addFrame : function(frame) {
 
 	    if (frames.length > 0) {
@@ -26,6 +29,9 @@ WorkSpace = (function() {
 	    frame.onActivation();
 	},
 
+	/**
+	 * 
+	 */
 	removeFrame : function(frame) {
 
 	    var idx = frames.indexOf(frame);
@@ -44,7 +50,6 @@ WorkSpace = (function() {
 	    UIUtils.clearChilds(document.getElementById("workspace"));
 	    UIUtils.clearChilds(document.getElementById("dialogs"));
 	}
-
     }
 })();
 
@@ -273,7 +278,7 @@ WorkSpaceFrame.prototype.makeNaviBox = function() {
     var self = this;
 
     // Back-Button
-    this.backButton = this.makeActionBtn("gui/images/go-previous.svg", "Zurück", function(evt) {
+    this.backButton = this.makeActionBtn("gui/images/go-up.svg", "Zurück", function(evt) {
 	evt.stopPropagation();
 	if (self.onBack) {
 	    self.onBack();
@@ -360,6 +365,15 @@ WorkSpaceFrame.prototype.onDeActivation = function() {
 
 }
 
+
+/**
+ * 
+ */
+WorkSpaceFrame.prototype.validate = function() {
+
+    return new Validator().validate(this.content);
+}
+
 /**
  * actions für den WorkSpaceFrame
  */
@@ -397,9 +411,12 @@ WorkSpaceFrameAction.prototype.invoke = function() {
 /**
  * 
  */
-WorkSpaceFrame.prototype.validate = function() {
-
-    return new Validator().validate(this.content);
+WorkSpaceFrameAction.prototype.setTitle = function(text) {
+    
+    this.text = text;
+    if(this.btn) {
+	this.btn.title = text;
+    }
 }
 
 /*---------------------------------------------------------------------------*/
