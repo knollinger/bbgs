@@ -485,7 +485,7 @@ CourseMembersOverview.prototype.createAddAction = function() {
     var self = this;
     var action = new WorkSpaceFrameAction("gui/images/person-add.svg", "Mitglied hinzu fügen", function() {
 
-	new MemberFinder(true, function(member) {
+	new MemberSelector(true, function(member) {
 	    for (var i = 0; i < member.length; i++) {
 		member[i].getElementsByTagName("action")[0].textContent = "CREATE";
 		self.model.addElement("/course-model/members", member[i]);

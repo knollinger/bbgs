@@ -26,6 +26,7 @@ de.bbgs.partner.GetPartnerOverviewHandler
 de.bbgs.partner.GetPartnerModelHandler
 de.bbgs.partner.SavePartnerModelHandler
 de.bbgs.partner.RemovePartnerHandler
+de.bbgs.partner.SearchPartnerHandler
 
 #------------------------------------------------------------------------------
 #

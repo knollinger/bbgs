@@ -1,32 +1,27 @@
 /**
- * Der MemberFinder
+ * 
  */
-var MemberFinder = function(multiSelect, onSubmit) {
+var MemberFinder = function(onsubmit) {
 
-    WorkSpaceFrame.call(this);
-
-    this.multSel = multiSelect;
-    this.onsubmit = onSubmit;
-    this.selection = [];
-    this.timer = undefined;
-
-    var self = this;
-    this.keyMap[13] = function(table, evt) {
-	self.saveButton.click();
-    }
-
-    this.model = new Model(XmlUtils.createDocument("members"));
+   
+    WorkSpaceFrame.call(this, "gui/images/header.jpg");
+    this.onsubmit = onsubmit;
 
     var self = this;
     this.load("gui/member/member_finder.html", function() {
-	new TableDecorator("member_finder_result");
-	self.loadModel(function() {
 
-	    self.model.addChangeListener("//get-all-members-ok-rsp/members", function() {
-		self.fillTable(multiSelect);
-	    });
-	    self.fillTable(multiSelect);
+	var input = UIUtils.getElement("member-search-input");
+	var preview = UIUtils.getElement("member-search-preview");
+	input.addEventListener("input", function() {
+
+	    self.stopTimer();
+	    if (input.value) {
+		self.startTimer();
+	    } else {
+		self.clearPreview();
+	    }
 	});
+	input.focus();
     });
 }
 MemberFinder.prototype = Object.create(WorkSpaceFrame.prototype);
@@ -34,211 +29,106 @@ MemberFinder.prototype = Object.create(WorkSpaceFrame.prototype);
 /**
  * 
  */
-MemberFinder.prototype.loadModel = function(onsuccess) {
+MemberFinder.prototype.startTimer = function() {
+
+    var self = this;
+
+    this.stopTimer();
+    this.timer = window.setTimeout(function() {
+	self.performSearch();
+    }, 500);
+}
+
+/**
+ * 
+ */
+MemberFinder.prototype.stopTimer = function() {
+
+    if (this.timer) {
+	window.clearTimeout(this.timer);
+	this.timer = null;
+    }
+}
+
+/**
+ * 
+ */
+MemberFinder.prototype.clearPreview = function() {
+    UIUtils.clearChilds("member-search-preview");
+}
+
+/**
+ * 
+ */
+MemberFinder.prototype.performSearch = function() {
+
+    var search = UIUtils.getElement("member-search-input").value;
 
     var self = this;
     var caller = new ServiceCaller();
     caller.onSuccess = function(rsp) {
-
 	switch (rsp.documentElement.nodeName) {
-	case "get-all-members-ok-rsp":
-	    self.model = new Model(rsp);
-	    onsuccess();
+	case "search-member-ok-rsp":
+	    self.showSearchPreview(new Model(rsp), search);
 	    break;
 
 	case "error-response":
-	    var title = MessageCatalog.getMessage("MEMBER_LOAD_ERROR_TITLE");
-	    var messg = MessageCatalog.getMessage("MEMBER_LOAD_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
-	    new MessageBox(MessageBox.WARNING, title, messg);
+	    console.log(rsp.getElementsByTagName("msg")[0].textContent);
 	    break;
 	}
-    };
-
-    caller.onError = function(response, status) {
-	var title = MessageCatalog.getMessage("MEMBER_LOAD_ERROR_TITLE");
-	var messg = MessageCatalog.getMessage("MEMBER_LOAD_TECH_ERROR", status);
-	new MessageBox(MessageBox.WARNING, title, messg);
-    };
-    caller.invokeService(XmlUtils.createDocument("get-all-members-req"));
-}
-
-/**
- * 
- */
-MemberFinder.prototype.fillTable = function(multiselect) {
-
-    var fields = [];
-    fields.push(function(member) {
-
-	var check = document.createElement("input");
-	check.type = multiselect ? "checkbox" : "radio";
-	check.name = "member_finder_sel";
-	return check;
-    });
-    fields.push("zname");
-    fields.push("vname");
-    fields.push(function(td, member) {
-	var type = member.getElementsByTagName("type")[0].textContent;
-	return MemberTypeTranslator[type];
-    });
-
-    var self = this;
-    this.model.createTableBinding("member_finder_result", fields, "//get-all-members-ok-rsp/members/member[action != 'REMOVE']", function(tr, member) {
-	self.onResultSetSelection(tr, member);
-    });
-}
-
-/**
- * 
- */
-MemberFinder.prototype.onResultSetSelection = function(tr, member) {
-
-    var radio = tr.querySelector("input");
-
-    if (this.multSel) {
-	if (radio.checked) {
-	    this.selection.push(member);
-	} else {
-	    this.selection.remove(member);
-	}
-    } else {
-	this.selection = [].concat(member);
     }
-    this.onSelectionChange(this.selection);
+    caller.onError = function(req, status) {
+	console.log(status);
+    }
+
+    var req = XmlUtils.createDocument("search-member-req");
+    XmlUtils.setNode(req, "search", search);
+    caller.invokeService(req.documentElement);
 }
 
 /**
- * callback für die DialogMethode save()
+ * 
  */
-MemberFinder.prototype.onSave = function() {
+MemberFinder.prototype.showSearchPreview = function(model, search) {
 
-    if (this.onsubmit) {
-	this.onsubmit(this.selection);
+    var preview = UIUtils.getElement("member-search-preview")
+    this.clearPreview();
+
+    var allMembers = model.evaluateXPath("//search-member-ok-rsp/members/member");
+    for (var i = 0; i < allMembers.length; i++) {
+
+	var xpath = XmlUtils.getXPathTo(allMembers[i]);
+	preview.appendChild(this.renderPreviewItem(model, xpath, search));
     }
 }
 
 /**
  * 
  */
-MemberFinder.prototype.onSelectionChange = function(selection) {
+MemberFinder.prototype.renderPreviewItem = function(model, xpath, search) {
 
-    this.enableSaveButton(selection && selection.length);
-}
+    var result = document.createElement("div");
 
-/*---------------------------------------------------------------------------*/
-/**
- * MemberOverview
- * 
- * Eine spezialisierung des MemberFinders, welche noch die Actions AddMember,
- * EditMember und RemoveMember einbringt
- */
-var MemberOverview = function() {
+    var content = model.getValue(xpath + "/zname");
+    content += ", ";
+    content += model.getValue(xpath + "/vname");
+    content += ", ";
+    content += model.getValue(xpath + "/zip_code");
+    content += " ";
+    content += model.getValue(xpath + "/city");
+    content += ", ";
+    content += model.getValue(xpath + "/street");
 
-    MemberFinder.call(this, false, null);
-    this.createEditAction();
-    this.createAddAction();
-    this.createRemoveAction();
-    this.onSelectionChange();
-}
-MemberOverview.prototype = Object.create(MemberFinder.prototype);
-
-/**
- * 
- */
-MemberOverview.prototype.createEditAction = function() {
+    var replacement = "<b>" + search + "</b>";
+    content = content.replace(new RegExp(search, 'gi'), replacement);
+    result.innerHTML = content;
 
     var self = this;
-    this.actionEdit = new WorkSpaceFrameAction("gui/images/person-edit.svg", "Ein Mitglied bearbeiten", function() {
+    result.addEventListener("click", function() {
+
 	self.close();
-	new MemberEditor(self.selection[0].getElementsByTagName("id")[0].textContent);
+	var member = model.evaluateXPath(xpath)[0];
+	self.onsubmit(member);
     });
-    this.addAction(this.actionEdit);
-    this.keyMap[13] = function() {
-	self.actionEdit.invoke();
-    }
-}
-/**
- * 
- */
-MemberOverview.prototype.createAddAction = function() {
-
-    var self = this;
-
-    this.actionAdd = new WorkSpaceFrameAction("gui/images/person-add.svg", "Ein Mitglied hinzu fügen", function() {
-	self.close();
-	new MemberEditor(0);
-    });
-    this.addAction(this.actionAdd);
-    this.keyMap[187] = function() { // +-Taste
-	self.actionAdd.invoke();
-    }
-}
-
-/**
- * 
- */
-MemberOverview.prototype.createRemoveAction = function() {
-
-    var self = this;
-    this.actionRemove = new WorkSpaceFrameAction("gui/images/person-remove.svg", "Ein Mitglied löschen", function() {
-	self.removeMember();
-    });
-    this.addAction(this.actionRemove);
-    this.keyMap[46] = function() { // Entf-Taste
-	self.actionRemove.invoke();
-    }
-}
-
-/**
- * 
- */
-MemberOverview.prototype.onSelectionChange = function(selection) {
-
-    if (selection && selection.length) {
-	this.actionEdit.show();
-	this.actionRemove.show();
-    } else {
-	this.actionEdit.hide();
-	this.actionRemove.hide();
-    }
-}
-
-/**
- * 
- */
-MemberOverview.prototype.removeMember = function() {
-
-    var self = this;
-    var xpath = XmlUtils.getXPathTo(this.selection[0]);
-    var zname = this.model.getValue(xpath + "/zname");
-    var vname = this.model.getValue(xpath + "/vname");
-    var messg = MessageCatalog.getMessage("QUERY_REMOVE_MEMBER", zname, vname);
-    var title = MessageCatalog.getMessage("QUERY_REMOVE_MEMBER_TITLE");
-    new MessageBox(MessageBox.QUERY, title, messg, function() {
-
-	var caller = new ServiceCaller();
-	caller.onSuccess = function(rsp) {
-	    switch (rsp.documentElement.nodeName) {
-	    case "delete-member-ok-rsp":
-		self.model.removeElement(xpath);
-		self.selection = [];
-		break;
-
-	    case "error-response":
-		var messg = MessageCatalog.getMessage("MEMBER_REMOVE_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
-		var title = MessageCatalog.getMessage("MEMBER_REMOVE_ERROR_TITLE");
-		new MessageBox(MessageBox.ERROR, title, messg);
-		break;
-	    }
-	}
-	caller.onError = function(req, status) {
-	    var messg = MessageCatalog.getMessage("MEMBER_REMOVE_TECH_ERROR", status);
-	    var title = MessageCatalog.getMessage("MEMBER_REMOVE_ERROR_TITLE");
-	    new MessageBox(MessageBox.ERROR, title, messg);
-	}
-
-	var req = XmlUtils.createDocument("delete-member-req");
-	XmlUtils.setNode(req, "id", self.selection[0].getElementsByTagName("id")[0].textContent);
-	caller.invokeService(req);
-    });
+    return result;
 }

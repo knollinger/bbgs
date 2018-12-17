@@ -11,7 +11,7 @@ var MainNavigation = function() {
     });
 
     btn = this.addNavigationButton("gui/images/partner.svg", "Partner verwalten", function() {
-        new PartnerOverview();
+        new PartnerNavigation();
     });
     
     btn = this.addNavigationButton("gui/images/course.svg", "Kurse verwalten", function() {

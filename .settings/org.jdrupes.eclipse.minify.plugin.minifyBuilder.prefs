@@ -16,6 +16,7 @@
 //disableOptimizations//WebContent/gui/mail/sms_editor.js=true
 //disableOptimizations//WebContent/gui/member/member_editor.js=true
 //disableOptimizations//WebContent/gui/member/member_finder.js=true
+//disableOptimizations//WebContent/gui/member/member_selector.js=true
 //disableOptimizations//WebContent/gui/member/membertype_translator.js=true
 //disableOptimizations//WebContent/gui/notes/notes_editor.js=true
 //disableOptimizations//WebContent/gui/partner/partner_editor.js=true
@@ -64,6 +65,7 @@
 //minifier//WebContent/gui/mail/sms_editor.js=YuiCompressor
 //minifier//WebContent/gui/member/member_editor.js=YuiCompressor
 //minifier//WebContent/gui/member/member_finder.js=YuiCompressor
+//minifier//WebContent/gui/member/member_selector.js=YuiCompressor
 //minifier//WebContent/gui/member/membertype_translator.js=YuiCompressor
 //minifier//WebContent/gui/notes/notes_editor.js=YuiCompressor
 //minifier//WebContent/gui/partner/partner_editor.js=YuiCompressor
@@ -113,6 +115,7 @@
 //preserveSemicolons//WebContent/gui/mail/sms_editor.js=true
 //preserveSemicolons//WebContent/gui/member/member_editor.js=true
 //preserveSemicolons//WebContent/gui/member/member_finder.js=true
+//preserveSemicolons//WebContent/gui/member/member_selector.js=true
 //preserveSemicolons//WebContent/gui/member/membertype_translator.js=true
 //preserveSemicolons//WebContent/gui/notes/notes_editor.js=true
 //preserveSemicolons//WebContent/gui/partner/partner_editor.js=true

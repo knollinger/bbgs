@@ -1,3 +1,158 @@
+var PartnerNavigation = function() {
+
+    Navigation.call(this, "gui/images/header6.jpg");
+
+    this.addNavigationButton("gui/images/partner-add.svg", "Einen Partner anlegen", function() {
+	new PartnerEditor(0);
+    });
+
+    this.addNavigationButton("gui/images/partner-edit.svg", "Einen Partner bearbeiten", function() {
+	new PartnerFinder(function(partner) {
+	    new PartnerEditor(partner.getElementsByTagName("id")[0].textContent);
+	});
+    });
+
+    this.addNavigationButton("gui/images/partner-group.svg", "Alle Partner anzeigen", function() {
+	new PartnerOverview();
+    });
+
+}
+PartnerNavigation.prototype = Object.create(Navigation.prototype);
+
+/*---------------------------------------------------------------------------*/
+/**
+ * 
+ */
+var PartnerFinder = function(onsubmit) {
+    
+    WorkSpaceFrame.call(this, "gui/images/header6.jpg");
+    this.onsubmit = onsubmit;
+    
+    var self = this;
+    this.load("gui/partner/partner_finder.html", function() {
+
+	var input = UIUtils.getElement("partner-search-input");
+	var preview = UIUtils.getElement("partner-search-preview");
+	input.addEventListener("input", function() {
+
+	    self.stopTimer();
+	    if (input.value) {
+		self.startTimer();
+	    } else {
+		self.clearPreview();
+	    }
+	});
+	input.focus();
+    });
+}
+PartnerFinder.prototype = Object.create(WorkSpaceFrame.prototype);
+
+/**
+ * 
+ */
+PartnerFinder.prototype.startTimer = function() {
+
+    var self = this;
+
+    this.stopTimer();
+    this.timer = window.setTimeout(function() {
+	self.performSearch();
+    }, 500);
+}
+
+/**
+ * 
+ */
+PartnerFinder.prototype.stopTimer = function() {
+
+    if (this.timer) {
+	window.clearTimeout(this.timer);
+	this.timer = null;
+    }
+}
+
+/**
+ * 
+ */
+PartnerFinder.prototype.clearPreview = function() {
+    UIUtils.clearChilds("partner-search-preview");
+}
+
+/**
+ * 
+ */
+PartnerFinder.prototype.performSearch = function() {
+
+    var search = UIUtils.getElement("partner-search-input").value;
+
+    var self = this;
+    var caller = new ServiceCaller();
+    caller.onSuccess = function(rsp) {
+	switch (rsp.documentElement.nodeName) {
+	case "search-partner-ok-rsp":
+	    self.showSearchPreview(new Model(rsp), search);
+	    break;
+
+	case "error-response":
+	    console.log(rsp.getElementsByTagName("msg")[0].textContent);
+	    break;
+	}
+    }
+    caller.onError = function(req, status) {
+	console.log(status);
+    }
+
+    var req = XmlUtils.createDocument("search-partner-req");
+    XmlUtils.setNode(req, "search", search);
+    caller.invokeService(req.documentElement);
+}
+
+/**
+ * 
+ */
+PartnerFinder.prototype.showSearchPreview = function(model, search) {
+
+    var preview = UIUtils.getElement("partner-search-preview")
+    this.clearPreview();
+
+    var allPartners = model.evaluateXPath("//search-partner-ok-rsp/partners/partner");
+    for (var i = 0; i < allPartners.length; i++) {
+
+	var xpath = XmlUtils.getXPathTo(allPartners[i]);
+	preview.appendChild(this.renderPreviewItem(model, xpath, search));
+    }
+}
+
+/**
+ * 
+ */
+PartnerFinder.prototype.renderPreviewItem = function(model, xpath, search) {
+
+    var result = document.createElement("div");
+
+    var content = model.getValue(xpath + "/name");
+    content += ", ";
+    content += model.getValue(xpath + "/zip-code");
+    content += " ";
+    content += model.getValue(xpath + "/city");
+    content += ", ";
+    content += model.getValue(xpath + "/street");
+
+    var replacement = "<b>" + search + "</b>";
+    content = content.replace(new RegExp(search, 'gi'), replacement);
+    result.innerHTML = content;
+
+    var self = this;
+    result.addEventListener("click", function() {
+
+	self.close();
+	var partner = model.evaluateXPath(xpath)[0];
+	self.onsubmit(partner);
+    });
+    return result;
+}
+
+/*---------------------------------------------------------------------------*/
 /**
  * 
  */
@@ -6,7 +161,7 @@ var PartnerOverview = function() {
     WorkSpaceFrame.call(this);
 
     var self = this;
-    
+
     this.load("gui/partner/partner_overview.html", function() {
 
 	new TableDecorator("partner_overview");
@@ -14,8 +169,7 @@ var PartnerOverview = function() {
 	self.actionEdit = self.createEditAction();
 	self.actionAdd = self.createAddAction();
 	self.actionRemove = self.createRemoveAction();
-	
-	
+
 	self.loadModel(function() {
 
 	    self.model.addChangeListener("//get-partner-overview-ok-response/partners", function() {
@@ -38,7 +192,7 @@ PartnerOverview.prototype.createAddAction = function() {
 	new PartnerEditor(0);
     });
     this.addAction(action);
-    
+
     this.keyMap[187] = function(tbody, evt) {
 	action.invoke();
     }
@@ -56,7 +210,7 @@ PartnerOverview.prototype.createEditAction = function() {
 	new PartnerEditor(self.model.getValue(self.currPartner + "/id"));
     });
     this.addAction(action);
-    
+
     this.keyMap[13] = function(tbody, evt) {
 	action.invoke();
     }
@@ -86,7 +240,7 @@ PartnerOverview.prototype.createRemoveAction = function() {
     });
     this.addAction(action);
     action.hide();
-    
+
     this.keyMap[46] = function(tbody, evt) {
 	action.invoke();
     }
@@ -200,7 +354,6 @@ PartnerOverview.prototype.getColumnDescriptor = function() {
 	radio.value = partner.getElementsByTagName("id")[0].textContent;
 	return radio;
     });
-
 
     fields.push("name");
     fields.push(function(td, partner) {

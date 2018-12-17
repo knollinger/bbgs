@@ -12,7 +12,7 @@ var MemberNavigation = function() {
 
     this.addNavigationButton("gui/images/person-edit.svg", "Mitglieder bearbeiten", function() {
 	
-	new NewMemberFinder(function(member) {
+	new MemberFinder(function(member) {
 	    new MemberEditor(member.getElementsByTagName("id")[0].textContent);
 	});
     });

@@ -40,8 +40,7 @@ public class PartnerDBUtil
             List<Partner> result = new ArrayList<Partner>();
             while (rs.next())
             {
-                Partner p = new Partner();
-                PartnerDBUtil.loadPartnerFromResultSet(rs, p);
+                Partner p = PartnerDBUtil.loadPartnerFromResultSet(rs);
                 result.add(p);
             }
             return result;
@@ -73,8 +72,7 @@ public class PartnerDBUtil
             List<Partner> result = new ArrayList<Partner>();
             while (rs.next())
             {
-                Partner p = new Partner();
-                PartnerDBUtil.loadPartnerFromResultSet(rs, p);
+                Partner p = PartnerDBUtil.loadPartnerFromResultSet(rs);
                 result.add(p);
             }
             return result;
@@ -106,8 +104,7 @@ public class PartnerDBUtil
             List<Partner> result = new ArrayList<Partner>();
             while (rs.next())
             {
-                Partner p = new Partner();
-                PartnerDBUtil.loadPartnerFromResultSet(rs, p);
+                Partner p = PartnerDBUtil.loadPartnerFromResultSet(rs);
                 result.add(p);
             }
             return result;
@@ -140,7 +137,7 @@ public class PartnerDBUtil
                 rs = stmt.executeQuery();
                 if (rs.next())
                 {
-                    PartnerDBUtil.loadPartnerFromResultSet(rs, result.coreData);
+                    result.coreData = PartnerDBUtil.loadPartnerFromResultSet(rs);
                     result.contacts.addAll(ContactsDBUtil.getAllContacts(id, EContactDomain.PARTNER, conn));
                     result.notes.addAll(NotesDBUtil.getAllNotes(id, ENoteDomain.PARTNER, conn));
                     result.attachments.addAll(AttachmentsDBUtil.getAllAttachments(id, EAttachmentDomain.PARTNER, conn));
@@ -160,8 +157,9 @@ public class PartnerDBUtil
      * @return
      * @throws SQLException
      */
-    private static void loadPartnerFromResultSet(ResultSet rs, Partner p) throws SQLException
+    public static Partner loadPartnerFromResultSet(ResultSet rs) throws SQLException
     {
+        Partner p = new Partner();
         p.id = rs.getInt("id");
         p.type = EPartnerType.valueOf(rs.getString("type"));
         p.name = rs.getString("name");
@@ -172,6 +170,7 @@ public class PartnerDBUtil
         p.city = rs.getString("city");
         p.street = rs.getString("street");
         p.homepage = rs.getString("homepage");
+        return p;
     }
 
 
