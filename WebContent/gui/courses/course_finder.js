@@ -4,18 +4,19 @@
  */
 
 /**
- * @param showActions
  * @param onsubmit
  */
-var CourseOverview = function(showActions, onsubmit) {
+var CourseOverview = function(onsubmit) {
 
     WorkSpaceTabbedFrame.call(this, "course_overview");
     this.setTitle("Kurs-Übersicht");
-    this.showActions = showActions;
     this.onSubmit = onsubmit;
 
     this.result = [];
     this.subPanes = {};
+    
+    this.createAddAction();
+    
     var self = this;
     this.loadModel(function() {
 
@@ -23,6 +24,21 @@ var CourseOverview = function(showActions, onsubmit) {
     });
 }
 CourseOverview.prototype = Object.create(WorkSpaceTabbedFrame.prototype);
+
+/**
+ * 
+ */
+CourseOverview.prototype.createAddAction = function() {
+
+    var self = this;
+
+    var action = new WorkSpaceFrameAction("gui/images/course-add.svg", "Einen Kurs hinzu fügen (Alt + +)", function() {
+	self.close();
+	new CourseEditor(0);
+    });
+    this.addAction(action);
+    return action;
+}
 
 /**
  * Lade das KursModel
@@ -91,7 +107,7 @@ CourseOverview.prototype.getSubPaneFor = function(projYear) {
 
 	var title = projYear + ". Projektjahr";
 	var tab = this.addTab("gui/images/course.svg", title);
-	var subPane = new CourseOverviewSubPane(this, tab.contentPane, this.model, this.showActions);
+	var subPane = new CourseOverviewSubPane(this, tab.contentPane, this.model);
 	tab.associateTabPane(subPane);
 	this.subPanes[projYear] = subPane;
 
@@ -126,11 +142,10 @@ CourseOverview.prototype.onSave = function() {
 /**
  * 
  */
-var CourseOverviewSubPane = function(parentFrame, targetContainer, model, showActions) {
+var CourseOverviewSubPane = function(parentFrame, targetContainer, model) {
 
     WorkSpaceTabPane.call(this, parentFrame, targetContainer);
     this.model = model;
-    this.showActions = showActions;
 
     var content = document.createElement("div");
     content.className = "scrollable";
@@ -139,13 +154,11 @@ var CourseOverviewSubPane = function(parentFrame, targetContainer, model, showAc
     this.table = this.createTable();
     content.appendChild(this.table);
 
-    if (showActions) {
-	this.actionEdit = this.createEditAction();
-	this.actionAdd = this.createAddAction();
-	this.actionRemove = this.createRemoveAction();
-	this.actionCopy = this.createCopyAction();
-	this.actionPrint = this.createPrintAction();
-    }
+    this.actionEdit = this.createEditAction();
+//    this.actionAdd = this.createAddAction();
+    this.actionRemove = this.createRemoveAction();
+    this.actionCopy = this.createCopyAction();
+    this.actionPrint = this.createPrintAction();
 }
 CourseOverviewSubPane.prototype = Object.create(WorkSpaceTabPane.prototype);
 
@@ -198,12 +211,11 @@ CourseOverviewSubPane.prototype.addEntry = function(course) {
     var fields = this.getColumnDescriptor();
     var onclick = function(tr, node) {
 
-	if (self.showActions) {
-	    self.actionEdit.show();
-	    self.actionRemove.show();
-	    self.actionCopy.show();
-	    self.actionPrint.show();
-	}
+	self.actionEdit.show();
+	self.actionRemove.show();
+	self.actionCopy.show();
+	self.actionPrint.show();
+
 	self.currCourse = XmlUtils.getXPathTo(node);
 	self.currRow = tr;
 	self.parentFrame.selectionChanged(self.currCourse);
@@ -243,9 +255,7 @@ CourseOverviewSubPane.prototype.getColumnDescriptor = function() {
  */
 CourseOverviewSubPane.prototype.activate = function() {
 
-    if (this.showActions) {
-	this.actionAdd.show();
-    }
+    this.actionAdd.show();
 }
 
 /**
@@ -270,22 +280,22 @@ CourseOverviewSubPane.prototype.createEditAction = function() {
 /**
  * 
  */
-CourseOverviewSubPane.prototype.createAddAction = function() {
-
-    var self = this;
-
-    var action = new WorkSpaceFrameAction("gui/images/course-add.svg", "Einen Kurs hinzu fügen (Alt + +)", function() {
-	self.parentFrame.close();
-	new CourseEditor(0);
-    });
-    this.addAction(action);
-
-    this.keyMap[187] = function(tbody, evt) {
-	action.invoke();
-    }
-    action.hide();
-    return action;
-}
+//CourseOverviewSubPane.prototype.createAddAction = function() {
+//
+//    var self = this;
+//
+//    var action = new WorkSpaceFrameAction("gui/images/course-add.svg", "Einen Kurs hinzu fügen (Alt + +)", function() {
+//	self.parentFrame.close();
+//	new CourseEditor(0);
+//    });
+//    this.addAction(action);
+//
+//    this.keyMap[187] = function(tbody, evt) {
+//	action.invoke();
+//    }
+//    action.hide();
+//    return action;
+//}
 
 /**
  * 

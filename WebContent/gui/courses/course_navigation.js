@@ -12,7 +12,7 @@ var CourseMainNavigation = function() {
     });
 
     this.addNavigationButton("gui/images/course.svg", "Kurse verwalten", function() {
-        new CourseOverview(true);
+        new CourseOverview();
     });
     
     this.addNavigationButton("gui/images/location.svg", "Kurs-Lokationen verwalten", function() {
