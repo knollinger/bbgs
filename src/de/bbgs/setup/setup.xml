@@ -14,7 +14,7 @@
 			<port>587</port>
 			<use-start-tls>true</use-start-tls>
 			<user>bbgs.verwaltung</user>
-			<pwd>Sun12shine</pwd>
+			<pwd></pwd>
 			<from>info@bayerns-beste-gipfelstuermer-verwaltung.de</from>
 		</send>
 		<receive>
@@ -22,7 +22,7 @@
 			<port>993</port>
 			<use-start-tls>true</use-start-tls>
 			<user>bbgs.verwaltung</user>
-			<pwd>Sun12shine</pwd>
+			<pwd></pwd>
 			<protocol>imaps</protocol>
 		</receive>
 	</email>
