@@ -7,7 +7,7 @@
 		<user>root</user>
 		<pwd>Sun12shine</pwd>
 	</database>
-
+	
 	<email>
 		<send>
 			<host>smtp.gmail.com</host>
