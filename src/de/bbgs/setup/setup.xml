@@ -5,7 +5,7 @@
 		<port>3306</port>
 		<dbname>BBGS</dbname>
 		<user>root</user>
-		<pwd>Sun12shine</pwd>
+		<pwd></pwd>
 	</database>
 	
 	<email>
