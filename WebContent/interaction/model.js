@@ -16,6 +16,15 @@ var Model = function(xmlDocument) {
 }
 
 /**
+ * Setze das Model in den Zustand "gespeichert"...es wird also der "hasChanged"-
+ * Indikator entfernt
+ */
+Model.prototype.setSaved = function() {
+
+    this.hasChanged = false;
+}
+
+/**
  * 
  * @returns
  */

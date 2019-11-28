@@ -30,7 +30,7 @@ ContactOverview.prototype.activate = function() {
 /**
  * Das Template zur Erstellung eines neuen Contacts
  */
-ContactOverview.EMPTY_CONTACT = "<contact><action>CREATE</action><relation/><id/><zname/><vname/><vname2/><title/><phone/><mobile/><email/><phone2/><mobile2/><email2/></contact>";
+ContactOverview.EMPTY_CONTACT = "<contact><action>CREATE</action><relation/><id/><zname/><vname/><vname2/><title/><phone/><mobile/><email/><phone2/><mobile2/><email2/><zip-code/><city/><street/></contact>";
 
 /**
  * 
@@ -137,12 +137,24 @@ ContactOverview.prototype.renderOneContact = function(contact) {
 	content.appendChild(row);
     }
 
-    row.appendChild(this.createEdit(contact, "zname", "Name", "mandatory"));
-    row.appendChild(this.createEdit(contact, "vname", "Vorname", "mandatory"));
+    row.appendChild(this.createEdit(contact, "zname", "Name", "Name", "mandatory"));
+    row.appendChild(this.createEdit(contact, "vname", "Vorname", "Vorname", "mandatory"));
 
-    content.appendChild(this.createFallbackRow(contact, "phone", "Festnetz"));
-    content.appendChild(this.createFallbackRow(contact, "mobile", "Mobil-Nummer"));
-    content.appendChild(this.createFallbackRow(contact, "email", "EMail"));
+    row = document.createElement("div");
+    row.className = "grid-row-0";
+    content.appendChild(row);
+    row.appendChild(this.createFallbackEdit(contact, "zip-code", "PLZ", "PLZ"));
+    row.appendChild(this.createFallbackEdit(contact, "city", "Ort", "Ort"));
+    
+    row = document.createElement("div");
+    row.className = "grid-row-0";
+    content.appendChild(row);
+    row.appendChild(this.createFallbackEdit(contact, "street", "Straße", "Straße", "grid-col-2"));
+    
+    
+    content.appendChild(this.createFallbackRow(contact, "phone", "Festnetz", "Festnetz"));
+    content.appendChild(this.createFallbackRow(contact, "mobile", "Mobil-Nummer", "Mobil-Nr"));
+    content.appendChild(this.createFallbackRow(contact, "email", "EMail", "EMail"));
 
     contact.addEventListener("change", function() {
 	var action = contact.getElementsByTagName("action")[0];
@@ -179,11 +191,12 @@ ContactOverview.prototype.createSelector = function(contact, row) {
 /**
  * 
  */
-ContactOverview.prototype.createEdit = function(contact, nodeName, placeHolder, classes) {
+ContactOverview.prototype.createEdit = function(contact, nodeName, placeHolder, title, classes) {
 
     var input = document.createElement("input");
     input.className = "grid-col-1";
-    input.placeholder = input.title = placeHolder;
+    input.placeholder = placeHolder;
+    input.title = title;
     UIUtils.addClass(input, classes);
 
     var xpath = XmlUtils.getXPathTo(contact) + "/" + nodeName;
@@ -194,19 +207,16 @@ ContactOverview.prototype.createEdit = function(contact, nodeName, placeHolder, 
 /**
  * 
  */
-ContactOverview.prototype.createFallbackEdit = function(contact, nodeName, placeHolder, classes) {
+ContactOverview.prototype.createFallbackEdit = function(contact, nodeName, placeHolder, title, classes) {
 
     var xpath = this.xPathDefNode + "/" + nodeName;
     var place = this.model.getValue(xpath) || placeHolder;
-    var input = this.createEdit(contact, nodeName, place, classes);
+    var input = this.createEdit(contact, nodeName, place, title, classes);
 
     var self = this;
     this.model.addChangeListener(xpath, function() {
 
-	place = self.model.getValue(xpath);
-	if (place == "") {
-	    place = placeHolder;
-	}
+	place = self.model.getValue(xpath)  || placeHolder;
 	input.placeholder = place;
     });
     return input;
@@ -215,13 +225,13 @@ ContactOverview.prototype.createFallbackEdit = function(contact, nodeName, place
 /**
  * 
  */
-ContactOverview.prototype.createFallbackRow = function(contact, nodeName, placeHolder) {
+ContactOverview.prototype.createFallbackRow = function(contact, nodeName, placeHolder, title) {
 
     var row = document.createElement("div");
     row.className = "grid-row-0";
 
-    row.appendChild(this.createFallbackEdit(contact, nodeName, placeHolder));
-    row.appendChild(this.createFallbackEdit(contact, nodeName + "2", "2. " + placeHolder));
+    row.appendChild(this.createFallbackEdit(contact, nodeName, placeHolder, title));
+    row.appendChild(this.createFallbackEdit(contact, nodeName + "2", "2. " + placeHolder, "2. " + title));
     return row;
 }
 

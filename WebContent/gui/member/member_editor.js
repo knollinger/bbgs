@@ -11,17 +11,16 @@ var MemberNavigation = function() {
     });
 
     this.addNavigationButton("gui/images/person-edit.svg", "Mitglieder bearbeiten", function() {
-	
+
 	new MemberFinder(function(member) {
 	    new MemberEditor(member.getElementsByTagName("id")[0].textContent);
 	});
     });
 
-
     this.addNavigationButton("gui/images/person-group.svg", "Alle Mitglieder anzeigen", function() {
 	new MemberOverview();
     });
-    this.setTitle("Mitglieder-Verwaltung");
+    this.setTitle("Mitglieder-Verwaltung");    
 }
 MemberNavigation.prototype = Object.create(Navigation.prototype);
 
@@ -207,13 +206,25 @@ MemberEditor.prototype.updateTitlebar = function() {
 
 /**
  * beim klick auf Save...
+ * 
  */
 MemberEditor.prototype.onSave = function() {
 
+    var self = this;
     var caller = new ServiceCaller();
     caller.onSuccess = function(rsp) {
 	switch (rsp.documentElement.nodeName) {
 	case "save-member-model-ok-response":
+	    self.model.hasChanged = false;
+	    break;
+
+	case "save-member-model-possible-duplicates-response":
+	    var title = MessageCatalog.getMessage("MEMBER_SAVE_DUPLICATES_TITLE");
+	    var messg = MessageCatalog.getMessage("MEMBER_SAVE_DUPLICATES", self.formatPossDuplicates(rsp));
+	    new MessageBox(MessageBox.QUERY, title, messg, function() {
+		self.model.setValue("//member-model/force", true);
+		self.onSave();
+	    });
 	    break;
 
 	case "error-response":
@@ -229,8 +240,51 @@ MemberEditor.prototype.onSave = function() {
 	new MessageBox(MessageBox.ERROR, title, messg);
     }
     caller.invokeService(this.model.getDocument());
+}
+
+/**
+ * 
+ */
+MemberEditor.prototype.formatPossDuplicates = function(rsp) {
+
+    var result = "<ul>";
+
+    var members = rsp.getElementsByTagName("member");
+    for (var i = 0; i < members.length; i++) {
+
+	var curr = members[i];
+	result += "<li>";
+	result += curr.getElementsByTagName("zname")[0].textContent;
+	result += ", ";
+	result += curr.getElementsByTagName("vname")[0].textContent;
+	result += ", ";
+	result += curr.getElementsByTagName("zip-code")[0].textContent;
+	result += ", ";
+	result += curr.getElementsByTagName("city")[0].textContent;
+	result += ", ";
+	result += curr.getElementsByTagName("street")[0].textContent;
+	result += ", ";
+	result += curr.getElementsByTagName("birth_date")[0].textContent;
+	result += "</li>";
+    }
+
+    result += "</ul>";
+
+    return result;
 
 }
+
+/**
+ * Callback wird gerufen, wenn das zerstören eines WorkspaceFrames ansteht.
+ * 
+ * @return true, es stehen noch ungespeicherte Änderungen an
+ * 
+ */
+/*
+ * MemberEditor.prototype.hasPendingChanges = function() {
+ * 
+ * return this.model.hasChanged; }
+ */
 
 /*---------------------------------------------------------------------------*/
 /**
@@ -257,7 +311,7 @@ var MemberCoreDataEditor = function(parentFrame, targetCnr, model, enableSearchM
 	self.model.createValueBinding("edit_member_title", "//member-model/core-data/title")
 	self.model.createValueBinding("edit_member_birthdate", "//member-model/core-data/birth_date")
 	self.model.createValueBinding("edit_member_sex", "//member-model/core-data/sex")
-	self.model.createValueBinding("edit_member_zipcode", "//member-model/core-data/zip_code");
+	self.model.createValueBinding("edit_member_zipcode", "//member-model/core-data/zip-code");
 	self.model.createValueBinding("edit_member_city", "//member-model/core-data/city");
 	self.model.createValueBinding("edit_member_street", "//member-model/core-data/street");
 	self.model.createValueBinding("edit_member_school", "//member-model/core-data/school");
@@ -300,6 +354,7 @@ var MemberCoreDataEditor = function(parentFrame, targetCnr, model, enableSearchM
 	projYear.addEventListener("change", function() {
 	    self.onProjYearChange();
 	});
+
     });
 }
 MemberCoreDataEditor.prototype = Object.create(WorkSpaceTabPane.prototype);
@@ -325,36 +380,84 @@ MemberCoreDataEditor.prototype.fillCoopPartners = function(model) {
  * Je nach Mitgliedsart werden verschiedene Felder ausgeblendet
  */
 MemberCoreDataEditor.prototype.hiddenFieldsByType = {
-    "" : [ "edit_member_projyear", "edit_member_since", "edit_member_until", "edit_member_school", "edit_member_dse_state" ],
-    "TEACHER" : [ "edit_member_projyear", "edit_member_school" ],
-    "SCOUT" : [ "edit_member_since", "edit_member_until", "edit_member_school" ],
-    "EXSCOUT" : [ "edit_member_since", "edit_member_until", "edit_member_school" ],
-    "PRAKTIKANT" : [ "edit_member_since", "edit_member_until", "edit_member_school" ],
-    "EHRENAMT" : [ "edit_member_projyear", "edit_member_school" ],
-    "FEST" : [ "edit_member_projyear", "edit_member_school" ],
-    "STUDENT" : [ "edit_member_since", "edit_member_until" ],
-    "REFUGEE" : [ "edit_member_since", "edit_member_until" ],
-    "SHORT" : [ "edit_member_projyear", "edit_member_school" ],
-    "REG_COURSE" : [ "edit_member_projyear", "edit_member_school" ],
-    "REG_EVENT" : [ "edit_member_projyear", "edit_member_school" ]
+    "" : [
+	    "edit_member_projyear", "edit_member_since", "edit_member_until", "edit_member_school", "edit_member_dse_state"
+    ],
+    "TEACHER" : [
+	    "edit_member_projyear", "edit_member_school"
+    ],
+    "SCOUT" : [
+	    "edit_member_since", "edit_member_until", "edit_member_school"
+    ],
+    "EXSCOUT" : [
+	    "edit_member_since", "edit_member_until", "edit_member_school"
+    ],
+    "PRAKTIKANT" : [
+	    "edit_member_since", "edit_member_until", "edit_member_school"
+    ],
+    "EHRENAMT" : [
+	    "edit_member_projyear", "edit_member_school"
+    ],
+    "FEST" : [
+	    "edit_member_projyear", "edit_member_school"
+    ],
+    "STUDENT" : [
+	    "edit_member_since", "edit_member_until"
+    ],
+    "REFUGEE" : [
+	    "edit_member_since", "edit_member_until"
+    ],
+    "SHORT" : [
+	    "edit_member_projyear", "edit_member_school"
+    ],
+    "REG_COURSE" : [
+	    "edit_member_projyear", "edit_member_school"
+    ],
+    "REG_EVENT" : [
+	    "edit_member_projyear", "edit_member_school"
+    ]
 }
 
 /**
  * Je nach Mitglieds-Art sind verschiedene Felder verpflichtend
  */
 MemberCoreDataEditor.prototype.mandatoryFieldsByType = {
-    "" : [ "edit_member_zname", "edit_member_vname", "edit_member_type" ],
-    "TEACHER" : [ "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
-    "SCOUT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
-    "EXSCOUT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
-    "PRAKTIKANT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
-    "EHRENAMT" : [ "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
-    "FEST" : [ "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street" ],
-    "SHORT" : [ "edit_member_type", "edit_member_since", "edit_member_until", , "edit_member_zname", "edit_member_vname" ],
-    "STUDENT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname" ],
-    "REFUGEE" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname" ],
-    "REG_COURSE" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname" ],
-    "REG_EVENT" : [ "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname" ]
+    "" : [
+	    "edit_member_zname", "edit_member_vname", "edit_member_type"
+    ],
+    "TEACHER" : [
+	    "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"
+    ],
+    "SCOUT" : [
+	    "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"
+    ],
+    "EXSCOUT" : [
+	    "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"
+    ],
+    "PRAKTIKANT" : [
+	    "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"
+    ],
+    "EHRENAMT" : [
+	    "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"
+    ],
+    "FEST" : [
+	    "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"
+    ],
+    "SHORT" : [
+	    "edit_member_type", "edit_member_since", "edit_member_until", , "edit_member_zname", "edit_member_vname"
+    ],
+    "STUDENT" : [
+	    "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"
+    ],
+    "REFUGEE" : [
+	    "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"
+    ],
+    "REG_COURSE" : [
+	    "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"
+    ],
+    "REG_EVENT" : [
+	    "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"
+    ]
 }
 
 /**
@@ -764,7 +867,9 @@ MemberCourseOverview.prototype.getColumnDescriptor = function() {
 	opt.textContent = "Foto-Einverständnis";
 	select.appendChild(opt);
 
-	var values = [ "NONE", "INTERN", "PRINT_ONLY", "FULL" ];
+	var values = [
+		"NONE", "INTERN", "PRINT_ONLY", "FULL"
+	];
 	for (var i = 0; i < values.length; i++) {
 
 	    opt = document.createElement("option");

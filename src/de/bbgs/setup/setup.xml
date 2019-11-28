@@ -5,7 +5,7 @@
 		<port>3306</port>
 		<dbname>BBGS</dbname>
 		<user>root</user>
-		<pwd></pwd>
+		<pwd>Sun12shine</pwd>
 	</database>
 	
 	<email>
@@ -14,7 +14,7 @@
 			<port>587</port>
 			<use-start-tls>true</use-start-tls>
 			<user>bbgs.verwaltung</user>
-			<pwd></pwd>
+			<pwd>Living4Climbing</pwd>
 			<from>info@bayerns-beste-gipfelstuermer-verwaltung.de</from>
 		</send>
 		<receive>
@@ -22,17 +22,8 @@
 			<port>993</port>
 			<use-start-tls>true</use-start-tls>
 			<user>bbgs.verwaltung</user>
-			<pwd></pwd>
+			<pwd>Living4Climbing</pwd>
 			<protocol>imaps</protocol>
 		</receive>
 	</email>
-
-	<!-- Wir verwenden https://app.sms77.io/ als SMS-Gateway -->
-	<sms>
-		<user>anderl.knollinger@gmail.com</user>
-		<api-key>7YEvXk0Zu4Mna6vwWBmRteRN7shTkH5r</api-key>
-		<from1>017661006855</from1>
-		<from>BBGS</from>
-		<schedule>60000</schedule>
-	</sms>
 </setup>

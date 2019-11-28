@@ -16,7 +16,7 @@ Validator.prototype.validate = function(parent) {
     var parent = UIUtils.getElement(parent);
     if (parent) {
 
-	var allChilds = parent.querySelectorAll(".mandatory");
+	var allChilds = parent.querySelectorAll("input,textarea,select");
 	for (var i = 0; result && i < allChilds.length; i++) {
 
 	    var currElem = allChilds[i];
@@ -84,6 +84,10 @@ Validator.prototype.testExpectedType = function(elem, expectedType) {
 	case 'zipcode':
 	    result = this.assertIsZipCode(elem);
 	    break;
+	    
+	case 'email':
+	    result = this.assertIsEmail(elem);
+	    break;
 	}
     }
     return result;
@@ -138,6 +142,19 @@ Validator.prototype.assertIsZipCode = function(elem) {
     var result = (n != NaN && n > 0 && n < 100000);
     if (!result) {
 	new ToolTip(elem, ToolTip.warningIcon, "Dieses Feld muss eine Postleitzahl beinhalten.");
+    }
+    return result;
+}
+
+/**
+ * 
+ * @param value
+ */
+Validator.prototype.assertIsEmail = function(elem) {
+
+    var result = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(elem.value);
+    if (!result) {
+	new ToolTip(elem, ToolTip.warningIcon, "Die eingegebene Email-Adresse ist ungültig!");
     }
     return result;
 }

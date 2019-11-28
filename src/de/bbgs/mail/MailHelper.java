@@ -1,5 +1,6 @@
 package de.bbgs.mail;
 
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -29,7 +30,7 @@ import javax.xml.bind.JAXBException;
 import de.bbgs.attachments.Attachment;
 import de.bbgs.contacts.Contact;
 import de.bbgs.courses.Course;
-import de.bbgs.mail.SendMailHandler.MemberTypeWrapper;
+import de.bbgs.mail.addressbook.CustomMailGroup;
 import de.bbgs.member.EMemberType;
 import de.bbgs.member.Member;
 import de.bbgs.partner.Partner;
@@ -66,14 +67,11 @@ public class MailHelper
      * @return
      * @throws SQLException 
      */
-    public static Collection<InternetAddress> resolveMemberTypeAddresses(Collection<MemberTypeWrapper> memberTypes,
+    public static Collection<InternetAddress> resolveMemberTypeAddresses(Collection<EMemberType> memberTypes,
         Connection conn) throws SQLException
     {
         Set<EMemberType> types = new HashSet<>();
-        for (MemberTypeWrapper t : memberTypes)
-        {
-            types.add(t.type);
-        }
+        types.addAll(memberTypes);
         return MailDBUtils.getAllMemberTypeEmails(types, conn);
     }
 
@@ -184,7 +182,6 @@ public class MailHelper
     {
         Message msg = new MimeMessage(MailHelper.getMailSession());
         msg.setSubject(subject);
-
         msg.setFrom(new InternetAddress(SetupReader.getSetup().getEmailSetup().send.from));
         msg.setReplyTo(new InternetAddress[]{mailSenderInfo.getInternetAddress()});
 

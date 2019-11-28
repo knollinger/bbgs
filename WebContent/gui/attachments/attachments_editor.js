@@ -135,7 +135,7 @@ AttachmentsOverview.prototype.uploadFile = function(name, type, data) {
     XmlUtils.setNode(node, "mime-type", type);
     XmlUtils.setNode(node, "content", data);
 
-    this.model.addElement(self.xPath, node.documentElement);
+    this.model.addElement(this.xPath, node.documentElement);
     this.fillTable();
 }
 

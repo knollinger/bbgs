@@ -14,6 +14,12 @@ import java.util.Set;
 import javax.mail.internet.InternetAddress;
 
 import de.bbgs.attachments.EAttachmentDomain;
+import de.bbgs.mail.addressbook.CustomMailGroup;
+import de.bbgs.mail.addressbook.CustomMailGroupModel;
+import de.bbgs.mail.addressbook.GroupMember;
+import de.bbgs.mail.addressbook.MailCourse;
+import de.bbgs.mail.addressbook.MailMember;
+import de.bbgs.mail.addressbook.MailPartner;
 import de.bbgs.member.EMemberType;
 import de.bbgs.partner.EPartnerType;
 import de.bbgs.session.SessionWrapper;

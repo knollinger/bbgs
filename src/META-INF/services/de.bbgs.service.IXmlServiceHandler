@@ -47,12 +47,11 @@ de.bbgs.courses.CopyCourseHandler
 #
 # all about mail
 #
-de.bbgs.mail.GetCustomMailGroupsHandler
-de.bbgs.mail.GetCustomMailGroupHandler
-de.bbgs.mail.SaveCustomMailGroupHandler
-de.bbgs.mail.GetAdressbookHandler
+de.bbgs.mail.addressbook.GetCustomMailGroupsHandler
+de.bbgs.mail.addressbook.GetCustomMailGroupHandler
+de.bbgs.mail.addressbook.SaveCustomMailGroupHandler
+de.bbgs.mail.addressbook.GetAdressbookHandler
 de.bbgs.mail.SendMailHandler
-de.bbgs.sms.SendSMSHandler
 
 #------------------------------------------------------------------------------
 #

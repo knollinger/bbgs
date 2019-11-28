@@ -1,10 +1,10 @@
 WorkSpace = (function() {
 
     // Keine ContextMenus!
-    document.body.addEventListener("contextmenu", function(evt) {
-	evt.preventDefault();
-	evt.stopPropagation();
-    }, false);
+//    document.body.addEventListener("contextmenu", function(evt) {
+//	evt.preventDefault();
+//	evt.stopPropagation();
+//    }, false);
 
     // prevent touchmove!
     document.body.addEventListener("touchmove", function(evt) {
@@ -47,8 +47,8 @@ WorkSpace = (function() {
 	},
 
 	clearAll : function() {
-	    UIUtils.clearChilds(document.getElementById("workspace"));
 	    UIUtils.clearChilds(document.getElementById("dialogs"));
+	    UIUtils.clearChilds(document.getElementById("workspace"));
 	}
     }
 })();
@@ -159,14 +159,26 @@ WorkSpaceFrame.prototype.load = function(url, onload) {
 }
 
 /**
- * 
+ * Wenn der Frame eine onClose-Methode hat, rufen wir diese und übergeben Ihr den 
+ * Callback für die asynchrone Benachrichtigung. Die onClose-Methode muss diese
+ * Funktion mit dem parameter true aufrufen, wenn der FRame geschlossen werden
+ * soll, anderenfalls bleibt er offen.
  */
 WorkSpaceFrame.prototype.close = function() {
 
-    if (this.onClose) {
-	this.onClose();
+    var self = this;
+    if (!this.hasPendingChanges || !this.hasPendingChanges()) {
+	WorkSpace.removeFrame(this);	
     }
-    WorkSpace.removeFrame(this);
+    else {
+
+	var title = MessageCatalog.getMessage("DISCARD_CHANGES_TITLE");
+	var messg = MessageCatalog.getMessage("DISCARD_CHANGES_MESSG");
+	new MessageBox(MessageBox.QUERY, title, messg, function() {
+	    WorkSpace.removeFrame(self);	
+	});
+
+    }
 }
 
 /**

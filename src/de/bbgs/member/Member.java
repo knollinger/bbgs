@@ -38,9 +38,9 @@ public class Member implements IJAXBObject
 
     @XmlElement(name = "sex")
     @XmlJavaTypeAdapter(value = ESex.XMLAdapter.class)
-    public ESex sex = ESex.UNDEFINED;
+    public ESex sex = ESex.N;
 
-    @XmlElement(name = "zip_code")
+    @XmlElement(name = "zip-code")
     @XmlJavaTypeAdapter(value = EmptyIntegerXmlAdapter.class)
     public Integer zipCode = new Integer(0);
 

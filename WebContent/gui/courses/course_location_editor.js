@@ -282,7 +282,7 @@ CourseLocationEditor.prototype.setupCoreDataEditor = function() {
 CourseLocationEditor.prototype.setupContactsOverview = function() {
 
     this.contactsDataTab = this.addTab("gui/images/person-group.svg", "Kontakt-Personen");
-    var subFrame = new ContactOverview(this, this.contactsDataTab.contentPane, this.model, "//course-location-model/contacts");
+    var subFrame = new ContactOverview(this, this.contactsDataTab.contentPane, this.model, "//course-location-model/contacts", "//course-location-model");
     this.contactsDataTab.associateTabPane(subFrame);
 }
 

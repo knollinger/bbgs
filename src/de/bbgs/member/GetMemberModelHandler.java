@@ -77,6 +77,7 @@ public class GetMemberModelHandler implements IXmlServiceHandler
             conn = ConnectionPool.getConnection();
             if (req.id != 0)
             {
+                model.force = true;
                 model.coreData = MemberDBUtil.getMember(req.id, conn);
                 model.contacts = ContactsDBUtil.getAllContacts(req.id, EContactDomain.MEMBER, conn);
                 model.attachments = AttachmentsDBUtil.getAllAttachments(req.id, EAttachmentDomain.MEMBER, conn);

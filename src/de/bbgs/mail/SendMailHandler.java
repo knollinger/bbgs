@@ -1,31 +1,31 @@
 package de.bbgs.mail;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.mail.Message;
 import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
+import javax.mail.internet.AddressException;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import org.jsoup.Jsoup;
+
 import de.bbgs.attachments.Attachment;
 import de.bbgs.courses.Course;
+import de.bbgs.mail.addressbook.CustomMailGroup;
 import de.bbgs.member.EMemberType;
 import de.bbgs.member.Member;
 import de.bbgs.partner.Partner;
 import de.bbgs.service.IXmlServiceHandler;
-import de.bbgs.service.ThreadPool;
 import de.bbgs.session.SessionWrapper;
 import de.bbgs.utils.ConnectionPool;
 import de.bbgs.utils.DBUtils;
+import de.bbgs.xml.ErrorResponse;
 import de.bbgs.xml.IJAXBObject;
 
 /**
@@ -34,6 +34,8 @@ import de.bbgs.xml.IJAXBObject;
  */
 public class SendMailHandler implements IXmlServiceHandler
 {
+    private static final String ERR_INV_ADDRESS = "Die Addresse '%1$s' ist nicht korrekt.";
+    
     @Override
     public boolean needsSession()
     {
@@ -67,9 +69,65 @@ public class SendMailHandler implements IXmlServiceHandler
     @Override
     public IJAXBObject handleRequest(IJAXBObject request, SessionWrapper session)
     {
-        SendMailTask task = new SendMailTask((Request) request, session);
-        ThreadPool.getInstance().submit(task);
-        return new Response();
+        IJAXBObject result = null;
+        Connection conn = null;
+        try
+        {
+            conn = ConnectionPool.getConnection();
+            Request req = (Request) request;
+
+            MessageBuilder builder = new MessageBuilder(conn);
+            builder.withSubject(req.subject) //
+                .withSender(session.getAccountId()) //
+                .withContent(Jsoup.parse(req.body));
+
+            for (Member m : req.recipients.members)
+            {
+                builder.addMember(m.id);
+            }
+
+            for (EMemberType type : req.recipients.memberTypes)
+            {
+                builder.addMembersOfType(type);
+            }
+
+            for (Course course : req.recipients.courses)
+            {
+                builder.addCourseMembers(course.id);
+            }
+
+            for (CustomMailGroup group : req.recipients.groups)
+            {
+                builder.addMailGroup(group.id);
+            }
+
+            for (Partner partner : req.recipients.partners)
+            {
+                builder.addPartner(partner.id);
+            }
+
+            for (Attachment a : req.attachments)
+            {
+                builder.addAttachment(a.name, a.mimeType, a.content);
+            }
+
+            Message msg = builder.createMessage();
+            Transport.send(msg);
+            result = new Response();
+        }
+        catch (AddressException e)
+        {
+            result = new ErrorResponse(String.format(ERR_INV_ADDRESS, e.getRef()));
+        }
+        catch (Exception e)
+        {
+            result = new ErrorResponse(e.getMessage());
+        }
+        finally
+        {
+            DBUtils.closeQuitly(conn);
+        }
+        return result;
     }
 
 
@@ -77,86 +135,16 @@ public class SendMailHandler implements IXmlServiceHandler
      * @author anderl
      *
      */
-    private static class SendMailTask implements Runnable
+    @XmlType(name = "SendMailHandler.Recipients")
+    public static class Recipients
     {
-        private Request request;
-        private SessionWrapper session;
-
-        /**
-         * @param req
-         */
-        public SendMailTask(Request req, SessionWrapper session)
-        {
-            this.request = req;
-            this.session = session;
-        }
-
-        @Override
-        public void run()
-        {
-            Connection conn = null;
-            try
-            {
-                conn = ConnectionPool.getConnection();
-                MailSenderInfo senderInfo = MailDBUtils.getMailSenderInfo(this.session, conn);
-                Message msg = MailHelper.composeMessage(senderInfo, this.request.subject, this.request.body,
-                    this.request.attachments);
-
-                InternetAddress[] recipents = this.resolveAdresses(this.request.recipients, conn);
-                InternetAddress[] replyTo = {MailHelper.resolveAddress(session.getEmail())};
-
-                msg.setRecipients(Message.RecipientType.BCC, recipents);
-                msg.setReplyTo(replyTo);
-                Transport.send(msg);
-            }
-            catch (Exception e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            finally
-            {
-                DBUtils.closeQuitly(conn);
-            }
-        }
-
-        /**
-         * 
-         * @param recipients
-         * @return
-         * @throws SQLException 
-         */
-        private InternetAddress[] resolveAdresses(Recipents recipients, Connection conn) throws SQLException
-        {
-
-            Set<InternetAddress> addresses = new HashSet<>();
-            addresses.addAll(MailHelper.resolveMemberAddresses(recipients.members, conn));
-            addresses.addAll(MailHelper.resolveMemberTypeAddresses(recipients.memberTypes, conn));
-            addresses.addAll(MailHelper.resolveCourseAddresses(recipients.courses, conn));
-            addresses.addAll(MailHelper.resolvePartnerAddresses(recipients.partner, conn));
-            addresses.addAll(MailHelper.resolveCustomGroupAddresses(recipients.groups, conn));
-
-            InternetAddress[] result = new InternetAddress[addresses.size()];
-            addresses.toArray(result);
-            return result;
-        }
-    }
-
-    /**
-     * @author anderl
-     *
-     */
-    @XmlType(name="SendMailHandler.Recipients")
-    public static class Recipents
-    {
-
         @XmlElementWrapper(name = "members")
         @XmlElement(name = "member")
         public List<Member> members = new ArrayList<>();
 
         @XmlElementWrapper(name = "types")
         @XmlElement(name = "member-type")
-        List<MemberTypeWrapper> memberTypes = new ArrayList<>();
+        public List<EMemberType> memberTypes = new ArrayList<>();
 
         @XmlElementWrapper(name = "courses")
         @XmlElement(name = "course")
@@ -164,7 +152,7 @@ public class SendMailHandler implements IXmlServiceHandler
 
         @XmlElementWrapper(name = "partners")
         @XmlElement(name = "partner")
-        public List<Partner> partner = new ArrayList<>();
+        public List<Partner> partners = new ArrayList<>();
 
         @XmlElementWrapper(name = "custom-groups")
         @XmlElement(name = "custom-group")
@@ -175,27 +163,15 @@ public class SendMailHandler implements IXmlServiceHandler
      * @author anderl
      *
      */
-    @XmlType(name="SendMailHandler.MemberTypeWrapper")
-    public static class MemberTypeWrapper
-    {
-        @XmlElement(name = "type")
-        public EMemberType type;
-    }
-
-    /**
-     * @author anderl
-     *
-     */
     @XmlRootElement(name = "send-mail-req")
-    @XmlType(name = "SendMailHandler.Request")
+    @XmlType(name = "SendMailHandler.NewRequest")
     public static class Request implements IJAXBObject
     {
-
         @XmlElement(name = "subject")
         public String subject = "";
 
         @XmlElement(name = "send-to")
-        public Recipents recipients = new Recipents();
+        public Recipients recipients = new Recipients();
 
         @XmlElement(name = "body")
         public String body = "";
@@ -206,9 +182,8 @@ public class SendMailHandler implements IXmlServiceHandler
     }
 
     @XmlRootElement(name = "send-mail-ok-rsp")
-    @XmlType(name = "SendMailHandler.Response")
+    @XmlType(name = "SendMailHandler.ResponseNew")
     public static class Response implements IJAXBObject
     {
     }
-
 }

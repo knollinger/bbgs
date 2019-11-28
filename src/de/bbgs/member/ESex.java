@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 public enum ESex
 {
-    UNDEFINED, M, W, U;
+    M, W, U, N;
 
     public String toHumanReadable()
     {
@@ -19,14 +19,19 @@ public enum ESex
                 result = "Weiblich";
                 break;
 
-            default :
+            case U :
                 result = "keine Angabe";
+                break;
+
+            case N:
+                result = "";
                 break;
         }
         return result;
     }
-        
-    public static class XMLAdapter extends XmlAdapter<String, ESex> {
+
+    public static class XMLAdapter extends XmlAdapter<String, ESex>
+    {
 
         @Override
         public String marshal(ESex type) throws Exception
@@ -37,11 +42,12 @@ public enum ESex
         @Override
         public ESex unmarshal(String name) throws Exception
         {
-            if(name.equals("")) {
+            if (name.equals(""))
+            {
                 return ESex.U;
             }
             return ESex.valueOf(name);
         }
-        
+
     }
 }

@@ -75,12 +75,14 @@ MemberSelector.prototype.fillTable = function(multiselect) {
 	check.name = "member_finder_sel";
 	return check;
     });
+   
     fields.push("zname");
     fields.push("vname");
     fields.push(function(td, member) {
 	var type = member.getElementsByTagName("type")[0].textContent;
 	return MemberTypeTranslator[type];
     });
+    fields.push("birth_date");
 
     var self = this;
     this.model.createTableBinding("member_finder_result", fields, "//get-all-members-ok-rsp/members/member[action != 'REMOVE']", function(tr, member) {
@@ -138,6 +140,7 @@ var MemberOverview = function() {
     this.createEditAction();
     this.createAddAction();
     this.createRemoveAction();
+    this.createPrintAction();
     this.onSelectionChange();
 }
 MemberOverview.prototype = Object.create(MemberSelector.prototype);
@@ -186,6 +189,25 @@ MemberOverview.prototype.createRemoveAction = function() {
     this.addAction(this.actionRemove);
     this.keyMap[46] = function() { // Entf-Taste
 	self.actionRemove.invoke();
+    }
+}
+
+/**
+ * 
+ */
+MemberOverview.prototype.createPrintAction = function() {
+
+    var self = this;
+    this.actionPrint = new WorkSpaceFrameAction("gui/images/print.svg", "Mitglieder-Übersicht drucken", function() {
+	
+	  var link = document.createElement("a");
+	  link.download = "Mitgliederübersicht.csv";
+	  link.href = "getDocument/memberOverview.csv";
+	  link.click();
+    });
+    this.addAction(this.actionPrint);
+    this.keyMap['P'] = function() { // Entf-Taste
+	self.actionPrint.invoke();
     }
 }
 

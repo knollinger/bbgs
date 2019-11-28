@@ -31,4 +31,10 @@ class PasswordUtil
         }
         return result.toString().toUpperCase();
     }
+    
+    public static void main(String[] args) throws NoSuchAlgorithmException
+    {
+        System.out.println(PasswordUtil.hashPassword("Start12345"));
+        
+    }
 }

@@ -8,7 +8,7 @@ import java.util.Set;
 
 import de.bbgs.contacts.Contact;
 import de.bbgs.courses.Course;
-import de.bbgs.mail.CustomMailGroup;
+import de.bbgs.mail.addressbook.CustomMailGroup;
 import de.bbgs.member.EMemberType;
 import de.bbgs.member.Member;
 import de.bbgs.partner.Partner;

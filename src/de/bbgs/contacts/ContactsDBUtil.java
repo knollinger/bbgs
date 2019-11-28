@@ -52,6 +52,9 @@ public class ContactsDBUtil
                 contact.phone2 = rs.getString("phone2");
                 contact.mobile2 = rs.getString("mobile2");
                 contact.email2 = rs.getString("email2");
+                contact.zipCode = rs.getInt("zip_code");
+                contact.city = rs.getString("city");
+                contact.street = rs.getString("street");
 
                 String relation = rs.getString("relation");
                 contact.relation = (relation != null) ? ERelation.valueOf(relation) : ERelation.OTHER;
@@ -150,7 +153,7 @@ public class ContactsDBUtil
         try
         {
             stmt = conn.prepareStatement(
-                "insert into contacts set zname=?, vname=?, vname2=?, title=?, phone=?, mobile=?, email=?, phone2=?, mobile2=?, email2=?, ref_id=?, domain=?, relation=?");
+                "insert into contacts set zname=?, vname=?, vname2=?, title=?, phone=?, mobile=?, email=?, phone2=?, mobile2=?, email2=?, ref_id=?, domain=?, relation=?, zip_code=?, city=?, street=?");
             stmt.setString(1, contact.zname);
             stmt.setString(2, contact.vname);
             stmt.setString(3, contact.vname2);
@@ -164,6 +167,9 @@ public class ContactsDBUtil
             stmt.setInt(11, refId);
             stmt.setString(12, domain.name());
             stmt.setString(13, contact.relation.name());
+            stmt.setInt(14, contact.zipCode);
+            stmt.setString(15, contact.city);
+            stmt.setString(16, contact.street);
             stmt.executeUpdate();
         }
         finally
@@ -183,7 +189,7 @@ public class ContactsDBUtil
         try
         {
             stmt = conn.prepareStatement(
-                "update contacts set zname=?, vname=?, vname2=?, title=?, phone=?, mobile=?, email=? , phone2=?, mobile2=?, email2=?, relation=? where id=?");
+                "update contacts set zname=?, vname=?, vname2=?, title=?, phone=?, mobile=?, email=? , phone2=?, mobile2=?, email2=?, relation=?, zip_code=?, city=?, street=? where id=?");
             stmt.setString(1, contact.zname);
             stmt.setString(2, contact.vname);
             stmt.setString(3, contact.vname2);
@@ -195,7 +201,10 @@ public class ContactsDBUtil
             stmt.setString(9, contact.mobile2);
             stmt.setString(10, contact.email2);
             stmt.setString(11, contact.relation.name());
-            stmt.setInt(12, contact.id);
+            stmt.setInt(12, contact.zipCode);
+            stmt.setString(13, contact.city);
+            stmt.setString(14, contact.street);
+            stmt.setInt(15, contact.id);
             stmt.executeUpdate();
         }
         finally

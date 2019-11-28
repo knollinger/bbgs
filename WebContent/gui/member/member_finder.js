@@ -113,11 +113,13 @@ MemberFinder.prototype.renderPreviewItem = function(model, xpath, search) {
     content += ", ";
     content += model.getValue(xpath + "/vname");
     content += ", ";
-    content += model.getValue(xpath + "/zip_code");
+    content += model.getValue(xpath + "/zip-code");
     content += " ";
     content += model.getValue(xpath + "/city");
     content += ", ";
     content += model.getValue(xpath + "/street");
+    content += ", ";
+    content += model.getValue(xpath + "/birth_date");
 
     var replacement = "<b>" + search + "</b>";
     content = content.replace(new RegExp(search, 'gi'), replacement);

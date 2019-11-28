@@ -9,7 +9,7 @@ var MailEditor = function() {
     var self = this;
     this.load("gui/mail/mail_editor.html", function() {
 
-	self.setupCKEditor();
+	self.setupQuillEditor();
 	self.actionAddPerson = self.createAddPersonAction();
 	self.actionAddAttachment = self.createAddAttachmentAction();
 	self.actionSendMail = self.createSendMailAction();
@@ -36,11 +36,6 @@ var MailEditor = function() {
 	new FilePicker("edit_email_attachments", function(name, type, data) {
 	    self.addAttachment(name, type, data);
 	});
-	// UIUtils.getElement("edit_email_attachments").addEventListener("click",
-	// function(evt) {
-	// evt.stopPropagation();
-	// self.actionAddAttachment.invoke();
-	// });
 
     });
 }
@@ -54,20 +49,36 @@ MailEditor.EMPTY_MODEL = "<send-mail-req><subject/><send-to><members/><types/><c
 /**
  * Bsserl Gfreddel....was solls
  */
-MailEditor.prototype.setupCKEditor = function() {
+MailEditor.prototype.setupQuillEditor = function() {
+
+    var BackgroundClass = Quill.import('attributors/class/background');
+    Quill.register("/formats/background", BackgroundClass, true);
+    
+    var ColorClass = Quill.import('attributors/class/color');
+    Quill.register("/formats/color", ColorClass, true);
+    
+    var SizeStyle = Quill.import('attributors/style/size');
+    SizeStyle.whiteList = null;
+    Quill.register("/formats/size", SizeStyle, true);
 
     var self = this;
-    CKEDITOR.replace("edit_email_content", {
-	on : {
-	    instanceReady : function(evt) {
-		UIUtils.addClass("cke_edit_email_content", "grid-row-1");
-		UIUtils.addClass("cke_edit_email_content", "grid-col-2");
-
+    var options = {
+	debug : 'info',
+	modules : {
+	    toolbar : "#edit_email_toolbar",
+	    imageResize: {
+	          displaySize: true
 	    },
-	    change : function() {
-		self.model.setValue("//send-mail-req/body", CKEDITOR.instances.edit_email_content.getData());
-	    }
-	}
+	},
+	placeholder : 'Tell a story...',
+	readOnly : false,
+	theme : 'snow'
+    };
+    var editor = new Quill('#edit_email_content', options);
+    editor.focus();
+    editor.on('text-change', function() {
+	let html = editor.root.innerHTML;
+	self.model.setValue("//send-mail-req/body", html);
     });
 }
 
@@ -344,14 +355,17 @@ MailEditor.prototype.sendMail = function() {
 	    break;
 
 	case "error-response":
-	    alert("error-response");
+	    var title = MessageCatalog.getMessage("SENDMAIL_ERROR_TITLE");
+	    var messg = MessageCatalog.getMessage("SENDMAIL_ERROR", rsp.getElementsByTagName("msg")[0].textContent);
+	    new MessageBox(MessageBox.ERROR, title, messg);
 	    break;
 	}
     }
 
     caller.onError = function(req, status) {
-	alert("status: " + status);
-
+	var title = MessageCatalog.getMessage("SENDMAIL_ERROR_TITLE");
+	var messg = MessageCatalog.getMessage("SENDMAIL_TECH_ERROR", status);
+	new MessageBox(MessageBox.ERROR, title, messg);
     }
     caller.invokeService(this.model.getDocument());
 }

@@ -10,11 +10,8 @@ var MailNavigation = function() {
     this.addNavigationButton("gui/images/mail.svg", "Email senden", function() {
         new MailEditor();
     });
-    
-    this.addNavigationButton("gui/images/phone.svg", "SMS senden", function() {
-        new SMSEditor();
-    });
-    this.addNavigationButton("gui/images/adressbook.svg", "Email/SMS-Verteiler bearbeiten", function() {
+      
+    this.addNavigationButton("gui/images/adressbook.svg", "Email-Verteiler bearbeiten", function() {
         new MailGroupOverview();
     });
     this.setTitle("Email");

@@ -1,0 +1,24 @@
+V1.00.00
+    * Für jeden Kontakt kann eine eigene Wohn-Adresse angegeben werden. Wenn 
+      dies nicht erfolgt, zieht die Addy des Kursteilnehmers...kann aber
+      später überschrieben werden
+      
+    * Beim speichern neuer Mitglieder wird geprüft, ob ähnliche Namen bereits 
+      gespeichert sind. Wenn ja, muss explizit das  Speichern bestätigt werden 
+      (keine Doppel-Erfassungen mehr)
+      
+    * im MemberFinder und im MemberOverview wird das Geburts-Datum mit 
+      ausgewiesen -> Wunsch von Helga
+      
+    * Der Mail-Editor ist komplett neu und gestattet nun auch Embedded-Images 
+      und das scaling selbiger
+      -> Wunsch von Sanna Sonnenschein....ich erwarte einen fetten Kuss dafür! :-)
+      
+    * MSJ-Liste ist nun auch im Kurs-Kalender verfügbar
+    
+    * bisserl was fürs schick ausschaun. Neue Schriftart, welche angenehmer zu 
+      lesen ist und nicht mehr so viele "Kasterln" aufm Screen.
+      
+    * Pflichtfelder werden nun deutlicher dar gestellt
+    
+      

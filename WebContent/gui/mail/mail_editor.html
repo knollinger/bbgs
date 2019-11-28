@@ -1,10 +1,26 @@
 <div class="workspace-frame-content" data-has-backbutton="yes" data-has-main-menu="yes" data-frame-title="Email schreiben"></div>
-<div id="edit_email_sendto" class="email-sendto grid-row-0 grid-col-2">
+<div id="edit_email_sendto" class="email-sendto grid-row-0 grid-col-2 mandatory">
     <div class="placeholder">An:</div>
 </div>
-<input id="edit_email_subject" class="grid-row-0 grid-col-2" placeholder="Betreff" title="Betreff"></input>
-<textarea id="edit_email_content" class="grid-col-2" placeholder="Email-Text" title="Email-Text"></textarea>
-
-<div class="grid-row-0 grid-col-2">Anhänge:</div>
-<div id="edit_email_attachments" class="email-attachments grid-row-0 grid-col-2">
+<input id="edit_email_subject" class="grid-row-0 grid-col-2 mandatory" placeholder="Betreff:" title="Betreff"></input>
+<div class="grid-row-1 grid-col-2 disp-flex flex-col">
+    <div id="edit_email_toolbar" class="flex-0">
+        <select class="ql-header" title="Überschriften"></select>
+        <button class="ql-bold" title="Fett"></button>
+        <button class="ql-italic" title="Kursiv"></button>
+        <button class="ql-underline" title="Unterstrichen"></button>
+        <button class="ql-strike" title="Durchgestrichen"></button>
+        <select class="ql-align" title="Text-Ausrichtung"></select>
+        <button class="ql-indent" value="-1" title="Einrückung zurück nehmen"></button>
+        <button class="ql-indent" value="+1" title="Einrücken"></button>
+        <button class="ql-list" value="ordered" title="Numerierte Liste"></button>
+        <button class="ql-list" value="bullet" title="Bullet-Liste"></button>
+        <select class="ql-color" title="Text-Farbe"></select>
+        <select class="ql-background" title="Text-Hintergrund"></select>
+        <button class="ql-image" title="Bild einfügen"></button>
+    </div>
+    <div id="edit_email_content" class="flex-1 scrollable"></div>
 </div>
+
+<div class="grid-row-0 grid-col-2 edit_email_attachments">Anhänge:</div>
+<div id="edit_email_attachments" class="email-attachments grid-row-0 grid-col-2"></div>

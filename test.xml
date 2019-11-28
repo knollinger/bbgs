@@ -1,144 +1,15 @@
-<register-member-req>
-	<course-id />
-	<core-data>
-		<is-member>false</is-member>
-		<zname />
-		<vname />
-		<birthday />
-		<sex />
-		<zipcode />
-		<city />
-		<street />
-		<insurance />
-		<family-insurance />
-	</core-data>
-	<partner-id />
-	<contacts>
-		<contact>
-			<action>CREATE</action>
-			<relation />
-			<zname />
-			<vname />
-			<phone />
-			<mobile />
-			<email />
-		</contact>
-	</contacts>
-	<notes>
-		<note>
-			<id>#health_tetanus</id>
-			<selected>false</selected>
-			<type>MEDICAL</type>
-			<comment>Es besteht ausreichender Schutz gegen Tetanus</comment>
-		</note>
-		<note>
-			<id>#health_swimmer</id>
-			<selected>false</selected>
-			<type>MEDICAL</type>
-			<comment>Mein Kind kann schwimmen</comment>
-		</note>
-		<note>
-			<id>#health_heart</id>
-			<selected>false</selected>
-			<type>MEDICAL</type>
-			<comment />
-		</note>
-		<note>
-			<id>#health_cronic</id>
-			<selected>false</selected>
-			<type>MEDICAL</type>
-			<comment />
-		</note>
-		<note>
-			<id>#health_musc</id>
-			<selected>false</selected>
-			<type>MEDICAL</type>
-			<comment />
-		</note>
-		<note>
-			<id>#health_allergic</id>
-			<selected>false</selected>
-			<type>MEDICAL</type>
-			<comment />
-		</note>
-		<note>
-			<id>#health_op</id>
-			<selected>false</selected>
-			<type>MEDICAL</type>
-			<comment />
-		</note>
-		<note>
-			<id>#health_infect</id>
-			<selected>false</selected>
-			<type>MEDICAL</type>
-			<comment />
-		</note>
-		<note>
-			<id>#health_drugs</id>
-			<selected>false</selected>
-			<type>MEDICAL</type>
-			<comment />
-		</note>
-		<note>
-			<id>#health_disable</id>
-			<selected>false</selected>
-			<type>MEDICAL</type>
-			<comment />
-		</note>
-		<note>
-			<id>#health_pregnant</id>
-			<selected>false</selected>
-			<type>MEDICAL</type>
-			<comment />
-		</note>
-		<note>
-			<id>#health_other</id>
-			<selected>false</selected>
-			<type>MEDICAL</type>
-			<comment />
-		</note>
-		<note>
-			<id>#food_vegetarian</id>
-			<selected>false</selected>
-			<type>DIET</type>
-			<comment>Vegetarische Ernährnung</comment>
-		</note>
-		<note>
-			<id>#food_vegan</id>
-			<selected>false</selected>
-			<type>DIET</type>
-			<comment>Vegane Ernährnung</comment>
-		</note>
-		<note>
-			<id>#food_no_pork</id>
-			<selected>false</selected>
-			<type>DIET</type>
-			<comment>Kein Schweinefleisch</comment>
-		</note>
-		<note>
-			<id>#food_no_cow</id>
-			<selected>false</selected>
-			<type>DIET</type>
-			<comment>Kein Rindfleisch</comment>
-		</note>
-		<note>
-			<id>#food_no_gluten</id>
-			<selected>false</selected>
-			<type>DIET</type>
-			<comment>Gluten-Unverträglich</comment>
-		</note>
-		<note>
-			<id>#food_no_lactose</id>
-			<selected>false</selected>
-			<type>DIET</type>
-			<comment>Laktose-Intolerant</comment>
-		</note>
-		<note>
-			<id>#food_other</id>
-			<selected>false</selected>
-			<type>DIET</type>
-			<comment />
-		</note>
-	</notes>
-	<accept-policy />
-</register-member-req>
+<send-mail-req>
+	<subject>t</subject>
+	<send-to>
+		<members />
+		<types>
+			<member-type>EHRENAMT</member-type>
+		</types>
+		<courses />
+		<partners />
+		<custom-groups />
+	</send-to>
+	<title />
+	<body />
+	<attachments />
+</send-mail-req>

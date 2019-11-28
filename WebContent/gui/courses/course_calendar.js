@@ -245,6 +245,11 @@ CourseCalendar.prototype.createPrintAction = function() {
 	    menu.makeMenuItem("ausgewählten Kurs drucken", function() {
 		self.printCurrentCourse();
 	    });
+
+	    menu.makeSeparator();
+	    menu.makeMenuItem("MSJ-Liste für ausgewählten Kurs drucken", function() {
+		self.printMSJListe();
+	    });
 	}
 
     });
@@ -273,6 +278,17 @@ CourseCalendar.prototype.printCurrentCourse = function() {
     var courseId = this.model.getValue(this.currSelection + "/course-id");
     var title = "Details für den Kurs " + this.model.getValue(this.currSelection + "/name");
     var url = "getDocument/course_details.pdf?id=" + courseId;
+    new DocumentViewer(url, title);
+}
+
+/**
+ * 
+ */
+CourseCalendar.prototype.printMSJListe = function() {
+
+    var courseId = this.model.getValue(this.currSelection + "/course-id");
+    var url = "getDocument/msj_liste.pdf?id=" + courseId;
+    var title = "MSJ-Liste für den Kurs '" + this.model.getValue(this.currCourse + "/name") + "'";
     new DocumentViewer(url, title);
 }
 

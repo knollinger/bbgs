@@ -465,7 +465,7 @@ PartnerEditor.prototype.setupCoreDataEditor = function() {
 PartnerEditor.prototype.setupContactsOverview = function() {
 
     var tabBinder = this.addTab("gui/images/person-group.svg", "Kontakt-Personen");
-    var subFrame = new ContactOverview(this, tabBinder.contentPane, this.model, "/partner-model/contacts", null, false);
+    var subFrame = new ContactOverview(this, tabBinder.contentPane, this.model, "/partner-model/contacts", "/partner-model/core-data", false);
     tabBinder.associateTabPane(subFrame);
 }
 

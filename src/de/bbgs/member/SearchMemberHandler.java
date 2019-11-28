@@ -77,12 +77,13 @@ public class SearchMemberHandler implements IXmlServiceHandler
                 String search = "%" + req.search.trim() + "%";
 
                 stmt = conn.prepareStatement(
-                    "select * from members where zname like ? or vname like ? or zip_code like ? or city like ? or street like ? order by zname, vname");
+                    "select * from members where zname like ? or vname like ? or zip_code like ? or city like ? or street like ? or email like ? order by zname, vname");
                 stmt.setString(1, search);
                 stmt.setString(2, search);
                 stmt.setString(3, search);
                 stmt.setString(4, search);
                 stmt.setString(5, search);
+                stmt.setString(6, search);
                 rs = stmt.executeQuery();
                 while (rs.next())
                 {

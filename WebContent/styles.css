@@ -1,8 +1,13 @@
+@font-face {
+	font-family: OpenSans;
+	src: url(gui/fonts/open-sans/OpenSans-Regular.ttf);
+}
+
 * {
 	margin: 0;
 	padding: 0;
-	font-family: Arial;
-	font-size: 18px;
+	font-family: OpenSans, Arial;
+	font-size: 16px;
 	box-sizing: border-box;
 }
 
@@ -11,7 +16,6 @@
 	-moz-box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
 	-ms-box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
 	box-shadow: 0px 0px 4px 0px rgba(0, 0, 192, 1);
-	outline: none;
 }
 
 html, body {
@@ -28,10 +32,11 @@ html, body {
 }
 
 input {
-	border: 1px solid #c0c0c0;
+	border-width: 0 0 1px 0; 
+	border-style: solid;
+	border-color: #c0c0c0;
 	background-color: white;
 	padding: 4px 4px 4px 4px;
-	border-radius: 2px;
 	height: 2em;
 }
 
@@ -48,8 +53,9 @@ input::-ms-clear {
 }
 
 textarea {
-	border: 1px solid #c0c0c0;
-	border-radius: 2px;
+    border-width: 0 0 1px 0; 
+    border-style: solid;
+    border-color: #c0c0c0;
 	background-color: white;
 	padding: 4px 4px 4px 4px;
 	resize: none;
@@ -57,8 +63,9 @@ textarea {
 }
 
 select {
-	border: 1px solid #c0c0c0;
-	border-radius: 2px;
+    border-width: 0 0 1px 0; 
+    border-style: solid;
+    border-color: #c0c0c0;
 	background-color: white;
 	-webkit-appearance: none;
 	-moz-appearance: none;
@@ -156,8 +163,9 @@ th:last-child {
 th.search-icon {
 	background: transparent url("gui/images/table_search.png") no-repeat 4px
 		center;
-	background-size: 16px 16px;
-	min-width: 24px;
+	background-size: 1em 1em;
+	min-width: calc(1em + 8px);
+	min-height: calc(1em + 8px);
 }
 
 th.sortable {
@@ -227,7 +235,7 @@ iframe {
 }
 
 .mandatory {
-	border-left: 1px solid red !important;
+    border-bottom: 1px solid #e00000;	
 }
 
 .clickable {
@@ -240,6 +248,10 @@ iframe {
 
 .scrollable {
 	overflow: auto;
+}
+
+.bordered {
+	border: 1px solid #d0d0d0;
 }
 
 .vcenter-to-parent {
@@ -259,6 +271,10 @@ iframe {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+}
+
+.clearfix {
+	clear: both;	
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1155,11 +1171,6 @@ iframe {
 	overflow: auto;
 }
 
-.grid-row {
-	/*	margin-bottom: 10px; */
-	
-}
-
 .grid-row-0 {
 	-webkit-flex: 0 auto;
 	-moz-flex: 0 auto;
@@ -1181,7 +1192,12 @@ iframe {
 	flex: 2;
 }
 
+[class*='grid-row'] {
+	margin-left: 1rem;
+}
+
 [class*='grid-row-']:before, [class*='grid-row-']:after {
+	
 	content: ' ';
 	display: table;
 	clear: both;
@@ -1189,24 +1205,24 @@ iframe {
 
 [class*='grid-col-'] {
 	float: left;
-	margin-right: 5px !important;
-	margin-bottom: 10px !important;
+	margin-right: 1rem !important;
+	margin-bottom: 1rem !important;
 }
 
 .grid-col-1 {
-	width: calc(50% - 5px) !important;
+	width: calc(50% - 1rem) !important;
 }
 
 .grid-col-2 {
-	width: calc(100% - 5px) !important;
+	width: calc(100% - 1rem) !important;
 }
 
 @media only screen and (max-width: 600px) {
 	.grid-col-1 {
-		width: 100% !important;
+		width: calc(100% - 1rem) !important;
 	}
 	.grid-col-2 {
-		width: 100% !important;
+        width: calc(100% - 1rem) !important;
 	}
 }
 
@@ -1232,7 +1248,7 @@ iframe {
 	-moz-flex-direction: column;
 	-ms-flex-direction: column;
 	flex-direction: column;
-	height: 250px;
+	max-height: 60%;
 	width: 80%;
 	border: 1px solid #d0d0d0;
 	background-color: white;
@@ -1837,7 +1853,7 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	-moz-flex-direction: column;
 	-ms-flex-direction: column;
 	flex-direction: column;
-	padding: 5px;
+	padding: 1rem;
 }
 
 @media only screen and (min-width: 601px) {
@@ -1889,7 +1905,6 @@ input[type='radio']:checked+.calendar-termin-monthly {
 	background: transparent url("gui/images/dropdown-markup.png") no-repeat
 		right center;
 	min-height: 1em;
-	border: 1px solid #d0d0d0;
 	border-radius: 2px;
 	background-color: white;
 	white-space: nowrap;
@@ -1922,7 +1937,7 @@ input[type='radio']:checked+.calendar-termin-monthly {
 }
 
 .color-select-item:hover {
-	background-color: #d0d0d0;
+	background-color: #f0f0f0;
 }
 
 .color-chooser-display {
@@ -1952,7 +1967,9 @@ input[type='radio']:checked+.calendar-termin-monthly {
 .multsel-cnr {
 	display: inline-block;
 	min-height: 1em;
-	border: 1px solid #d0d0d0;
+	border-width: 0 0 1px 0;
+	border-style: solid;
+	border-color:  #d0d0d0;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -1999,7 +2016,9 @@ input[type='radio']:checked+.calendar-termin-monthly {
  * all about mails
  */
 .email-sendto {
-	border: 1px solid #d0d0d0;
+	border-width: 0 0 1px 0;
+	border-style: solid; 
+	border-color: #d0d0d0;
 	padding: 5px;
 	min-height: 2em;
 	max-height: 10em;
@@ -2165,9 +2184,8 @@ input[type='radio']:checked+.calendar-termin-monthly {
 }
 
 .contact-overview-item {
-	border: 1px solid #d0d0d0;
-	margin-bottom: 10px;
-	padding: 10px 5px 0 5px;
+	border-bottom: 1px solid #d0d0d0;
+	padding: 5px 5px 0 5px;
 	display: -webkit-flex;
 	display: -moz-flex;
 	display: -ms-flex;

@@ -1,5 +1,7 @@
 de.bbgs.member.GetMemberImageHandler
 de.bbgs.member.GetCurrentMemberThumbHandler
+de.bbgs.member.GetMemberListDocumentHandler
+
 de.bbgs.attachments.GetMimeTypeIconHandler
 de.bbgs.attachments.GetAttachmentHandler
 

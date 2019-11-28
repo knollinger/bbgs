@@ -18,6 +18,9 @@ import de.bbgs.xml.IJAXBObject;
 @XmlRootElement(name="member-model")
 public class MemberModel implements IJAXBObject
 {
+    @XmlElement(name="force")
+    public boolean force = false;
+    
     @XmlElement(name="core-data")
     public Member coreData = new Member();
     

@@ -32,6 +32,13 @@ var MessageCatalog = (function() {
 
 	// --------------------------------------------------------------------
 	//
+	// all about discard changes
+	//
+	DISCARD_CHANGES_TITLE : "Ungespeicherte Änderungen verwerfen ?",
+	DISCARD_CHANGES_MESSG : "Es liegen ungespeicherte Änderungen vor. Willst Du diese wirklich verwerfen?",
+
+	// --------------------------------------------------------------------
+	//
 	// all about Member Main-Navigation
 	//
 	MEMBER_LOAD : "Lade Mitglieds-Daten",
@@ -46,6 +53,9 @@ var MessageCatalog = (function() {
 	MEMBER_REMOVE_ERROR : "Beim l&ouml;schen der Mitglieds-Informationen ist ein technischer Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
 	MEMBER_REMOVE_TECH_ERROR : "Beim l&ouml;schen der Mitglieds-Informationen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
 
+	MEMBER_SAVE_DUPLICATES_TITLE: "Mögliche Doubletten gefunden",
+	MEMBER_SAVE_DUPLICATES: "Die folgenden Mitglieder haben ähnliche Namen.<br><br>{1}<br><br>Bitte prüfe, das es sich bei dem neuen Mitglied um keine Doppel-Erfassung handelt.<br><br><b>Möchtest Du das neue Mitglied wirklich speichern?</b>",
+	
 	MEMBER_SAVE_ERROR_TITLE : "Fehler beim speichern der Mitglieds-Daten",
 	MEMBER_SAVE_ERROR : "Beim speichern der Mitglieds-Informationen ist ein technischer Fehler aufgetreten.<br>Antwort vom Server:<br>{1}",
 	MEMBER_SAVE_TECH_ERROR : "Beim speichern der Mitglieds-Informationen ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
@@ -197,6 +207,10 @@ var MessageCatalog = (function() {
 	TITLE_REMOVE_GROUPMEMBER : "Bist Du sicher?",
 	QUERY_REMOVE_GROUPMEMBER : "M&ouml;chtest Du das Mitglied '{1}, {2}' wirklich aus dem Mail-Verteiler löschen?",
 
+	SENDMAIL_ERROR_TITLE : "Die Mail konnte nicht vesendet werden.",
+	SENDMAIL_ERROR : "Beim versenden der Mail ist ein Fehler aufgetreten.<br>Ursache:<br><br>{1}",
+	SENDMAIL_TECH_ERROR : "Beim versenden der Mail ist ein technischer Fehler aufgetreten.<br>Der Server antwortete mit dem Antwort-Code {1}",
+	
 	// --------------------------------------------------------------------
 	//
 	// all about todos
