@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.xml.bind.annotation.XmlElement;
@@ -111,17 +112,22 @@ public class SendMailHandler implements IXmlServiceHandler
                 builder.addAttachment(a.name, a.mimeType, a.content);
             }
 
-            Message msg = builder.createMessage();
-            Transport.send(msg);
+            List<Message> messages = builder.createMessages();
+            for (Message message : messages)
+            {
+                Transport.send(message);
+            }
             result = new Response();
         }
         catch (AddressException e)
         {
             result = new ErrorResponse(String.format(ERR_INV_ADDRESS, e.getRef()));
+            e.printStackTrace();
         }
         catch (Exception e)
         {
             result = new ErrorResponse(e.getMessage());
+            e.printStackTrace();
         }
         finally
         {

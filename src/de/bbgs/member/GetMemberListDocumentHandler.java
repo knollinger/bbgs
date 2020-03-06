@@ -109,13 +109,14 @@ public class GetMemberListDocumentHandler implements IGetDocServiceHandler
      */
     private void writeHeader(ServletOutputStream out) throws IOException
     {
-        out.print("\"Name\", ");
-        out.print("\"Alter oder Gruppe\", ");
-        out.print("\"Schuh-Größe\", ");
-        out.print("\"Email\", ");
-        out.print("\"Notruf-Nummern\", ");
-        out.print("\"Kontakt-Personen\", ");
-        out.print("\"dabei seit\", ");
+        out.println("\"sep=,\"");
+        out.print("Name,");
+        out.print("Alter oder Gruppe,");
+        out.print("Schuh-Größe,");
+        out.print("Email,");
+        out.print("Notruf-Nummern,");
+        out.print("Kontakt-Personen,");
+        out.print("dabei seit,");
         out.println();
     }
 
@@ -248,14 +249,13 @@ public class GetMemberListDocumentHandler implements IGetDocServiceHandler
          */
         public void writeLine(ServletOutputStream out) throws IOException
         {
-
-            out.print(String.format("\"%1$s\", ", name));
-            out.print(String.format("\"%1$s\", ", this.age));
-            out.print("\"\",");
+            out.print(String.format("%1$s,", name));
+            out.print(String.format("%1$s,", this.age));
+            out.print(",");
             this.dumpHashSet(out, mails);
             this.dumpHashSet(out, phones);
             this.dumpHashSet(out, contacts);
-            out.print(String.format("\"%1$s\"", this.memberSince));
+            out.print(String.format("%1$s", this.memberSince));
             out.println();
         }
 
@@ -284,7 +284,7 @@ public class GetMemberListDocumentHandler implements IGetDocServiceHandler
             {
                 out.println(value);
             }
-            out.print("\", ");
+            out.print("\",");
         }
     }
 }

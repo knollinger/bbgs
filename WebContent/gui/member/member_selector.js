@@ -203,7 +203,11 @@ MemberOverview.prototype.createPrintAction = function() {
 	  var link = document.createElement("a");
 	  link.download = "Mitgliederübersicht.csv";
 	  link.href = "getDocument/memberOverview.csv";
+
+	  link.className="hidden";
+	  document.body.appendChild(link);
 	  link.click();
+	  link.remove();
     });
     this.addAction(this.actionPrint);
     this.keyMap['P'] = function() { // Entf-Taste

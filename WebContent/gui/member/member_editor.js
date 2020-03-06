@@ -423,7 +423,7 @@ MemberCoreDataEditor.prototype.hiddenFieldsByType = {
  */
 MemberCoreDataEditor.prototype.mandatoryFieldsByType = {
     "" : [
-	    "edit_member_zname", "edit_member_vname", "edit_member_type"
+	    "edit_member_zname", "edit_member_vname", "edit_member_type", "edit_member_sex"
     ],
     "TEACHER" : [
 	    "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"
@@ -444,19 +444,19 @@ MemberCoreDataEditor.prototype.mandatoryFieldsByType = {
 	    "edit_member_type", "edit_member_zname", "edit_member_vname", "edit_member_since", "edit_member_birthdate", "edit_member_sex", "edit_member_zipcode", "edit_member_city", "edit_member_street"
     ],
     "SHORT" : [
-	    "edit_member_type", "edit_member_since", "edit_member_until", , "edit_member_zname", "edit_member_vname"
+	    "edit_member_type", "edit_member_since", "edit_member_until", , "edit_member_zname", "edit_member_vname", "edit_member_sex"
     ],
     "STUDENT" : [
-	    "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"
+	    "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_sex"
     ],
     "REFUGEE" : [
-	    "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"
+	    "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_sex"
     ],
     "REG_COURSE" : [
-	    "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"
+	    "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_sex"
     ],
     "REG_EVENT" : [
-	    "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname"
+	    "edit_member_type", "edit_member_projyear", "edit_member_zname", "edit_member_vname", "edit_member_sex"
     ]
 }
 

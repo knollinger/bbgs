@@ -149,9 +149,7 @@ public class DocBuilder
          */
         public void replaceTag(String key, double val)
         {
-            NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.GERMAN);
-//            String moneyString = formatter.format(val);
-            
+            NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.GERMAN);          
             this.replaceTag(key, formatter.format(val));
         }
 
@@ -165,6 +163,4 @@ public class DocBuilder
         }
 
     }
-
-
 }

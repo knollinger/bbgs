@@ -213,8 +213,10 @@ public class MailHelper
         // Und die Parts für die Attachments
         for (Attachment attachment : attachments)
         {
+            String fileName = attachment.name.replace(' ', '_');
+            System.out.println("append file " + fileName);
             BodyPart attachBodyPart = new MimeBodyPart();
-            attachBodyPart.setFileName(attachment.name);
+            attachBodyPart.setFileName(fileName);
 
             byte[] data = attachment.content;
             String mimeType = attachment.mimeType;

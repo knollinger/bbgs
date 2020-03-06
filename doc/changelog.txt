@@ -1,14 +1,21 @@
 V1.00.00
+
+    * Kursnamen können nun deutlich länger werden ohne einen Fehler auszulösen
+      --> WUnsch von Helga
+      
     * Für jeden Kontakt kann eine eigene Wohn-Adresse angegeben werden. Wenn 
       dies nicht erfolgt, zieht die Addy des Kursteilnehmers...kann aber
       später überschrieben werden
+      --> Wunsch von Helga
       
     * Beim speichern neuer Mitglieder wird geprüft, ob ähnliche Namen bereits 
       gespeichert sind. Wenn ja, muss explizit das  Speichern bestätigt werden 
       (keine Doppel-Erfassungen mehr)
+      --> Wunsch von Helga und Sanna
       
     * im MemberFinder und im MemberOverview wird das Geburts-Datum mit 
-      ausgewiesen -> Wunsch von Helga
+      ausgewiesen 
+      --> Wunsch von Helga
       
     * Der Mail-Editor ist komplett neu und gestattet nun auch Embedded-Images 
       und das scaling selbiger

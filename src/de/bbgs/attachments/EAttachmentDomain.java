@@ -23,6 +23,12 @@ public enum EAttachmentDomain
     MAILSIG,
     
     /**
+     * In zu sendenden Mails werden die DATA-URLs durch referenzen auf getDocument ersetzt, 
+     * die Images landen in der Datenbank
+     */
+    MAILCONTENT,
+    
+    /**
      * Attachments an Kursen, die id ist die CourseId
      */
     COURSE,

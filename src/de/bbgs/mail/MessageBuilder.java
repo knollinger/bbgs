@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
@@ -54,6 +55,8 @@ import de.bbgs.utils.IOUtils;
  */
 class MessageBuilder
 {
+    private static final int MAX_RECIPIENTS_PER_MAIL = 100;
+
     private Connection conn;
     private InternetAddress senderAddy;
     private Set<InternetAddress> recipients = new HashSet<>();
@@ -255,7 +258,7 @@ class MessageBuilder
     }
 
     /**
-     * erzeuge die Message
+     * erzeuge die Message(s). 
      * 
      * @return
      * @throws MailConfigurationException 
@@ -263,22 +266,34 @@ class MessageBuilder
      * @throws MailContentException 
      * @throws MessagingException 
      */
-    public Message createMessage()
+    public List<Message> createMessages()
         throws MailConfigurationException, MailAddressException, MailContentException, MessagingException
     {
-        Message msg = new MimeMessage(this.getMailSession());
-        msg.setSubject(this.subject);
-        msg.setFrom(this.getFrom());
-        msg.setReplyTo(new InternetAddress[]{this.senderAddy});
-        msg.setRecipients(Message.RecipientType.BCC, this.composeRecipients());
+        Address[] recipients = this.composeRecipients();
 
-        Multipart body = new MimeMultipart();
-        for (BodyPart bodyPart : this.createBodyParts())
+        List<Message> messages = new ArrayList<>();
+
+        for (int i = 0; i < recipients.length; i += MAX_RECIPIENTS_PER_MAIL)
         {
-            body.addBodyPart(bodyPart);
+
+            Address[] addrChunk = Arrays.copyOfRange(recipients, i,
+                Math.min(i + MAX_RECIPIENTS_PER_MAIL, recipients.length));
+            Message msg = new MimeMessage(this.getMailSession());
+            msg.setSubject(this.subject);
+            msg.setFrom(this.getFrom());
+            msg.setReplyTo(new InternetAddress[]{this.senderAddy});
+            msg.setRecipients(Message.RecipientType.BCC, addrChunk);
+
+            Multipart body = new MimeMultipart("related");
+            for (BodyPart bodyPart : this.createBodyParts())
+            {
+                body.addBodyPart(bodyPart);
+            }
+            msg.setContent(body);
+            messages.add(msg);
         }
-        msg.setContent(body);
-        return msg;
+
+        return messages;
     }
 
     /**
@@ -304,9 +319,9 @@ class MessageBuilder
     {
         List<BodyPart> parts = new ArrayList<>();
 
-        Document doc = this.content.clone();
+        Document doc = this.content; // Clone entfernt
         doc.head().appendChild(this.createStyles());
-        
+
         Elements images = doc.select("img");
         for (Element image : images)
         {
@@ -400,7 +415,8 @@ class MessageBuilder
     private BodyPart createAttachment(Attachment attachment) throws MessagingException
     {
         BodyPart part = new MimeBodyPart();
-        part.addHeader("Content-Disposition", String.format("attachment; filename=%1$s", attachment.getFileName()));
+        String fileName = attachment.fileName.replace(' ', '_');
+        part.addHeader("Content-Disposition", String.format("attachment; filename=%1$s", fileName));
         DataSource src = new ByteArrayDataSource(attachment.getContent(), attachment.getMimeType());
         part.setDataHandler(new DataHandler(src));
         return part;
@@ -432,7 +448,7 @@ class MessageBuilder
         styles.appendText("img { max-width: 800px; }\n");
         return styles;
     }
-    
+
     /**
      * liefere die MailSession
      * 

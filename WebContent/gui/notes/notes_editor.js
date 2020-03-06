@@ -50,15 +50,15 @@ NotesOverview.prototype.createAddAction = function() {
     var self = this;
     var action = new WorkSpaceFrameAction("gui/images/note-add.svg", "Notiz hinzufügen", function() {
 
-	var note = new Model(XmlUtils.parse(NotesOverview.EMPTY_NOTE));
-	self.currNote = self.model.addElement(self.xPath, note.getDocument().documentElement);
-	
+	var note = XmlUtils.parse(NotesOverview.EMPTY_NOTE);
+	self.currNote = self.model.addElement(self.xPath, note.documentElement);
+
 	var row = self.renderOneNote(self.model.evaluateXPath(self.currNote)[0]);
 	row.querySelector(".mandatory").focus();
     });
     this.addAction(action);
     action.hide();
-    
+
     this.keyMap[187] = function() {
 	action.invoke();
     }
@@ -90,7 +90,7 @@ NotesOverview.prototype.createRemoveAction = function() {
     });
     this.addAction(action);
     action.hide();
-    
+
     this.keyMap[46] = function() {
 	action.invoke();
     }
@@ -105,9 +105,9 @@ NotesOverview.prototype.fillTable = function() {
 
     var tbody = UIUtils.getElement("edit_notes_overview_body");
     UIUtils.clearChilds(tbody);
-    
+
     var allNotes = this.model.evaluateXPath(this.xPath + "/note[action != 'REMOVE']");
-    for(var i = 0; i < allNotes.length; i++) {
+    for (var i = 0; i < allNotes.length; i++) {
 	var row = this.renderOneNote(allNotes[i]);
     }
 }
@@ -136,26 +136,23 @@ NotesOverview.prototype.renderOneNote = function(note) {
 NotesOverview.prototype.getColumnDescriptor = function() {
 
     var self = this;
-    
-    if(!NotesOverview.COL_DESC) {
-	
-	NotesOverview.COL_DESC = [];
-	NotesOverview.COL_DESC.push(function(td, note) {
-	    var radio = document.createElement("input");
-	    radio.type = "radio";
-	    radio.name = "notes_overview";
-	    radio.value = note.getElementsByTagName("id")[0].textContent;
-	    return radio;
-	});
-	
-	NotesOverview.COL_DESC.push(function(td, note) {
-	    return self.createTypeSelector(note);
-	});
-	
-	NotesOverview.COL_DESC.push(function(td, note) {
-	    return self.createDescriptionEdit(note);
-	});
-    }
+
+    NotesOverview.COL_DESC = [];
+    NotesOverview.COL_DESC.push(function(td, note) {
+	var radio = document.createElement("input");
+	radio.type = "radio";
+	radio.name = "notes_overview";
+	radio.value = note.getElementsByTagName("id")[0].textContent;
+	return radio;
+    });
+
+    NotesOverview.COL_DESC.push(function(td, note) {
+	return self.createTypeSelector(note);
+    });
+
+    NotesOverview.COL_DESC.push(function(td, note) {
+	return self.createDescriptionEdit(note);
+    });
     return NotesOverview.COL_DESC;
 }
 
@@ -185,22 +182,24 @@ NotesOverview.prototype.createTypeSelector = function(note) {
 /**
  * 
  */
-NotesOverview.TYPE_MAP = [ {
-    name : "",
-    value : "Art der Notiz"
-}, {
-    name : "COMMON",
-    value : "Allgemeiner Hinweis"
-}, {
-    name : "DIET",
-    value : "Ernährung"
-}, {
-    name : "MEDICAL",
-    value : "Medizinischer Hinweis"
-}, {
-    name : "OTHER",
-    value : "Sonstiges"
-} ];
+NotesOverview.TYPE_MAP = [
+	{
+	    name : "",
+	    value : "Art der Notiz"
+	}, {
+	    name : "COMMON",
+	    value : "Allgemeiner Hinweis"
+	}, {
+	    name : "DIET",
+	    value : "Ernährung"
+	}, {
+	    name : "MEDICAL",
+	    value : "Medizinischer Hinweis"
+	}, {
+	    name : "OTHER",
+	    value : "Sonstiges"
+	}
+];
 
 /**
  * 

@@ -345,8 +345,6 @@ public class GetMSJListeDocumentHandler implements IGetDocServiceHandler
         {
 
             PDField pdField = f.next();
-            System.out.println(pdField.getFullyQualifiedName() + " - " + pdField.getPartialName() + " - "
-                + pdField.getFieldFlags() + " - " + pdField.getFieldType() + " - " + pdField.getValueAsString());
             pdField.setValue("");
         }
     }
